@@ -1,0 +1,13 @@
+para roles
+1 administrador (acceso total)
+2 director (creación de servicios y usuarios)
+3 analista (creación y gestion de citas)
+4 medico (pasa consulta, recipes historias)
+5 enfermero (ordena los pacientes, carga signos vitales)
+
+para servicios
+1 administrativo
+2 obreros
+3 medicos generales
+4 especialistas
+5 asistenciales (enfermero camillero)
