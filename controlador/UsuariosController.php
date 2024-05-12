@@ -118,8 +118,10 @@ class UsuariosController extends RolesController {
                     // Guardar el nombre del usuario y su rol en las variables de sesión
                     $_SESSION['id_usuario'] = $usuario['id_usuario'];
                     $_SESSION['nombre'] = $usuario['nombre'];
+                    $_SESSION['apellido'] = $usuario['apellido'];
                     $_SESSION['rol'] = $usuario['nombre_rol'];
                     $_SESSION['valor_rol'] = $usuario['valor_rol'];
+                    $_SESSION['foto'] = $usuario['foto_usuario']; // Guardar la ruta completa de la imagen
     
                     // Redirigir al usuario a la página correspondiente
                     if ($usuario['valor_rol'] == true) {
@@ -133,6 +135,59 @@ class UsuariosController extends RolesController {
         }
     }
 
+    
+    public function controlarAcceso($archivo) {
+
+    
+            // Obtenemos el valor del rol del usuario actual
+            $valor_rol = $_SESSION['valor_rol'];
+
+            // Definimos los archivos a los que puede acceder cada rol
+            $permisos = [
+                1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex'],
+                2 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex'],
+                3 => ['CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex',  'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex'],
+                4 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosIndex', 'PatologiasIndex', 'MedicamentosIndex', 'HistoriasMedicasIdex'],
+                5 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'CitasEnfermeriaIndex'],
+            ];
+
+        // Obtenemos el nombre del archivo actual sin la extensión
+        $archivo_sin_ext = pathinfo($archivo, PATHINFO_FILENAME);
+
+        // Verificamos si el usuario tiene permiso para acceder al archivo solicitado
+        if (!in_array($archivo_sin_ext, $permisos[$valor_rol])) {
+            // Si no tiene permiso, lo redirigimos al archivo error404
+            header("Location: ../vista/Error.php");
+            exit;
+        }
+    }
+
+    public function Menu(){
+        $menu = '';
+    
+        switch ($_SESSION['valor_rol']) {
+            case '1':
+                $menu = '../vista/menus/Administrador.php';
+                break;
+            case '2':
+                $menu = '../vista/menus/Director.php';
+                break;
+            case '3':
+                $menu = '../vista/menus/Analista.php';
+                break;
+            case '4':
+                $menu = '../vista/menus/Medico.php';
+                break;
+            case '5':
+                $menu = '../vista/menus/Asistencial.php';
+                break;
+            default:
+                echo "<script>alert('Rol de usuario no válido.'); window.location.href = '../vista/Mantenimiento.php';</script>";
+                exit;
+        }
+        
+        include($menu);
+    }
 
     //maneja el acceso a las vistas
     public function Vistas(){
@@ -187,7 +242,7 @@ class UsuariosController extends RolesController {
         return $this->usuariosModelo->verificarUsuarioExistente($nombre);
     }
 
-    public function buscarDatosUsuarios($fk_usuario) {
+/*     public function buscarDatosUsuarios($fk_usuario) {
         return $this->usuariosModelo->buscarDatosUsuarios($fk_usuario);
     }
 
@@ -197,7 +252,7 @@ class UsuariosController extends RolesController {
 
     public function obtenerUsuariosPorServicio($fk_usuario) {
         return $this->usuariosModelo->obtenerUsuariosPorServicio($fk_usuario);
-    }
+    } */
 
         public function verTodosAsignacion() {
         return $this->usuariosModelo->verTodosAsignacion();

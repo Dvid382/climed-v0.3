@@ -3,6 +3,7 @@ require_once '../controlador/UsuariosController.php';
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
+$controlar = $controladorUsuario->controlarAcceso(__FILE__);
 // Incluir TCPDF
 require_once('TCPDF/tcpdf.php');
 

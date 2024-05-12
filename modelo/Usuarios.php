@@ -217,7 +217,7 @@ class Usuario extends Roles {
         }
         
         public function iniciarSesion($cedula, $clave) {
-            $query = "SELECT personas.nombre AS nombre, personas.apellido AS apellido, usuarios.id AS id_usuario, personas.cedula AS cedula, Usuarios.fk_rol, Roles.nombre AS nombre_rol, roles.valor AS valor_rol, Usuarios.clave, usuarios.estatus
+            $query = "SELECT personas.nombre AS nombre, personas.apellido AS apellido, usuarios.foto AS foto_usuario,usuarios.id AS id_usuario, personas.cedula AS cedula, Usuarios.fk_rol, Roles.nombre AS nombre_rol, roles.valor AS valor_rol, Usuarios.clave, usuarios.estatus
             FROM Usuarios
             JOIN Roles ON Usuarios.fk_rol = Roles.id
 			JOIN Personas ON Usuarios.fk_persona = Personas.id

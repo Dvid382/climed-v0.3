@@ -3,6 +3,7 @@
     $controladorUsuario = new UsuariosController();
     $usuarios = $controladorUsuario->verTodosUsuarios();
     $vistas = $controladorUsuario->Vistas();
+$controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
     require_once '../controlador/CitasController.php';
 

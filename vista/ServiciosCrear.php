@@ -3,6 +3,7 @@ require_once '../controlador/UsuariosController.php';
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
+$controlar = $controladorUsuario->controlarAcceso(__FILE__);
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +46,7 @@ $vistas = $controladorUsuario->Vistas();
         
      ?>
     
-    <div class="bg-light rounded h-100 p-4">
+    <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
     <center><h1>Crear Servicio</h1></center>
         <form method="POST">
 

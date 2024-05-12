@@ -3,6 +3,7 @@ require_once '../controlador/UsuariosController.php';
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
+$controlar = $controladorUsuario->controlarAcceso(__FILE__);
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +12,7 @@ $vistas = $controladorUsuario->Vistas();
 <?php include('dist/Plantilla.php');?>
 </head>
 <body>
-<div class="container-fluid pt-4 px-4">
+<div class="container-sm pt-4 px-4">
 
      <?php
         require_once '../controlador/PersonasController.php';
@@ -52,14 +53,14 @@ $vistas = $controladorUsuario->Vistas();
      ?>
 
 
-    <div class="bg-light rounded h-100 p-4">
+    <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
 
         <center><h1>Crear Persona</h1></center>
 
         <form method="POST">
 
             <div class="form-floating mb-3">
-            <input class="form-control " type="text" name="nombre" id="nombre" required>
+            <input class="form-control" type="text" name="nombre" id="nombre" required>
             <label  for="nombre">Nombre:</label>
             </div>
 
@@ -143,7 +144,7 @@ $vistas = $controladorUsuario->Vistas();
     <!-- Template Javascript -->
     <script src="dist/plantilla/js/main.js"></script>
         <script src="dist/js/buscar.js"></script>
-<!--     <script src="dist/js/validarpersona.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script> -->
+    <script src="dist/js/validarpersona.js"></script>
+    <script src="dist/js/validacionseguridad.js"></script>
 </body>
 </html>

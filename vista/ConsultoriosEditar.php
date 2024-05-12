@@ -3,6 +3,7 @@ require_once '../controlador/UsuariosController.php';
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
+$controlar = $controladorUsuario->controlarAcceso(__FILE__);
 ?>
 
 
@@ -12,8 +13,8 @@ $vistas = $controladorUsuario->Vistas();
 <?php include('dist/Plantilla.php'); ?>
 </head>
     <body>
-        <div class="contenedor">
-            <div class="container" style="width: 50%;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
 
                 <?php
                     require_once('../controlador/ConsultoriosController.php');
