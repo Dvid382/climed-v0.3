@@ -11,14 +11,31 @@ class CitasController {
 
     public function crearCitas($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora, $estatus, $fk_usuario_sesion, $fk_consultorio) {
         if ($this->citasModelo->verificarCitasExistentes($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora)) {
-            echo "<script>alert('Error: la cita ya existe.');</script>";
-            echo '<script>window.location="CitasCrear.php";</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'La cita ya existe.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'CitasCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
             if ($this->citasModelo->crearCitas($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora, $estatus, $fk_usuario_sesion, $fk_consultorio)) {
-                $_SESSION['mensaje'] = "Cita creada correctamente";
-                echo "<script>alert('Completado: Cita creada correctamente.');</script>";
-                echo '<script>window.location="CitasIndex.php";</script>';
+                echo "<script>
+                swal({
+                   title: 'Completado',
+                   text: 'Cita creada correctamente.',
+                   icon: 'success',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
                 exit;
             } else {
                 echo "<script>alert('Error al crear la cita.');</script>";
@@ -32,16 +49,33 @@ class CitasController {
 
     public function modificar($id, $fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora, $estatus, $fk_usuario_sesion) {
         $this->citasModelo->modificarCitas($id, $fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora, $estatus, $fk_usuario_sesion);
-        $_SESSION['mensaje'] = "Cita modificada correctamente";
-        echo "<script> alert ('Completado: Cita creada correctamente.')</script>";
-        echo '<script language="javascript">window.location="CitasIndex.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Cita modificada correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         exit;
     }
 
     public function eliminar($id) {
         $this->citasModelo->eliminarCitas($id);
-        echo "<script> alert ('Completado: Cita Eliminada correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Cita eliminada correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         exit;
         // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }

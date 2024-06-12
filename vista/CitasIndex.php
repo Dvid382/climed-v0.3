@@ -15,11 +15,11 @@ $citas = $controlador->verTodas();
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
     
 </head>
 <body>
-<?php include('dist/Menu.php');?>
+<?php include('menus/menu.php');?>
 <div class="content open">
         <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
@@ -29,7 +29,7 @@ $citas = $controlador->verTodas();
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown" style="margin-left: 10%;">
                          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                         <img src="<?php echo $_SESSION['foto']?>" alt="" width="20px"  class="rounded-circle me-lg-2">
+                                                  <img src="<?php echo $_SESSION['foto']?>" alt="" width="35px"  class="rounded-circle me-lg-2">
                             <span class="d-none d-lg-inline-flex"><?php echo   $_SESSION['nombre'] . " " . $_SESSION['apellido']  ; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -51,9 +51,9 @@ $citas = $controlador->verTodas();
                 <?php  if($_SESSION['valor_rol'] == '1'): ?>
                 <br><a class="btn btn-primary" href="CitasCrear.php">Nueva cita</a>
                 <?php endif; ?>
-
+                <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
                 
-                <table id="tabla" class="table">
+                <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>Pacientes</th>
@@ -84,7 +84,7 @@ $citas = $controlador->verTodas();
                             <td><?php echo $cita['nombre_usuario'] . ' ' . $cita['apellido_usuario']; ?></td>
                             <td><?php echo $cita['fecha']; ?></td>
                             <td><?php echo $cita['hora']; ?></td>
-                            <td><?php echo ($cita['estatus'] == 1) ? 'Activo' : 'Inactivo'; ?></td>
+                            <td><?php echo ($cita['estatus'] == 1) ? 'ACTIVO' : 'INACTIVO'; ?></td>
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                             <td>
                                 <a class="btn btn-outline-warning m-2" href="CitasEditar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
@@ -100,19 +100,50 @@ $citas = $controlador->verTodas();
         </div>
     </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Ocultar filas con estatus inactivo al cargar la página
+            $("table tr").each(function() {
+                if ($(this).find("td:eq(7)").text().trim() === "INACTIVO") {
+                    $(this).hide();
+                }
+            });
+
+            // Manejar clic en el botón
+            $("#btnMostrarInactivos").click(function() {
+                if ($(this).hasClass("btn btn-outline-success m-2")) {
+                    // Mostrar filas inactivas
+                    $("table tr").each(function() {
+                        if ($(this).find("td:eq(7)").text().trim() === "INACTIVO") {
+                            $(this).show();
+                        }
+                    });
+                    $(this).removeClass("btn btn-outline-success m-2").addClass("btn btn-outline-danger m-2").text("Ocultar inactivos");
+                } else {
+                    // Ocultar filas inactivas
+                    $("table tr").each(function() {
+                        if ($(this).find("td:eq(7)").text().trim() === "INACTIVO") {
+                            $(this).hide();
+                        }
+                    });
+                    $(this).removeClass("btn btn-outline-danger m-2").addClass("btn btn-outline-success m-2").text("Mostrar inactivos");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

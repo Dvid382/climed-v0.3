@@ -9,7 +9,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
 
@@ -20,9 +20,9 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $nombre = ucfirst($_POST['nombre']);
-                $estatus = ucfirst($_POST['estatus']);
                 $valor = ucfirst($_POST['valor']);
                 $descripcion = ucfirst($_POST['descripcion']);
+                $fk_cargo =  $_POST['fk_cargos'];
                 
                 
 
@@ -34,7 +34,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 if ($existeRol) {
                     echo "<script> alert ('Error: El Rol ya existe.')</script>";
                 } else {
-                    $resultado = $rolcontroller->crear($nombre, $estatus, $valor, $descripcion);
+                    $resultado = $rolcontroller->crear($nombre, $valor, $descripcion, $fk_cargo);
 
                     if ($resultado) {
                         echo "<script> alert '(Error: Estado creado exitosamente.)'</script>";
@@ -58,14 +58,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-select" aria-label="Default select example" name="estatus" id="estatus">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                    <label class="form-label " for="estatus">Estatus:</label>
-                </div>
-
-                <div class="form-floating mb-3">
                     <select class="form-select" aria-label="Default select example" name="valor" id="valor">
                         <option value="1">Administrador</option>
                         <option value="2">Director</option>
@@ -73,12 +65,27 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         <option value="4">Medico</option>
                         <option value="5">Enfermero</option>
                     </select>
-                    <label class="form-label " for="valor">Valor:</label>
+                    <label class="form-label " for="valor">Denominación del Cargo:</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="fk_cargos" aria-label="Default select example" name="fk_cargos" required>
+                        <option value="">Seleccione un Cargo</option>
+                        <?php
+                            require_once '../controlador/CargosController.php';
+                            $cargosController = new CargosController();
+                            $cargos = $cargosController->verTodos();
+
+                            foreach ($cargos as $cargo) {
+                                echo "<option value='" . $cargo['id'] . "'>" . $cargo['nombre'] . "</option>";
+                            }
+                        ?>
+                    </select>
                 </div>
 
                 <div class="form-floating mb-3">
                     <textarea class="form-control" placeholder="Descripcion"
-                    id="floatingTextarea" name="descripcion" style="height: 150px;" required></textarea>
+                    id="descripcion" name="descripcion" style="height: 150px;" required></textarea>
                     <label class="form-label " for="nombre">Descripción:</label>
                 </div>
 
@@ -91,20 +98,20 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         </div>    
     </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validaciongenerica.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validaciongenerica.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>

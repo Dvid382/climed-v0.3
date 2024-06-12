@@ -4,7 +4,7 @@
         <div class="sidebar pe-4 pb-3 open">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                <img class="d-flex align-items-center ms-4 mb-1" src="dist/climed.jpg" width="60%" height="60%" style="border-radius: 70%;">
+                <img class="d-flex align-items-center ms-4 mb-1" src="../dist/climed.jpg" width="60%" height="60%" style="border-radius: 70%;">
                     <h3 class="text-primary d-flex align-items-center ms-4 mb-1">CLIMED</h3>
                 </a>
 <!--                 <div class="d-flex align-items-center ms-4 mb-4">
@@ -23,19 +23,30 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-folder me-2"></i>Archivos</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="PersonasIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Personas.</a>
-                            <a href="RolesIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Roles.</a>
                             <a href="LaboratoriosIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Laboratorio.</a>
                             <a href="PatologiasIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Patologia.</a>
                             <a href="ServiciosIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Servicios.</a>
                             <a href="ConsultoriosIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Consulturio.</a>
+                            <a href="CargosIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Cargos.</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-pencil me-2"></i>Procesos</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="UsuariosIndex.php" class="dropdown-item"><i class="fa fa-user ms-4 me-4"></i>Usuarios.</a>
+                            
                             <a href="AsignacionesIndex.php" class="dropdown-item"><i class="fa fa-clipboard ms-4 me-4"></i>Asignaciones.</a>
                             <a href="CitasIndex.php" class="dropdown-item"><i class="fa fa-clipboard ms-4 me-4"></i>Citas.</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-gear me-2"></i>Configuración</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="UsuariosIndex.php" class="dropdown-item"><i class="fa fa-user ms-4 me-4"></i>Usuarios.</a>
+                            <a href="RolesIndex.php" class="dropdown-item"><i class="fa fa-folder-open ms-4 me-4"></i>Roles.</a>
+                            <a href="MenusIndex.php" class="dropdown-item"><i class="fa-solid fa-square-caret-down ms-4 me-4"></i>Menus.</a>
+                            <a href="SubmenusIndex.php" class="dropdown-item"><i class="fa fa-bars ms-4 me-4"></i>Submenus.</a>
+                            <a href="Mantenimiento.php" class="dropdown-item"><i class="fa-solid fa-clock-rotate-left ms-4 me-4"></i>Duración Citas.</a>
                         </div>
                     </div>
                     <a href="Mantenimiento.php" class="nav-item nav-link"><i class="fa fa-gears me-2"></i>Gestion calidad.</a>

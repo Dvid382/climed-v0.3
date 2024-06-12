@@ -11,31 +11,67 @@ class ServiciosController {
     
     public function crear($nombre, $estatus, $valor, $descripcion) {
         if ($this->serviciosModelo->verificarServiciosExistente($nombre)) {
-            echo "<script> alert ('Error: el servicios ya existe.')</script>";
-            echo '<script language="javascript">window.location="CrearServicios.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'El servicios ya existe.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'ServiciosCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
             $this->serviciosModelo->crearServicio($nombre, $estatus, $valor, $descripcion);
             
-            $_SESSION['mensaje'] = "Servicios creado correctamente";
-             echo "<script> alert ('Completado: Servicios creado correctamente.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Servicio creado correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'ServiciosIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     }
 
     public function eliminar($id) {
         $this->serviciosModelo->eliminarServicios($id);
-        echo "<script> alert ('Completado: Servicios Eliminado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Servicio eliminado correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'ServiciosIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         exit;
         // Puedes agregar lógica adicional después de eliminar el Servicios si es necesario
     }
     
     public function modificar($id, $nombre, $estatus, $valor, $descripcion) {
         $this->serviciosModelo->modificarServicios($id, $nombre, $estatus, $valor, $descripcion);
-        echo "<script> alert ('Completado: Servicios modificado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Servicio modificado correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'ServiciosIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
+        
         // Puedes agregar lógica adicional después de modificar el Servicios si es necesario
     }
     

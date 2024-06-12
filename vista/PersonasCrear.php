@@ -9,7 +9,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
 <div class="container-sm pt-4 px-4">
@@ -27,6 +27,8 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             $direccion = ucfirst($_POST['direccion']);
             $f_nacimiento = ucfirst($_POST['f_nacimiento']);
             $estatus = ucfirst($_POST['estatus']);
+            $segundo_nombre = ucfirst($_POST['segundo_nombre']);
+            $segundo_apellido = ucfirst($_POST['segundo_apellido']);
             
             
             
@@ -39,7 +41,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             if ($existepersonas) {
                 echo "<script> alert ('Error: La Persona ya existe.')</script>";
             } else {
-                $resultado = $personascontroller->crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus,);
+                $resultado = $personascontroller->crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus,  $segundo_nombre, $segundo_apellido);
 
                 if ($resultado) {
                     echo "<script> alert '(Error: Persona guardada exitosamente.)'</script>";
@@ -60,19 +62,28 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         <form method="POST">
 
             <div class="form-floating mb-3">
-            <input class="form-control" type="text" name="nombre" id="nombre" required>
-            <label  for="nombre">Nombre:</label>
+                <input class="form-control " type="text" name="cedula" id="cedula" required>
+                <label  for="cedula">Cedula:</label>
             </div>
 
+            <div class="form-floating mb-3">
+                <input class="form-control" type="text" name="nombre" id="nombre" required>
+                <label  for="nombre">Primer nombre:</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input class="form-control" type="text" name="segundo_nombre" id="segundo_nombre" required>
+                <label  for="nombre">Segundo nombre:</label>
+            </div>
 
             <div class="form-floating mb-3">
                 <input class="form-control " type="text" name="apellido" id="apellido" required>
-                <label  for="apellido">Apellido:</label>
+                <label  for="apellido">Primer apellido:</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control " type="text" name="cedula" id="cedula" required>
-                <label  for="cedula">Cedula:</label>
+                <input class="form-control " type="text" name="segundo_apellido" id="segundo_apellido" required>
+                <label  for="apellido">Segundo apellido:</label>
             </div>
 
             <div class="form-floating mb-3">
@@ -115,6 +126,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
             <div class="form-floating mb-3">
                 <select class="form-select" aria-label="Default select example" name="estatus" id="estatus">
+                    <option value="-0">Seleccione un estatus</option>
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
@@ -131,20 +143,20 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     </div>    
 </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-        <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validarpersona.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+        <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validarpersona.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>

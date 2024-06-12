@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php session_start();?>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 
 <body>
-    <?php
-        include('dist/Menu.php');
-    ?>
+<?php include('menus/menu.php');?>
     <div class="container-xxl position-relative bg-white d-flex p-0">
 
 
@@ -23,7 +20,7 @@
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown" style="margin-left: 10%;">
                          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                         <img src="<?php echo $_SESSION['foto']?>" alt="" width="20px"  class="rounded-circle me-lg-2">
+                                                  <img src="<?php echo $_SESSION['foto']?>" alt="" width="35px"  class="rounded-circle me-lg-2">
                             <span class="d-none d-lg-inline-flex"><?php echo   $_SESSION['nombre'] . " " . $_SESSION['apellido']  ; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -39,7 +36,7 @@
                 <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
                     <div class="col-md-6 text-center p-4">
                     <img
-                        src="dist/plantilla/img/illustrations/page-misc-error-light.png"
+                        src="../dist/plantilla/img/illustrations/page-misc-error-light.png"
                         alt="page-misc-error-light"
                         width="500"
                         class="img-fluid"

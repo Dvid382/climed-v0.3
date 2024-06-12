@@ -168,7 +168,7 @@ class Usuario extends Roles {
             return $stmt->fetch();
         }
         public function buscarDatosPersonas($fk_persona) {
-            $query = "SELECT usuarios.*, personas.nombre AS nombre_persona, personas.apellido AS apellido_persona, personas.cedula AS cedula_persona
+            $query = "SELECT usuarios.*, personas.nombre AS nombre_persona, personas.apellido AS apellido_persona, personas.cedula AS cedula_persona, personas.correo AS correo_persona
             FROM usuarios
             JOIN personas ON usuarios.fk_persona = personas.id
             WHERE usuarios.fk_persona = :fk_persona";
@@ -217,7 +217,7 @@ class Usuario extends Roles {
         }
         
         public function iniciarSesion($cedula, $clave) {
-            $query = "SELECT personas.nombre AS nombre, personas.apellido AS apellido, usuarios.foto AS foto_usuario,usuarios.id AS id_usuario, personas.cedula AS cedula, Usuarios.fk_rol, Roles.nombre AS nombre_rol, roles.valor AS valor_rol, Usuarios.clave, usuarios.estatus
+            $query = "SELECT personas.nombre AS nombre, personas.apellido AS apellido, usuarios.foto AS foto_usuario,usuarios.id AS id_usuario, personas.cedula AS cedula, Usuarios.fk_rol, Roles.id AS rol_id, Roles.nombre AS nombre_rol, roles.valor AS valor_rol, Usuarios.clave, usuarios.estatus
             FROM Usuarios
             JOIN Roles ON Usuarios.fk_rol = Roles.id
 			JOIN Personas ON Usuarios.fk_persona = Personas.id

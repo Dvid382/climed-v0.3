@@ -15,8 +15,17 @@ class UsuariosController extends RolesController {
 
     public function crearUsuario( $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
         if ($this->verificarUsuarioExistente($fk_persona)) {
-            echo "<script> alert ('Error: el Usuario ya existe.')</script>";
-            echo '<script language="javascript">window.location="UsuarioCrear.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'El Usuario ya existe.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     
@@ -45,27 +54,49 @@ class UsuariosController extends RolesController {
     
         if ($this->usuariosModelo->crearUsuario( $rutaFotoDestino, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus)) {
            
-            echo "<script> alert ('Completado: Usuario creado correctamente.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
+
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Usuario creado correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
-            echo "<script> alert ('Error: Error al crear el usuario.')</script>";
-            echo '<script language="javascript">window.location="UsuarioCrear.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Error al crear el usuario.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     }
-    
-    
+
     public function eliminarUsuario($id) {
-        if ($this->usuariosModelo->eliminarUsuario($id)) {
-            echo "<script> alert ('Completado: Usuario eliminado correctamente.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
-            exit;
-        } else {
-             echo "<script> alert ('Completado: Usuario eliminado correctamente.')</script>";
-             echo '<script language="javascript">window.location="Inicio.php"</script>';
-            exit;
-        }
+        $this->usuariosModelo->eliminarUsuario($id);
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Usuario eliminado correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
+        // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }
     
     public function modificarUsuario($id, $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
@@ -91,12 +122,31 @@ class UsuariosController extends RolesController {
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino);
 
         if ($this->usuariosModelo->modificarUsuario($id, $rutaFotoDestino, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus)) {
-            echo "<script> alert ('Completado: Usuario modificado.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
+
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Usuario modificado correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
-            echo "<script> alert ('Error: No se pudo modificar el usuario.')</script>";
-            echo '<script language="javascript">window.location="EditarUsuario.php?id=" . $id"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'No se pudo modificar el usuario.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
         var_dump($id, $rutaFotoDestino, $clave, $fk_rol, $fk_servicio, $estatus);
@@ -113,13 +163,14 @@ class UsuariosController extends RolesController {
                 // Verificar el estado del usuario
                 if ($usuario['estatus'] == '0') {
                     echo "<script> alert ('Error: Su usuario se encuentra inactivo.')</script>";
-                    echo '<script language="javascript">window.location="../Inicio.php"</script>';
+                    echo '<script language="javascript">window.location="../Index.php"</script>';
                 } else {
                     // Guardar el nombre del usuario y su rol en las variables de sesión
                     $_SESSION['id_usuario'] = $usuario['id_usuario'];
                     $_SESSION['nombre'] = $usuario['nombre'];
                     $_SESSION['apellido'] = $usuario['apellido'];
                     $_SESSION['rol'] = $usuario['nombre_rol'];
+                    $_SESSION['rol_id'] = $usuario['rol_id'];
                     $_SESSION['valor_rol'] = $usuario['valor_rol'];
                     $_SESSION['foto'] = $usuario['foto_usuario']; // Guardar la ruta completa de la imagen
     
@@ -144,9 +195,9 @@ class UsuariosController extends RolesController {
 
             // Definimos los archivos a los que puede acceder cada rol
             $permisos = [
-                1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex'],
-                2 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex'],
-                3 => ['CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex',  'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex'],
+                1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar', 'MenusIndex', 'MenusCrear', 'MenusEditar', 'MenusEliminar', 'SubmenusIndex', 'SubmenusEliminar', 'SubmenusCrear', 'SubmenusEditar'],
+                2 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar'],
+                3 => ['CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex',  'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer'],
                 4 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosIndex', 'PatologiasIndex', 'MedicamentosIndex', 'HistoriasMedicasIdex'],
                 5 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'CitasEnfermeriaIndex'],
             ];
@@ -182,7 +233,17 @@ class UsuariosController extends RolesController {
                 $menu = '../vista/menus/Asistencial.php';
                 break;
             default:
-                echo "<script>alert('Rol de usuario no válido.'); window.location.href = '../vista/Mantenimiento.php';</script>";
+                echo "<script>
+                swal({
+                   title: 'Error',
+                   text: 'Rol de usuario no válido.',
+                   icon: 'warning',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = '../vista/Mantenimiento.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
                 exit;
         }
         
@@ -193,11 +254,33 @@ class UsuariosController extends RolesController {
     public function Vistas(){
         if (!isset($_SESSION['rol'])) {
             echo "<script>alert('Usted debe iniciar sesión para acceder a esta página.'); window.location.href = '../Index.php';</script>";
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Usted debe iniciar sesión para acceder a esta página.',
+               icon: 'warning',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = '../Index.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
         
         if ( $_SESSION['valor_rol']==false) {
             echo "<script>alert('Usted no tiene permiso para acceder a esta página.'); window.location.href = 'Home.php';</script>";
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Usted no tiene permiso para acceder a esta página.',
+               icon: 'warning',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'Home.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         
         }
@@ -265,4 +348,12 @@ class UsuariosController extends RolesController {
         echo json_encode($usuarios);
         exit;
     }
+
+    public function obtenerMenuDinamico() {
+        $rol_id = $_SESSION['rol_id'];
+        $rolesController = new RolesController();
+        $menus_submenus = $rolesController->obtenerMenusSubMenusUsuario($rol_id);
+        return $menus_submenus;
+    }
+    
 }

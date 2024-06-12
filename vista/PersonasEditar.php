@@ -10,7 +10,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
     <div class="container-fluid pt-4 px-4">
@@ -30,7 +30,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         $persona = $PersonasController->verPersonaPorId($personaId);
 
                         // Verificar si se enviaron los datos actualizados del Rol
-                        if (isset($_POST['nombre']) && isset($_POST['apellido']) && isset($_POST['cedula']) && isset($_POST['telefono']) && isset($_POST['correo']) && isset($_POST['sexo']) && isset($_POST['direccion']) && isset($_POST['f_nacimiento']) && isset($_POST['estatus'])) {
+                        if (isset($_POST['nombre']) && isset($_POST['apellido']) && isset($_POST['cedula']) && isset($_POST['telefono']) && isset($_POST['correo']) && isset($_POST['sexo']) && isset($_POST['direccion']) && isset($_POST['f_nacimiento']) && isset($_POST['estatus']) && isset($_POST['segundo_nombre']) && isset($_POST['segundo_apellido'])) {
                             $nuevoNombre = $_POST['nombre'];
                             $nuevoApellido = $_POST['apellido'];
                             $nuevaCedula = $_POST['cedula'];
@@ -40,11 +40,13 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                             $nuevaDireccion = $_POST['direccion'];
                             $nuevaf_nacimiento = $_POST['f_nacimiento'];
                             $nuevoEstatus = $_POST['estatus'];
+                            $nuevoSegundo_nombre = $_POST['segundo_nombre'];
+                            $nuevoSegundo_apellido = $_POST['segundo_apellido'];
                             
                             
 
                             // Actualizar los datos del Rol con los nuevos valores
-                            $PersonasController->modificarPersona($personaId, $nuevoNombre, $nuevoApellido, $nuevaCedula, $nuevoTelefono, $nuevoCorreo, $nuevoSexo, $nuevaDireccion, $nuevaf_nacimiento, $nuevoEstatus);
+                            $PersonasController->modificarPersona($personaId, $nuevoNombre, $nuevoApellido, $nuevaCedula, $nuevoTelefono, $nuevoCorreo, $nuevoSexo, $nuevaDireccion, $nuevaf_nacimiento, $nuevoEstatus, $nuevoSegundo_nombre, $nuevoSegundo_apellido);
 
                             exit();
                             
@@ -60,10 +62,19 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             <form method="POST">
 
                 <div class="form-floating mb-3">
-                <input class="form-control " type="text" name="nombre" id="nombre" value="<?php echo $persona['nombre']; ?> " required>
-                <label  for="nombre">Nombre:</label>
+                    <input class="form-control " type="text" name="cedula" id="cedula" value="<?php echo $persona['cedula']; ?> " required>
+                    <label  for="cedula">Cedula:</label>
                 </div>
 
+                <div class="form-floating mb-3">
+                    <input class="form-control " type="text" name="nombre" id="nombre" value="<?php echo $persona['nombre']; ?> " required>
+                    <label  for="nombre">Nombre:</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control " type="text" name="segundo_nombre" id="segundo_nombre" value="<?php echo $persona['segundo_nombre']; ?> " required>
+                    <label  for="segundo_nombre">Segundo nombre:</label>
+                </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control " type="text" name="apellido" id="apellido" value="<?php echo $persona['apellido']; ?> " required>
@@ -71,8 +82,8 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control " type="text" name="cedula" id="cedula" value="<?php echo $persona['cedula']; ?> " required>
-                    <label  for="cedula">Cedula:</label>
+                    <input class="form-control " type="text" name="segundo_apellido" id="segundo_apellido" value="<?php echo $persona['segundo_apellido']; ?> " required>
+                    <label  for="segundo_apellido">Segundo apellido:</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -115,6 +126,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
                 <div class="form-floating mb-3">
                     <select class="form-select" aria-label="Default select example" name="estatus" id="estatus">
+                        <option value="-0">Seleccione un estatus</option>
                         <option value="1">Activo</option>
                         <option value="0">Inactivo</option>
                     </select>
@@ -132,20 +144,20 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     </div>
 
     <!-- libreries JS -->
-    <script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/js/LimpiarInput.js"></script>
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validarpersona.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/js/LimpiarInput.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validarpersona.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>

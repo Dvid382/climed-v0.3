@@ -1,16 +1,30 @@
 <?php
 require_once '../controlador/UsuariosController.php';
+if (isset($_SESSION['eliminacion_exitosa']) && $_SESSION['eliminacion_exitosa']) {
+    echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Asignación eliminada exitosamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'AsignacionesIndex.php'; // Redirige a la página de índice
+               }
+            });
+         </script>";
+    unset($_SESSION['eliminacion_exitosa']); // Limpiar la variable de sesión
+}
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
 $controlar = $controladorUsuario->controlarAcceso(__FILE__);
-$controlar = $controladorUsuario->controlarAcceso(__FILE__);
+
 
 require_once '../controlador/AsignacionesController.php';
 $controlador = new AsignacionesController();
 $asignaciones = $controlador->verTodos();
 $controladorAsignaciones = new AsignacionesController();
-
+    
 require_once '../controlador/ServiciosController.php';
 $controladorServicios = new ServiciosController();
 
@@ -20,10 +34,10 @@ $controladorServicios = new ServiciosController();
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
-    <?php include('dist/Menu.php');?>
+    <?php include('menus/menu.php');?>
     <div class="content open">
         <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
@@ -33,7 +47,7 @@ $controladorServicios = new ServiciosController();
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown" style="margin-left: 10%;">
                          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                         <img src="<?php echo $_SESSION['foto']?>" alt="" width="20px"  class="rounded-circle me-lg-2">
+                                                  <img src="<?php echo $_SESSION['foto']?>" alt="" width="35px"  class="rounded-circle me-lg-2">
                             <span class="d-none d-lg-inline-flex"><?php echo   $_SESSION['nombre'] . " " . $_SESSION['apellido']  ; ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -56,7 +70,8 @@ $controladorServicios = new ServiciosController();
                         <?php  if($_SESSION['valor_rol'] == '1'): ?>
                         <a class="btn btn-primary" href="AsignacionesCrear.php">Nueva Asignación</a>
                         <?php endif; ?>
-                    <table id="tabla" class="table">
+                        <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar Cancelados</button>
+                        <table id="tabla" class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
                             <th>Nombre</th>
@@ -132,20 +147,51 @@ $controladorServicios = new ServiciosController();
         <!-- Catalogo Asignaciones Fin-->
     </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Ocultar filas con estatus inactivo al cargar la página
+        $("table tr").each(function() {
+            if ($(this).find("td:eq(1)").text().trim() === "Cancelada") {
+                $(this).hide();
+            }
+        });
+
+        // Manejar clic en el botón
+        $("#btnMostrarInactivos").click(function() {
+            if ($(this).hasClass("btn btn-outline-success m-2")) {
+                // Mostrar filas inactivas
+                $("table tr").each(function() {
+                    if ($(this).find("td:eq(1)").text().trim() === "Cancelada") {
+                        $(this).show();
+                    }
+                });
+                $(this).removeClass("btn btn-outline-success m-2").addClass("btn btn-outline-danger m-2").text("Ocultar inactivos");
+            } else {
+                // Ocultar filas inactivas
+                $("table tr").each(function() {
+                    if ($(this).find("td:eq(1)").text().trim() === "Cancelada") {
+                        $(this).hide();
+                    }
+                });
+                $(this).removeClass("btn btn-outline-danger m-2").addClass("btn btn-outline-success m-2").text("Mostrar inactivos");
+            }
+        });
+    });
+</script>
 </body>
 </html>

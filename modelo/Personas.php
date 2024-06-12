@@ -24,7 +24,9 @@ class Persona  {
         private $sexo;
         private $direccion;
         private $f_nacimiento;
-        private $estatus; 
+        private $estatus;
+        private $segundo_nombre;
+        private $segundo_apellido;
 
         //setters y getters
         public function getId(){
@@ -106,12 +108,28 @@ class Persona  {
         public function setEstatus($estatus){
             $this->estatus = $estatus;
         }
+    
+        public function getSegundo_nombre(){
+            return $this->segundo_nombre;
+        }
+    
+        public function setSegundo_nombre($segundo_nombre){
+            $this->segundo_nombre = $segundo_nombre;
+        }
+    
+        public function getSegundo_apellido(){
+            return $this->segundo_apellido;
+        }
+    
+        public function setSegundo_apellido($segundo_apellido){
+            $this->segundo_apellido = $segundo_apellido;
+        }
    
-        public function crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus) {
+        public function crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus, $segundo_nombre, $segundo_apellido) {
            
             try {
-            $query = "INSERT INTO personas (nombre, apellido, cedula, telefono, correo, sexo, direccion, f_nacimiento, estatus) 
-                      VALUES (:nombre, :apellido, :cedula, :telefono, :correo, :sexo, :direccion, :f_nacimiento, :estatus)";
+            $query = "INSERT INTO personas (nombre, apellido, cedula, telefono, correo, sexo, direccion, f_nacimiento, estatus, segundo_nombre, segundo_apellido) 
+                      VALUES (:nombre, :apellido, :cedula, :telefono, :correo, :sexo, :direccion, :f_nacimiento, :estatus, :segundo_nombre, :segundo_apellido)";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':apellido', $apellido);
@@ -122,6 +140,8 @@ class Persona  {
             $stmt->bindParam(':direccion', $direccion);
             $stmt->bindParam(':f_nacimiento', $f_nacimiento);
             $stmt->bindParam(':estatus', $estatus);
+            $stmt->bindParam(':segundo_nombre', $segundo_nombre);
+            $stmt->bindParam(':segundo_apellido', $segundo_apellido);
             $stmt->execute();
             return true;
         } catch(PDOException $e) {
@@ -159,11 +179,11 @@ class Persona  {
             $stmt->execute();
             return $stmt->fetch();
         }
-        public function modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus) {
+        public function modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus, $segundo_nombre, $segundo_apellido) {
             
             try {
                 $query = "UPDATE personas 
-                SET nombre = :nombre, apellido = :apellido, cedula = :cedula, telefono = :telefono, correo = :correo, sexo = :sexo, direccion = :direccion, f_nacimiento = :f_nacimiento, estatus = :estatus 
+                SET nombre = :nombre, apellido = :apellido, cedula = :cedula, telefono = :telefono, correo = :correo, sexo = :sexo, direccion = :direccion, f_nacimiento = :f_nacimiento, estatus = :estatus, segundo_nombre = :segundo_nombre, segundo_apellido = :segundo_apellido
                 WHERE id = :id";
                 $stmt = $this->conexion->prepare($query);
                 $stmt->bindParam(':id', $id);
@@ -176,6 +196,8 @@ class Persona  {
                 $stmt->bindParam(':direccion', $direccion);
                 $stmt->bindParam(':f_nacimiento', $f_nacimiento);
                 $stmt->bindParam(':estatus', $estatus);
+                $stmt->bindParam(':segundo_nombre', $segundo_nombre);
+                $stmt->bindParam(':segundo_apellido', $segundo_apellido);
                 $stmt->execute();
                 
                 return true;

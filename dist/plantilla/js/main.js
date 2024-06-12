@@ -1,7 +1,7 @@
 (function ($) {
     "use strict";
 
-    // Spinner
+    /*     // Spinner
     var spinner = function () {
         setTimeout(function () {
             if ($('#spinner').length > 0) {
@@ -26,11 +26,7 @@
     });
 
 
-    // Sidebar Toggler
-    $('.sidebar-toggler').click(function () {
-        $('.sidebar, .content').toggleClass("open");
-        return false;
-    });
+
 
 
     // Progress Bar
@@ -56,26 +52,32 @@
         dots: true,
         loop: true,
         nav : false
-    });
+    }); */
 
+        // Sidebar Toggler
+        $('.sidebar-toggler').click(function () {
+            $('.sidebar, .content').toggleClass("open");
+            return false;
+        });
+        
        // Worldwide Sales Chart
     var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["2019", "2020", "2021", "2022", "2023", "2024"],
             datasets: [{
-                    label: "USA",
+                    label: "NIÑOS",
                     data: [15, 30, 55, 65, 60, 80, 95],
                     backgroundColor: "rgba(0, 156, 255, .7)"
                 },
                 {
-                    label: "UK",
+                    label: "ADULTOS",
                     data: [8, 35, 40, 60, 70, 55, 75],
                     backgroundColor: "rgba(0, 156, 255, .5)"
                 },
                 {
-                    label: "AU",
+                    label: "TERCERA EDAD",
                     data: [12, 25, 45, 55, 65, 70, 60],
                     backgroundColor: "rgba(0, 156, 255, .3)"
                 }
@@ -92,15 +94,15 @@
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["2019", "2020", "2021", "2022", "2023", "2024"],
             datasets: [{
-                    label: "Salse",
+                    label: "Infecciosas",
                     data: [15, 30, 55, 45, 70, 65, 85],
                     backgroundColor: "rgba(0, 156, 255, .5)",
                     fill: true
                 },
                 {
-                    label: "Revenue",
+                    label: "No Infecciosas",
                     data: [99, 135, 170, 130, 190, 180, 270],
                     backgroundColor: "rgba(0, 156, 255, .3)",
                     fill: true
@@ -138,8 +140,10 @@
     var myChart4 = new Chart(ctx4, {
         type: "bar",
         data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
+            labels: ["Médico", "Administrativo", "Obrero", "Directivo", "Asistenciales"],
             datasets: [{
+                label: "Ocultar",
+                fill: false,
                 backgroundColor: [
                     "rgba(0, 156, 255, .7)",
                     "rgba(0, 156, 255, .6)",
@@ -155,7 +159,7 @@
         }
     });
 
-
+    /* 
     // Pie Chart
     var ctx5 = $("#pie-chart").get(0).getContext("2d");
     var myChart5 = new Chart(ctx5, {
@@ -199,7 +203,7 @@
         options: {
             responsive: true
         }
-    });
+    }); */
     
 })(jQuery);
 

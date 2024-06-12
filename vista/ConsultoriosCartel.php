@@ -26,7 +26,7 @@ if (isset($_POST['imprimir_pdf'])) {
     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
     // Establecer el fondo de pantalla en orientación horizontal
-    $pdf->Image('dist/marco.jpg', 0, 0, 297, 210, '', '', '', false, 600, '', false, false, 0);
+    $pdf->Image('../dist/marco.jpg', 0, 0, 297, 210, '', '', '', false, 600, '', false, false, 0);
 
     // Capturar el HTML de la vista con los estilos
     ob_start();
@@ -89,11 +89,11 @@ if (isset($_POST['imprimir_pdf'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <?php include('dist/Plantilla.php'); ?>
+    <?php include('../dist/Plantilla.php'); ?>
 
     <style>
         body {
-            background-image: url('dist/marco.jpg');
+            background-image: url('../dist/marco.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -135,21 +135,21 @@ if (isset($_POST['imprimir_pdf'])) {
     </div>
 
     <!-- libreries JS -->
-    <script src="dist/js/jquery-3.7.1.min.js"></script>
-    <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-    <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-    <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-    <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="../dist/js/jquery-3.7.1.min.js"></script>
+    <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+    <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+    <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+    <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/js/LimpiarInput.js"></script>
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validaciongenerica.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/js/LimpiarInput.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validaciongenerica.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>

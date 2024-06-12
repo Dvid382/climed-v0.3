@@ -2,6 +2,7 @@
 
 //conexion
 require_once '../config/Conexion.php';
+require_once 'Cargos.php';
 
 //clase Roles
 class Roles
@@ -22,6 +23,7 @@ class Roles
     private $estatus;
     private $valor;
     private $descripcion;
+    private $fk_cargo;
     
 
     //setters y getters
@@ -65,15 +67,24 @@ class Roles
 		$this->valor = $descripcion;
 	}
 
+    public function getfk_cargo(){
+		return $this->fk_cargo;
+	}
 
-    public function crearRol( $nombre, $estatus, $valor, $descripcion) {
+	public function setfk_cargo($fk_cargo){
+		$this->valor = $fk_cargo;
+	}
+
+
+    public function crearRol( $nombre, $estatus = 1, $valor, $descripcion, $fk_cargo) {
         try {
-            $query = "INSERT INTO roles ( nombre, estatus, valor, descripcion ) VALUES ( :nombre, :estatus, :valor, :descripcion )";
+            $query = "INSERT INTO roles ( nombre, estatus, valor, descripcion, fk_cargo ) VALUES ( :nombre, :estatus, :valor, :descripcion, :fk_cargo)";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':estatus', $estatus);
             $stmt->bindParam(':valor', $valor);
             $stmt->bindParam(':descripcion', $descripcion);
+            $stmt->bindParam(':fk_cargo', $fk_cargo);
             $stmt->execute();
             return true;
         } catch(PDOException $e) {
@@ -96,15 +107,16 @@ class Roles
         }
     }
     
-    public function modificarRol($id, $nombre, $estatus, $valor, $descripcion) {
+    public function modificarRol($id, $nombre, $estatus, $valor, $descripcion, $fk_cargo) {
         try {
-            $query = "UPDATE roles SET nombre = :nombre, estatus = :estatus, valor = :valor, descripcion = :descripcion  WHERE id = :id";
+            $query = "UPDATE roles SET nombre = :nombre, estatus = :estatus, valor = :valor, descripcion = :descripcion, fk_cargo  = :fk_cargo  WHERE id = :id";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':estatus', $estatus);
             $stmt->bindParam(':valor', $valor);
             $stmt->bindParam(':descripcion', $descripcion);
+            $stmt->bindParam(':fk_cargo', $fk_cargo);
             $stmt->execute();
             return true;
         } catch(PDOException $e) {
@@ -116,7 +128,19 @@ class Roles
     
     public function verTodosRol() {
         try {
-            $query = "SELECT * FROM roles order by id asc";
+            $query = "SELECT 
+            r.id,
+            r.nombre,
+            r.estatus,
+            r.valor,
+            r.descripcion,
+            c.nombre AS nombre_cargo
+        FROM 
+            roles r
+        JOIN 
+            cargos c ON r. fk_cargo = c.id
+        ORDER BY 
+            r.id ASC;";
             $stmt = $this->conexion->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -177,5 +201,117 @@ class Roles
             return false;
         }
     }
+
+    public function obtenerRolesMenusSubmenus() {
+        try {
+            $query = "SELECT 
+            r.valor,
+            r.nombre AS nombre_rol,
+            m.nombre AS menu_nombre, 
+            sm.nombre AS submenu_nombre
+        FROM roles r
+        LEFT JOIN roles_menu mr ON r.id = mr.fk_rol
+        LEFT JOIN menus m ON mr.fk_menu = m.id
+        LEFT JOIN submenus sm ON m.id = sm.fk_menus
+        ORDER BY r.valor, r.nombre, m.nombre, sm.nombre";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener roles, menus y submenús: " . $e->getMessage();
+            return [];
+        }
+    }
+    
+    public function crearRolMenu($fk_rol, $fk_menu, $fk_submenu) {
+        try {
+            $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) VALUES (:fk_rol, :fk_menu, :fk_submenu)";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_rol', $fk_rol);
+            $stmt->bindParam(':fk_menu', $fk_menu);
+            $stmt->bindParam(':fk_submenu', $fk_submenu);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error al crear la asignación de rol, menú y submenu: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus) {
+        try {
+            // Iniciar una transacción para garantizar la integridad de los datos
+            $this->conexion->beginTransaction();
+    
+            // Eliminar todas las asignaciones existentes para el rol
+            $this->eliminarMenusSubMenusPorRol($rol_id);
+    
+            // Insertar las nuevas asignaciones
+            $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) VALUES (:fk_rol, :fk_menu, :fk_submenu)";
+            $stmt = $this->conexion->prepare($query);
+    
+            foreach ($fk_menus as $fk_menu) {
+                foreach ($fk_submenus as $fk_submenu) {
+                    $stmt->bindParam(':fk_rol', $rol_id);
+                    $stmt->bindParam(':fk_menu', $fk_menu);
+                    $stmt->bindParam(':fk_submenu', $fk_submenu);
+                    $stmt->execute();
+                }
+            }
+    
+            // Confirmar la transacción si todo se ejecutó correctamente
+            $this->conexion->commit();
+            return true;
+        } catch (PDOException $e) {
+            // Revertir la transacción en caso de error
+            $this->conexion->rollBack();
+            echo "Error al actualizar los menús y submenús por rol: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
+public function eliminarMenusSubMenusPorRol($rol_id) {
+    try {
+        $query = "DELETE FROM roles_menu WHERE fk_rol = :fk_rol";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindParam(':fk_rol', $rol_id);
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo "Error al eliminar los menús y submenús por rol: " . $e->getMessage();
+    }
+}
+
+    
+    public function obtenerMenusSubMenusPorRol($rol_id) {
+        try {
+            $query = "SELECT 
+                        m.id AS menu_id, 
+                        m.nombre AS menu_nombre, 
+                        m.icono AS menu_icono, 
+                        m.orden AS menu_orden,
+                        sm.id AS submenu_id,
+                        sm.nombre AS submenu_nombre, 
+                        sm.icono AS submenu_icono, 
+                        sm.url AS submenu_url,
+                        sm.fk_menus AS submenu_menu,
+                        sm.orden AS submenu_orden
+                      FROM roles_menu rm
+                      JOIN menus m ON rm.fk_menu = m.id  
+                      JOIN submenus sm ON rm.fk_submenu = sm.id
+                      WHERE rm.fk_rol = :rol_id
+                      ORDER BY m.orden, sm.orden";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':rol_id', $rol_id);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener menús y submenús por rol: " . $e->getMessage();
+            return [];
+        }
+    }
+    
     
 }

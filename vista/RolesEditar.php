@@ -10,7 +10,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
     <body>
     <div class="container-fluid pt-4 px-4">
@@ -31,15 +31,16 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         $rol = $rolcontroller->verPorId($rolId);
 
                         // Verificar si se enviaron los datos actualizados del Rol
-                        if (isset($_POST['nombre']) && isset($_POST['estado']) && isset($_POST['valor']) && isset($_POST['descripcion'])) {
+                        if (isset($_POST['nombre']) && isset($_POST['estado']) && isset($_POST['valor']) && isset($_POST['descripcion']) && isset($_POST['fk_cargos'])) {
                             $nuevoNombre = $_POST['nombre'];
                             $nuevoEstado = $_POST['estado'];
                             $nuevoValor = $_POST['valor'];
                             $nuevoDescripcion = $_POST['descripcion'];
+                            $nuevoFk_cargo =  $_POST['fk_cargos'];
                             
 
                             // Actualizar los datos del Rol con los nuevos valores
-                            $rolcontroller->modificar($rolId, $nuevoNombre, $nuevoEstado, $nuevoValor, $nuevoDescripcion);
+                            $rolcontroller->modificar($rolId, $nuevoNombre, $nuevoEstado, $nuevoValor, $nuevoDescripcion, $nuevoFk_cargo);
 
                             exit();
                         }
@@ -110,13 +111,28 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                                     }}}}                     
                             ?>
                         </select>
-                        <label class="form-label form-control-sm" for="valor">Valor:</label>
+                        <label class="form-label form-control-sm" for="valor">Denominación de Cargo:</label>
                     </div>
 
                     <div class="form-floating mb-3">
                         <input class="form-control form-control-lg" type="text" name="descripcion" autocomplete="off" id="descripcion" value="<?php echo $rol['descripcion']; ?> ">
                         <label class="form-label form-control-sm" for="nombre">Descripcion:</label>
                     </div>
+
+                    <div class="form-floating mb-3">
+                    <select class="form-select" id="fk_cargos" aria-label="Default select example" name="fk_cargos" required>
+                        <option value="">Seleccione un Cargo</option>
+                        <?php
+                            require_once '../controlador/CargosController.php';
+                            $cargosController = new CargosController();
+                            $cargos = $cargosController->verTodos();
+
+                            foreach ($cargos as $cargo) {
+                                echo "<option value='" . $cargo['id'] . "'>" . $cargo['nombre'] . "</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
 
                     <div class="form-floating mb-3">
                         <button class="btn btn-outline-success" type="submit">Guardar rol <i class="fa fa-check"></i></button>
@@ -129,22 +145,22 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         </div>
 
         <!-- libreries JS -->
-        <script src="dist/js/jquery-3.7.1.min.js"></script>
-            <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-                <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                    <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                        <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                    <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-                <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <script src="../dist/js/jquery-3.7.1.min.js"></script>
+            <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+                <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                    <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                        <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                    <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+                <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
         <!-- Template Javascript -->
-        <script src="dist/js/LimpiarInput.js"></script>
-        <script src="dist/plantilla/js/main.js"></script>
-            <script src="dist/js/buscar.js"></script>
-        <script src="dist/js/validaciongenerica.js"></script>
-        <script src="dist/js/validacionseguridad.js"></script>
+        <script src="../dist/js/LimpiarInput.js"></script>
+        <script src="../dist/plantilla/js/main.js"></script>
+            <script src="../dist/js/buscar.js"></script>
+        <script src="../dist/js/validaciongenerica.js"></script>
+        <script src="../dist/js/validacionseguridad.js"></script>
 
     </body>
 </html>

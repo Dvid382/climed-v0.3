@@ -11,10 +11,19 @@ class PersonasController  {
         $this->personasModelo = new Persona($conexion->conectar());
     }
 
-    public function crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus) {
+    public function crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido) {
         if ($this->verificarPersonaExistente($cedula)) {
-            echo "<script> alert ('Error: el personas ya existe.')</script>";
-            echo '<script language="javascript">window.location="personasCrear.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'La Personas ya existe.')</',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'personasCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     
@@ -28,6 +37,8 @@ class PersonasController  {
         $this->personasModelo->setDireccion('direccion');
         $this->personasModelo->setF_nacimiento('f_nacimiento');
         $this->personasModelo->setEstatus('estatus');
+        $this->personasModelo->setSegundo_nombre('segundo_nombre');
+        $this->personasModelo->setSegundo_apellido('segundo_apellido');
         
     
         /* // Ruta de la carpeta de destino
@@ -45,13 +56,31 @@ class PersonasController  {
         // Asignar la nueva ruta de la foto
         $this->personasModelo->setFoto($rutaFotoDestino); */
     
-        if ($this->personasModelo->crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus)) {
-            echo "<script> alert ('Completado: Persona creado correctamente.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
+        if ($this->personasModelo->crearPersona($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido)) {
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Persona creada correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'personasIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
-            echo "<script> alert ('Error: Error al crear el Persona.')</script>";
-            echo '<script language="javascript">window.location="PersonaCrear.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Error al crear la Persona.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'PersonasCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     }
@@ -59,13 +88,22 @@ class PersonasController  {
     
     public function eliminarPersona($id) {
         $this->personasModelo->eliminarPersona($id);
-        echo "<script> alert ('Completado: Persona Eliminada correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Persona eliminada correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'personasIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         exit;
         // Puedes agregar lógica adicional después de eliminar el rol si es necesario
     }
     
-    public function modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus) {
+    public function modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus, $segundo_nombre, $segundo_apellido) {
     
         $this->personasModelo->setId('id');
         $this->personasModelo->setNombre('nombre');
@@ -77,6 +115,8 @@ class PersonasController  {
         $this->personasModelo->setDireccion('direccion');
         $this->personasModelo->setF_nacimiento('f_nacimiento');
         $this->personasModelo->setEstatus('estatus');
+        $this->personasModelo->setSegundo_nombre('segundo_nombre');
+        $this->personasModelo->setSegundo_apellido('segundo_apellido');
 
         /* // Ruta de la carpeta de destino
         $carpetaDestino = '../vista/PersonasFoto/';
@@ -90,15 +130,33 @@ class PersonasController  {
         $rutaFotoDestino = $carpetaDestino . $foto['name'];
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino); */
 
-        if ($this->personasModelo->modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus)) {
-            echo "<script> alert ('Completado: Persona modificado.')</script>";
-             echo '<script language="javascript">window.location="Inicio.php"</script>'; 
+        if ($this->personasModelo->modificarPersona($id, $nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus,  $segundo_nombre, $segundo_apellido)) {
+             echo "<script>
+             swal({
+                title: 'Completado',
+                text: 'Persona modificada correctamente.',
+                icon: 'success',
+             }).then((willRedirect) => {
+                if (willRedirect) {
+                   window.location.href = 'personasIndex.php'; // Redirige a tu página PHP
+                }
+             });
+          </script>";
             
             exit;
 
         } else {
-            echo "<script> alert ('Error: No se pudo modificar el Persona.')</script>";
-             echo '<script language="javascript">window.location="EditarPersona.php?id=" . $id"</script>'; 
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Error al modificar a la Persona.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'EditarPersona.php?id='". $id."'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             
             exit;
         }
@@ -109,12 +167,32 @@ class PersonasController  {
     //maneja el acceso a las vistas
     public function Vistas(){
         if (!isset($_SESSION['rol'])) {
-            echo "<script>alert('Usted debe iniciar sesión para acceder a esta página.'); window.location.href = '../Index.php';</script>";
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Usted debe iniciar sesión para acceder a esta página.',
+               icon: 'warning',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = '../Index.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
         
         if ( $_SESSION['valor_rol']==false) {
-            echo "<script>alert('Usted no tiene permiso para acceder a esta página.'); window.location.href = 'Home.php';</script>";
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Usted no tiene permiso para acceder a esta página.',
+               icon: 'warning',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'Home.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         
         }

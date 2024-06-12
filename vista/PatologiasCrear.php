@@ -9,7 +9,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
 <div class="container-fluid pt-4 px-4">
@@ -55,33 +55,34 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
 
         <div class="form-floating mb-3">
-            <input class="form-control " id="floatingTextarea" type="text" name="nombre" id="nombre" required>
-            <label  for="floatingTextarea">Nombre:</label>
+            <input class="form-control " id="descripcion" type="text" name="nombre" id="nombre" required>
+            <label  for="descripcion">Nombre:</label>
         </div>    
 
         <div class="form-floating mb-3">
-            <select class="form-select" id="floatingTextarea" aria-label="Default select example" name="estatus" id="estatus">
+            <select class="form-select" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
+            <option value="-0">Seleccionar un estatus</option>
             <option value="1">Activo</option>
             <option value="0">Inactivo</option>
             </select>
-            <label  for="floatingTextarea">Estatus:</label>
+            <label  for="descripcion">Estatus:</label>
         </div>
 
         <div class="form-floating mb-3">
-            <select class="form-select" id="floatingTextarea" aria-label="Default select example" name="valor" id="valor">
+            <select class="form-select" id="descripcion" aria-label="Default select example" name="valor" id="valor">
             <option value="1">Enfermedades infecciosas</option>
             <option value="2">Enfermedades no infecciosas</option>
             <option value="3">Traumatismos</option>
             <option value="4">Enfermedades congénitas</option>
             <option value="5">Trastornos mentales</option>
             </select>
-            <label  for="floatingTextarea">Valor:</label>
+            <label  for="descripcion">Taxonomía de patologías:</label>
         </div>
 
         <div class="form-floating mb-3">    
             <textarea class="form-control" placeholder="Descripcion"
-                id="floatingTextarea" name="descripcion" style="height: 150px;" required></textarea>
-            <label  for="floatingTextarea">Descripción:</label>
+                id="descripcion" name="descripcion" style="height: 150px;" required></textarea>
+            <label  for="descripcion">Descripción:</label>
         </div>
 
         <div class="form-floating mb-3">
@@ -94,20 +95,20 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     </div>    
 </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/buscar.js"></script>
-    <script src="dist/js/validaciongenerica.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/buscar.js"></script>
+    <script src="../dist/js/validaciongenerica.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>

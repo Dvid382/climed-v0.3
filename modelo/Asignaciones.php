@@ -116,7 +116,7 @@ class Asignaciones
 
     public function eliminarAsignaciones($id) {
         try {
-            $query = "UPDATE asignaciones SET estatus = 0 WHERE id = :id";
+            $query = "UPDATE asignaciones SET estatus = 4 WHERE id = :id";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':id', $id);
             $stmt->execute();

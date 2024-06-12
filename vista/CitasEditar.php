@@ -9,7 +9,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php'); ?>
+<?php include('../dist/Plantilla.php'); ?>
 </head>
 <body>
 
@@ -112,11 +112,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </div>
 
             <div class="form-floating mb-3">
-                <select class="form-select" id="floatingTextarea" aria-label="Default select example" name="estatus" id="estatus">
+                <select class="form-select" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
                     <option value="1" <?php if ($cita['estatus'] == 1) echo 'selected'; ?>>Activo</option>
                     <option value="0" <?php if ($cita['estatus'] == 0) echo 'selected'; ?>>Inactivo</option>
                 </select>
-                <label for="floatingTextarea">Estatus:</label>
+                <label for="descripcion">Estatus:</label>
             </div>
 
             <input type="hidden" class="form-control form-control-sm" name="fk_usuario_sesion" id="fk_usuario_sesion" value="<?php echo $_SESSION['id_usuario']; ?>">
@@ -209,14 +209,14 @@ function verificarPersonaExistente(cedula) {
 
     <!-- libreries JS -->
 
-    <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
     <script src="dist/plantilla/js/main.js"></script>

@@ -20,32 +20,66 @@ class AsignacionesController {
     
     public function crearAsignacion($nombre, $estatus, $descripcion, $f_inicio, $f_fin, $fk_servicios, $fk_usuario) {
         if ($this->asignacionesModelo->verificarAsignacionesExistente($nombre)) {
-            echo "<script> alert ('Error: el Asignaciones ya existe.')</script>";
-            echo '<script language="javascript">window.location="AsignacionesCrear.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'Asignaciones ya existe.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'AsignacionesCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
             
             $this->asignacionesModelo->crearAsignacion($nombre, $estatus, $descripcion, $f_inicio, $f_fin, $fk_servicios, $fk_usuario);
             
-            $_SESSION['mensaje'] = "Asignaciones creado correctamente";
-             echo "<script> alert ('Completado: Asignaciones creado correctamente.')</script>";
-             echo '<script language="javascript">window.location="Inicio.php"</script>'; 
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Asignacion creada exitosamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'AsignacionesIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>"; 
             exit;
         }
     }
 
-    public function eliminar($id) {
+    public function eliminarAsignacion($id) {
         $this->asignacionesModelo->eliminarAsignaciones($id);
-        echo "<script> alert ('Completado: Asignaciones Eliminado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
-        exit;
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Asignacion Cancelada correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'AsignacionesIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>"; 
         // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }
     
     public function modificarAsignaciones($id, $nombre, $estatus, $descripcion, $f_inicio, $f_fin, $fk_servicios, $fk_usuario) {
         $this->asignacionesModelo->modificarAsignaciones($id, $nombre, $estatus, $descripcion, $f_inicio, $f_fin, $fk_servicios, $fk_usuario);
-        echo "<script> alert ('Completado: Asignaciones modificado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Asignacion modificada correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'AsignacionesIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>"; 
         // Puedes agregar lógica adicional después de modificar el Asignaciones si es necesario
     }
     

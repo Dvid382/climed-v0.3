@@ -14,7 +14,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('dist/Plantilla.php');?>
+<?php include('../dist/Plantilla.php');?>
 </head>
 <body>
 <div class="container-fluid pt-4 px-4">
@@ -63,7 +63,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="text" id="cedula" name="cedula" value="<?php $personasUsuario = $controladorUsuario->buscarDatosPersonas($usuario['fk_persona']); echo $personasUsuario['cedula_persona'];?>" readonly >
+                    <input class="form-control" type="text" id="cedula" name="cedula" value="<?php $personasUsuario = $controladorUsuario->buscarDatosPersonas($usuario['fk_persona']); echo $personasUsuario['cedula_persona'];?>"  readonly>
                     <label class="form-label " for="cedula">Cedula:</label>
                 </div>
 
@@ -119,10 +119,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
                 <div class="form-floating mb-3">
                     <select class="form-select" aria-label="Default select example" name="estatus" id="estatus">
+                    <option value="-0">Seleccionar un estatus</option>
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                     </select>
-                    <label for="floatingTextarea">Estatus:</label>
+                    <label for="descripcion">Estatus:</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -132,7 +133,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </form>
         </div>
     </div>
-<script src="dist/js/jquery-3.7.1.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function() {
     // Obtener el valor del campo cedula al cargar la página
@@ -169,15 +170,15 @@ function verificarPersonaExistente(cedula) {
 }
 </script>
     <!-- libreries JS -->
-    <script src="dist/js/LimpiarInput.js"></script>
-            <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-                <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                    <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                        <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                    <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-                <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="dist/js/validarusuario.js"></script>
+    <script src="../dist/js/LimpiarInput.js"></script>
+            <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+                <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                    <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                        <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                    <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+                <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="../dist/js/validarusuario.js"></script>
 </body>
 </html>

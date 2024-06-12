@@ -11,31 +11,66 @@ class LaboratoriosController {
     
     public function crear($nombre, $estatus, $valor, $descripcion) {
         if ($this->laboratoriosModelo->verificarLaboratoriosExistente($nombre)) {
-            echo "<script> alert ('Error: el Laboratorios ya existe.')</script>";
-            echo '<script language="javascript">window.location="CrearLaboratorios.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Error',
+               text: 'El Laboratorios ya existe.',
+               icon: 'error',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'LaboratoriosCrear.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         } else {
             $this->laboratoriosModelo->crearLaboratorio($nombre, $estatus, $valor, $descripcion);
             
-            $_SESSION['mensaje'] = "Laboratorios creado correctamente";
-             echo "<script> alert ('Completado: Laboratorios creado correctamente.')</script>";
-            echo '<script language="javascript">window.location="Inicio.php"</script>';
+            echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Laboratorios creado correctamente',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'LaboratoriosIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
             exit;
         }
     }
 
     public function eliminar($id) {
         $this->laboratoriosModelo->eliminarLaboratorios($id);
-        echo "<script> alert ('Completado: Laboratorios Eliminado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Laboratorio eliminado correctamente',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'LaboratoriosIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         exit;
         // Puedes agregar lógica adicional después de eliminar el Laboratorios si es necesario
     }
     
     public function modificar($id, $nombre, $estatus, $valor, $descripcion) {
         $this->laboratoriosModelo->modificarLaboratorios($id, $nombre, $estatus, $valor, $descripcion);
-        echo "<script> alert ('Completado: Laboratorios modificado correctamente.')</script>";
-        echo '<script language="javascript">window.location="Inicio.php"</script>';
+        echo "<script>
+        swal({
+           title: 'Completado',
+           text: 'Laboratorios modificado correctamente.',
+           icon: 'success',
+        }).then((willRedirect) => {
+           if (willRedirect) {
+              window.location.href = 'LaboratoriosIndex.php'; // Redirige a tu página PHP
+           }
+        });
+     </script>";
         // Puedes agregar lógica adicional después de modificar el Laboratorios si es necesario
     }
     

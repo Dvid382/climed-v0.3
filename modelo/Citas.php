@@ -151,7 +151,7 @@ class Citas
    
     public function verTodasCitas() {
         try {
-            $query = "SELECT * FROM citas";
+            $query = "SELECT * FROM citas ORDER BY id ASC";
             $stmt = $this->conexion->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -197,7 +197,7 @@ class Citas
         JOIN personas medico ON medico_usuario.fk_persona = medico.id
         JOIN personas usuarios ON citas.fk_usuario_sesion = usuarios.id
         JOIN servicios ON citas.fk_servicio = servicios.id
-        JOIN consultorios ON citas.fk_consultorio = consultorios.id;";
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id ORDER BY id ASC;";
     
             $stmt = $this->conexion->prepare($query);
             $stmt->execute();
@@ -222,7 +222,7 @@ class Citas
             $stmt->execute();
             return $stmt->fetchColumn() > 0;
         } catch(PDOException $e) {
-            echo "Error al verificar los Consultorios: " . $e->getMessage();
+            echo "Error al verificar la Cita: " . $e->getMessage();
             return false;
         }
     }

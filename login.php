@@ -9,27 +9,27 @@
     <meta content="" name="description">
     <title>Iniciar Sesión</title>
      <!-- Icon Font Stylesheet -->
-    <link rel="stylesheet" href="vista/dist/fontawesome-free-6.5.1-web/css/all.min.css">
-    <link rel="stylesheet" href="vista/dist/plantilla/lib/bootstrap-icons.css">
+    <link rel="stylesheet" href="dist/fontawesome-free-6.5.1-web/css/all.min.css">
+    <link rel="stylesheet" href="dist/plantilla/lib/bootstrap-icons.css">
 
     <!-- Libraries Stylesheet -->
-    <link href="vista/dist/plantilla/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="vista/dist/plantilla/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link href="dist/plantilla/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="dist/plantilla/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="vista/dist/plantilla/css/bootstrap.min.css" rel="stylesheet">
+    <link href="dist/plantilla/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="vista/dist/plantilla/css/style.css" rel="stylesheet">
+    <link href="dist/plantilla/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-xxl position-relative bg-white d-flex p-0">
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+   <!--  <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Cargando...</span>
         </div>
-    </div>
+    </div> -->
     <!-- Spinner End -->
 
     <!-- Sign In Start -->
@@ -89,19 +89,20 @@
         });
     </script>
     <!-- libreries JS -->
-    <script src="vista/dist/plantilla/lib/jquery-3.4.1.min.js"></script>
-        <script src="vista/dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="vista/dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="vista/dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="vista/dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="vista/dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="vista/dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="vista/dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="vista/dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="dist/plantilla/lib/jquery-3.7.1.min.js"></script>
+        <script src="dist/js/sweetalert.min.js"></script>
+        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="vista/dist/plantilla/js/main.js"></script>
-    <script src="vista/dist/js/validacionseguridad.js"></script>
+    <script src="dist/plantilla/js/main.js"></script>
+    <script src="dist/js/validacionseguridad.js"></script>
 </body>
 </html>
 
