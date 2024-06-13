@@ -118,12 +118,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-select" aria-label="Default select example" name="estatus" id="estatus">
-                    <option value="-0">Seleccionar un estatus</option>
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                    </select>
-                    <label for="descripcion">Estatus:</label>
+                    <input class="form-control" type="hidden" name="estatus" id="estatus" value="1">
                 </div>
 
                 <div class="form-floating mb-3">
@@ -179,6 +174,6 @@ function verificarPersonaExistente(cedula) {
                 <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
             <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
         <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="../dist/js/validarusuario.js"></script>
+<!--  <script src="../dist/js/validarusuario.js"></script> -->
 </body>
 </html>

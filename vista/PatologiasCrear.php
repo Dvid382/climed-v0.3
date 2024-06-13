@@ -60,12 +60,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         </div>    
 
         <div class="form-floating mb-3">
-            <select class="form-select" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
-            <option value="-0">Seleccionar un estatus</option>
-            <option value="1">Activo</option>
-            <option value="0">Inactivo</option>
-            </select>
-            <label  for="descripcion">Estatus:</label>
+            <input type="hidden" class="form-control" name="estatus" id="estatus" value="1">
         </div>
 
         <div class="form-floating mb-3">

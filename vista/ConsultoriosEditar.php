@@ -54,18 +54,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">  
-                    <select class="form-select" name="estado" id="estado">
-                        <?php if ($consultorio['estatus'] == 1) {
-                        echo' <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>';
-                            } else {
-                        echo ' <option value="0">Inactivo</option>
-                            <option value="1">Activo</option>
-                            ';
-                        }
-                        ?>
-                    </select>
-                    <label  for="estado">Estatus:</label>
+                    <input type="hidden" class="form-control" name="estado" id="estado" value="1">
                 </div>
                    
                 <div class="form-floating mb-3">  

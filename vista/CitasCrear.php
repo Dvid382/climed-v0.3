@@ -124,7 +124,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
+                    <input class="form-select" type="hidden" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
                     <option value="-0">Seleccionar un estatus</option>
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
@@ -224,6 +224,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>
         <script src="../dist/js/validacionseguridad.js"></script>
-    <script src="../dist/js/validarusuario.js"></script>
+    <!-- <!--     <script src="../dist/js/validarusuario.js"></script> --> -->
 </body>
 </html>

@@ -49,7 +49,7 @@ class Cargos
 	}
 
 	public function setdescripcion($descripcion){
-		$this->valor = $descripcion;
+		$this->descripcion = $descripcion;
 	}	
 
     public function getestado(){
@@ -57,7 +57,7 @@ class Cargos
 	}
 
 	public function setestado($estatus){
-		$this->valor = $estatus;
+		$this->estatus = $estatus;
 	}
 
     public function getfk_servicio(){
@@ -65,7 +65,7 @@ class Cargos
 	}
 
 	public function setcargo($fk_servicio){
-		$this->valor = $fk_servicio;
+		$this->fk_servicio = $fk_servicio;
 	}
 
    
