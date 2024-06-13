@@ -129,9 +129,9 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     </div>
 </div>
 
-<script src="dist/js/LimpiarInput.js"></script>
+<script src="../dist/js/LimpiarInput.js"></script>
 <!-- Nombre y Apellido de Usuario -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function() {
     // Obtener el valor del campo cedula al cargar la página
@@ -219,9 +219,9 @@ function verificarPersonaExistente(cedula) {
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-        <script src="dist/js/buscar.js"></script>
-        <script src="dist/js/validacionseguridad.js"></script>
-    <script src="dist/js/validarusuario.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+        <script src="../dist/js/buscar.js"></script>
+        <script src="../dist/js/validacionseguridad.js"></script>
+    <script src="../dist/js/validarusuario.js"></script>
 </body>
 </html>

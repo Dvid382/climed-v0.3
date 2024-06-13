@@ -142,7 +142,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         </div>
     </div>
 
-<script src="dist/js/jquery-3.7.1.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
 <!-- Nombre y Apellido de Usuario -->
 <script>
     $(document).ready(function() {

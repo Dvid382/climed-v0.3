@@ -58,19 +58,19 @@
 
     </div>
     <!-- libreries JS -->
-<script src="dist/js/jquery-3.7.1.min.js"></script>
-        <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
-            <script src="dist/plantilla/lib/chart/chart.min.js"></script>
-                <script src="dist/plantilla/lib/easing/easing.min.js"></script>
-                    <script src="dist/plantilla/lib/waypoints/waypoints.min.js"></script>
-                <script src="dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
-            <script src="dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
-        <script src="dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="../dist/js/jquery-3.7.1.min.js"></script>
+        <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
+            <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
+                <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
+                    <script src="../dist/plantilla/lib/waypoints/waypoints.min.js"></script>
+                <script src="../dist/plantilla/lib/owlcarousel/owl.carousel.min.js"></script>
+            <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
+        <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+    <script src="../dist/plantilla/js/main.js"></script>
+    <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 
 </html>

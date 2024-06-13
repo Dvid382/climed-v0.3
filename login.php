@@ -38,7 +38,7 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                    <img src="vista/dist/climed.jpg" width="25%" height="25%" style="border-radius: 70%;">
+                    <img src="dist/climed.jpg" width="25%" height="25%" style="border-radius: 70%;">
                         <h3>Iniciar sesion.</h3>
                     </div>
                     <form action="controlador/validar_sesion.php" method="POST">
