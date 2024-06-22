@@ -239,24 +239,32 @@ class Roles
         }
     }
 
-    public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus) {
+    public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus, $fk_usuario) {
         try {
             // Iniciar una transacción para garantizar la integridad de los datos
             $this->conexion->beginTransaction();
-    
-            // Eliminar todas las asignaciones existentes para el rol
-            $this->eliminarMenusSubMenusPorRol($rol_id);
-    
+
+
             // Insertar las nuevas asignaciones
             $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) VALUES (:fk_rol, :fk_menu, :fk_submenu)";
             $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_rol', $rol_id);
     
-            foreach ($fk_menus as $fk_menu) {
-                foreach ($fk_submenus as $fk_submenu) {
-                    $stmt->bindParam(':fk_rol', $rol_id);
-                    $stmt->bindParam(':fk_menu', $fk_menu);
-                    $stmt->bindParam(':fk_submenu', $fk_submenu);
+            foreach ($fk_menus as $menu_id) {
+                foreach ($fk_submenus as $submenu_id) {
+                    $stmt->bindValue(':fk_menu', $menu_id);
+                    $stmt->bindValue(':fk_submenu', $submenu_id);
                     $stmt->execute();
+                    $last_insert_id = $this->conexion->lastInsertId();
+
+
+
+                    // Insertar en la tabla usuario_menu
+                    $query_usuario_menu = "INSERT INTO menu_usuario (fk_rol_menu, fk_usuario) VALUES (:fk_rol_menu, :fk_usuario)";
+                    $stmt_usuario_menu = $this->conexion->prepare($query_usuario_menu);
+                    $stmt_usuario_menu->bindParam(':fk_rol_menu', $last_insert_id);
+                    $stmt_usuario_menu->bindParam(':fk_usuario', $fk_usuario);
+                    $stmt_usuario_menu->execute();
                 }
             }
     
@@ -271,12 +279,25 @@ class Roles
         }
     }
     
+    
+    
+    
 
 public function eliminarMenusSubMenusPorRol($rol_id) {
     try {
         $query = "DELETE FROM roles_menu WHERE fk_rol = :fk_rol";
         $stmt = $this->conexion->prepare($query);
         $stmt->bindParam(':fk_rol', $rol_id);
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo "Error al eliminar los menús y submenús por rol: " . $e->getMessage();
+    }
+}
+public function eliminarRolesMenuUsuario($last_insert_id) {
+    try {
+        $query = "DELETE FROM menu_usuario WHERE fk_rol_menu = :fk_rol_menu";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindParam(':fk_rol_menu', $last_insert_id);
         $stmt->execute();
     } catch (PDOException $e) {
         echo "Error al eliminar los menús y submenús por rol: " . $e->getMessage();

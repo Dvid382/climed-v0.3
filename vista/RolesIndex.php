@@ -93,7 +93,6 @@ $roles = $controlador->verTodos();
 
                                 <td>
                                 <?php if($_SESSION['valor_rol'] == '1'):?>
-                                    <a  class="btn btn-outline-warning" href="RolesMenuEditar.php?id=<?php echo $rol['id']; ?>"><i class="fa fa-list-alt"></i></a>
                                     <a  class="btn btn-outline-warning" href="RolesEditar.php?id=<?php echo $rol['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
                                     <a class="btn btn-outline-danger" href="RolesEliminar.php?id=<?php echo $rol['id']; ?>"><i class="fa fa-trash-alt"></i></a>
                                 <?php endif; ?>

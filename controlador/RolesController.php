@@ -132,18 +132,20 @@ class RolesController {
         }
     }
 
-    public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus) {
-        $resultado = $this->rolesModelo->actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus);
+    public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus, $fk_usuario) {
+        $resultado = $this->rolesModelo->actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus, $fk_usuario);
+
+        
             // Llamar al modelo para actualizar los menús y submenús
             if ($resultado) {
                 echo "<script>
                     swal({
                         title: 'Completado',
-                        text: 'Asignación de rol, menú y submenu realizada correctamente.',
+                        text: 'Asignación de menú y submenu realizada correctamente.',
                         icon: 'success',
                     }).then((willRedirect) => {
                         if (willRedirect) {
-                            window.location.href = 'RolesIndex.php';
+                            window.location.href = 'UsuariosIndex.php';
                         }
                     });
                 </script>";
@@ -152,11 +154,11 @@ class RolesController {
                 echo "<script>
                     swal({
                         title: 'Error',
-                        text: 'Hubo un error al asignar el rol, menú y submenu.',
+                        text: 'Hubo un error al asignar el menú y submenu.',
                         icon: 'error',
                     }).then((willRedirect) => {
                         if (willRedirect) {
-                            window.location.href = 'RolesIndex.php';
+                            window.location.href = 'UsuariosIndex.php';
                         }
                     });
                 </script>";

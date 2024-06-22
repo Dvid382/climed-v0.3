@@ -135,6 +135,18 @@ class Usuario extends Roles {
             return $stmt->fetch();
         }
 
+        public function verDatosUsuarioPorId($id) {
+            $query = "SELECT  p.id AS personas_id, p.nombre AS nombre, u.id AS usuario_id, u.fk_rol AS rol_usuario, r.nombre AS nombre_rol
+                        FROM usuarios AS u
+                        JOIN personas AS p ON u.fk_persona = p.id
+                        JOIN roles AS r ON u.fk_rol = r.id
+                        WHERE u.id = :id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch();
+        }
+
         public function modificarUsuario($id, $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // Encriptar la contraseña
             try {
@@ -174,6 +186,16 @@ class Usuario extends Roles {
             WHERE usuarios.fk_persona = :fk_persona";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':fk_persona', $fk_persona);
+            $stmt->execute();
+            return $stmt->fetch();
+        }
+
+        public function buscarDatosUsuarios($usuario_id) {
+            $query = "SELECT id AS usuario_id, fk_rol AS rol_usuario
+            FROM usuarios
+            WHERE id = :usuario_id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':usuario_id', $usuario_id);
             $stmt->execute();
             return $stmt->fetch();
         }
@@ -273,6 +295,51 @@ class Usuario extends Roles {
     }
 
     
-    
+/*     public function crearUsuarioMenu($fk_usuarios, $fk_roles_menu) {
+        try {
+            $query = "INSERT INTO roles_menu (fk_usuarios, fk_roles_menu)";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_usuarios', $fk_usuarios);
+            $stmt->bindParam(':fk_roles_menu', $fk_roles_menu);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error al crear la asignación de Usuario, Menu: " . $e->getMessage();
+            return false;
+        }
+    } */
+
+    public function obtenerMenusSubMenusPorUsuario($fk_usuario) {
+        try {
+            $query = "SELECT
+						ms.id AS id_menu_usuario,
+						ms.fk_rol_menu AS usuario_rol_menu,
+						ms.fk_usuario AS usuario_menu,
+                        m.id AS menu_id, 
+                        m.nombre AS menu_nombre, 
+                        m.icono AS menu_icono, 
+                        m.orden AS menu_orden,
+                        sm.id AS submenu_id,
+                        sm.nombre AS submenu_nombre, 
+                        sm.icono AS submenu_icono, 
+                        sm.url AS submenu_url,
+                        sm.fk_menus AS submenu_menu,
+                        sm.orden AS submenu_orden
+                      FROM menu_usuario ms
+					  JOIN roles_menu rm ON ms.fk_rol_menu = rm.id
+                      JOIN menus m ON rm.fk_menu = m.id  
+                      JOIN submenus sm ON rm.fk_submenu = sm.id
+					  WHERE ms.fk_usuario = :fk_usuario
+                      ORDER BY m.orden, sm.orden";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_usuario', $fk_usuario);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener menús y submenús por rol: " . $e->getMessage();
+            return [];
+        }
+    }
 
 }

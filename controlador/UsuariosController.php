@@ -195,7 +195,7 @@ class UsuariosController extends RolesController {
 
             // Definimos los archivos a los que puede acceder cada rol
             $permisos = [
-                1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar', 'MenusIndex', 'MenusCrear', 'MenusEditar', 'MenusEliminar', 'SubmenusIndex', 'SubmenusEliminar', 'SubmenusCrear', 'SubmenusEditar'],
+                1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'UsuariosMenuCrear', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar', 'MenusIndex', 'MenusCrear', 'MenusEditar', 'MenusEliminar', 'SubmenusIndex', 'SubmenusEliminar', 'SubmenusCrear', 'SubmenusEditar'],
                 2 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar'],
                 3 => ['CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex',  'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer'],
                 4 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosIndex', 'PatologiasIndex', 'MedicamentosIndex', 'HistoriasMedicasIdex'],
@@ -325,9 +325,10 @@ class UsuariosController extends RolesController {
         return $this->usuariosModelo->verificarUsuarioExistente($nombre);
     }
 
-/*     public function buscarDatosUsuarios($fk_usuario) {
-        return $this->usuariosModelo->buscarDatosUsuarios($fk_usuario);
+    public function buscarDatosUsuarios($usuario_id) {
+        return $this->usuariosModelo->buscarDatosUsuarios($usuario_id);
     }
+/*  
 
     public function buscarServiciosUsuarios($fk_usuario) {
         return $this->usuariosModelo->buscarServiciosUsuarios($fk_usuario);
@@ -340,7 +341,9 @@ class UsuariosController extends RolesController {
         public function verTodosAsignacion() {
         return $this->usuariosModelo->verTodosAsignacion();
     }
-
+        public function verDatosUsuarioPorId($id) {
+        return $this->usuariosModelo->verDatosUsuarioPorId($id);
+    }
     public function obtenerDatosPorServicio($idServicio)
     {
         $usuarios = $this->usuariosModelo->obtenerDatosPorServicio($idServicio);
@@ -350,10 +353,42 @@ class UsuariosController extends RolesController {
     }
 
     public function obtenerMenuDinamico() {
-        $rol_id = $_SESSION['rol_id'];
-        $rolesController = new RolesController();
-        $menus_submenus = $rolesController->obtenerMenusSubMenusUsuario($rol_id);
+        $fk_usuario = $_SESSION['id_usuario'];
+        $menus_submenus  = $this->usuariosModelo->obtenerMenusSubMenusPorUsuario($fk_usuario);
         return $menus_submenus;
     }
     
+/*     public function crearUsuarioMenu($fk_usuarios, $fk_roles_menu) {
+        // Insertar en la tabla Usuarios_menu
+        $resultado = $this->usuariosModelo->crearUsuarioMenu($fk_usuarios, $fk_roles_menu);
+    
+        if ($resultado) {
+            echo "<script>
+                swal({
+                    title: 'Completado',
+                    text: 'Asignación de Usuario, Menu realizada correctamente.',
+                    icon: 'success',
+                }).then((willRedirect) => {
+                    if (willRedirect) {
+                        window.location.href = 'RolesIndex.php';
+                    }
+                });
+            </script>";
+            return true;
+        } else {
+            echo "<script>
+                swal({
+                    title: 'Error',
+                    text: 'Hubo un error al asignar el Usuario, Menu.',
+                    icon: 'error',
+                }).then((willRedirect) => {
+                    if (willRedirect) {
+                        window.location.href = 'RolesIndex.php';
+                    }
+                });
+            </script>";
+            return false;
+        }
+    } */
+
 }
