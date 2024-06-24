@@ -20,70 +20,6 @@ $citas = $controlador->verTodas();
 </head>
 <body>
 <?php include('menus/menu.php');?>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] == 'EnviarCorreo') {
-        $citaId = $_POST['id'];
-        try {
-            $controlador->EnviarCorreo($citaId);
-            echo "<script>
-            swal({
-               title: 'Completado',
-               text: 'Correo enviado correctamente.',
-               icon: 'success',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
-        } catch (Exception $e) {
-            echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al enviar el correo: " . $e->getMessage() . "'
-            });
-            </script>";
-        }
-        exit;
-    }
-
-    if (isset($_POST['action']) && $_POST['action'] == 'ConfirmarCorreo') {
-        $citaId = $_POST['id'];
-        $controlador->ConfirmarCorreo($citaId);
-        echo "<script>
-        swal({
-           title: 'Completado',
-           text: 'Cita confirmada correctamente.',
-           icon: 'success',
-        }).then((willRedirect) => {
-           if (willRedirect) {
-              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-           }
-        });
-     </script>";
-        exit;
-    }
-
-    if (isset($_POST['action']) && $_POST['action'] == 'RestaurarCita') {
-        $citaId = $_POST['id'];
-        $controlador->RestaurarCita($citaId);
-        echo "<script>
-        swal({
-           title: 'Completado',
-           text: 'Cita restaurada correctamente.',
-           icon: 'success',
-        }).then((willRedirect) => {
-           if (willRedirect) {
-              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-           }
-        });
-     </script>";
-        exit;
-    }
-}
-?>
 <div class="content open">
         <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
@@ -112,9 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
             
             <div class="table-responsive">
-                <?php  if($_SESSION['valor_rol'] == '1'): ?>
-                <br><a class="btn btn-primary" href="CitasCrear.php">Nueva cita</a>
-                <?php endif; ?>
                 <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
                 
                 <table id="tabla" class="table table-bordered table-hover table-striped">
@@ -124,8 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th>Consultorios</th>
                             <th>Servicios</th>
                             <th>Médicos</th>
+                            <th>Usuario Creación</th>
                             <th>Fecha</th>
                             <th>Hora</th>
+                            <th>Estatus</th>
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                                 <th>Acciones</th>
                             <?php endif; ?>
@@ -135,7 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                         require_once '../controlador/CitasController.php';
                         $citasController = new CitasController();
-                        $citas = $citasController->index();
+                        
+                        // Verificar el valor del rol del usuario que inició sesión
+                        if ($_SESSION['valor_rol'] == '1' || $_SESSION['valor_rol'] == '2' || $_SESSION['valor_rol'] == '4') {
+                            $citas = $citasController->index();
+                        } elseif ($_SESSION['valor_rol'] == '5') {
+                            $citas = $citasController->indexEnfermeria();
+                        }
                         foreach ($citas as $cita):
                         ?>
                         <tr>
@@ -143,35 +84,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo $cita['nombre_consultorio']; ?></td>
                             <td><?php echo $cita['nombre_servicio']; ?></td>
                             <td><?php echo $cita['nombre_medico'] . ' ' . $cita['apellido_medico']; ?></td>
+                            <td><?php echo $cita['nombre_usuario'] . ' ' . $cita['apellido_usuario']; ?></td>
                             <td><?php echo $cita['fecha']; ?></td>
                             <td><?php echo $cita['hora']; ?></td>
-
-                            <?php if($_SESSION['valor_rol'] == '1'): ?>
+                            <td>
+                                <?php
+                                    switch ($cita['estatus']) {
+                                        case 1:
+                                            echo 'CREADA';
+                                            break;
+                                        case 2:
+                                            echo 'NOTIFICADA';
+                                            break;
+                                        case 3:
+                                            echo 'CONFIRMADA';
+                                            break;
+                                        case 4:
+                                            echo 'REVISIÓN';
+                                            break;
+                                        case 5:
+                                            echo 'EN PROCESO';
+                                            break;
+                                        case 6:
+                                            echo 'FINALIZADA';
+                                            break;
+                                        default:
+                                            echo 'CANCELADA';
+                                            break;
+                                    }
+                                ?>
+                            </td>
+                            <?php if($_SESSION['valor_rol'] == '5' || $_SESSION['valor_rol'] == '1'): ?>
                             <td>
                             <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                            <a class="btn btn-outline-warning" href="CitasEditar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
-                            <a class="btn btn-outline-danger" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
-                            <?php if($cita['estatus'] == '1'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="EnviarCorreo">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-primary" id="btn-send-email"><i class="fa fa-envelope"></i></button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if($cita['estatus'] == '2'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="ConfirmarCorreo">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-success"><i class="fa fa-check"></i></button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if($cita['estatus'] == '7'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="RestaurarCita">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-arrows-rotate"></i></button>
-                                </form>
-                            <?php endif; ?>
+                                <a class="btn btn-outline-warning m-2" href="CitasEnfermeriaCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
+                                <a class="btn btn-outline-danger m-2" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
                             </td>
                             <?php endif; ?>
                         </tr>
@@ -182,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+
         <!-- Modal para ver a la persona -->
     <!-- Incluir el archivo PersonasVer.php en el modal -->
 <div class="modal fade" id="personaModal" tabindex="-1" aria-labelledby="personaModalLabel" aria-hidden="true">
@@ -201,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
     <!-- Fin del modal -->
+
     <!-- libreries JS -->
 <script src="../dist/js/jquery-3.7.1.min.js"></script>
         <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
@@ -216,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
-<!--     <script>
+    <script>
         $(document).ready(function() {
             // Ocultar filas con estatus inactivo al cargar la página
             $("table tr").each(function() {
@@ -246,16 +195,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
         });
-    </script> -->
-        <script>
+    </script>
+    <script>
         // Botón de cierre del modal
         $('.btn-close').on('click', function() {
-            window.location.href = 'CitasIndex.php';
+            window.location.href = 'CitasEnfermeriaIndex.php';
         });
 
         // Botón "Cerrar"
         $('.btn-secondary').on('click', function() {
-            window.location.href = 'CitasIndex.php';
+            window.location.href = 'CitasEnfermeriaIndex.php';
         });
 
         $('#personaModal').on('show.bs.modal', function (event) {
@@ -263,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             var id = button.data('id');
 
             $.ajax({
-                url: 'CitasVer.php',
+                url: 'CitasEnfermeriaVer.php',
                 type: 'GET',
                 data: { id: id },
                 success: function(data) {

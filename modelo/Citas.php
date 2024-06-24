@@ -138,7 +138,7 @@ class Citas
 
     public function eliminarCitas($id) {
         try {
-            $query = "UPDATE citas SET estatus = 0 WHERE id = :id";
+            $query = "UPDATE citas SET estatus = 7 WHERE id = :id";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':id', $id);
             $stmt->execute();
@@ -173,8 +173,184 @@ class Citas
             return false;
         }
     }
+
+    public function actualizarEstatusCitaCorreo($citaId, $nuevoEstatus)
+    {
+        try {
+            $query = "UPDATE citas SET estatus = :nuevoEstatus WHERE id = :citaId";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nuevoEstatus', $nuevoEstatus);
+            $stmt->bindParam(':citaId', $citaId);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error al actualizar el estatus de la cita: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function actualizarEstatusConfirmarCorreo($citaId, $nuevoEstatus)
+    {
+        try {
+            $query = "UPDATE citas SET estatus = :nuevoEstatus WHERE id = :citaId";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nuevoEstatus', $nuevoEstatus);
+            $stmt->bindParam(':citaId', $citaId);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error al actualizar el estatus de la cita: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function verCitasEnfermeriaPorId($id) {
+        try {
+            $query = "SELECT
+            citas.id,
+            paciente.cedula AS cedula_paciente,
+            paciente.nombre AS nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            medico.nombre AS nombre_medico,
+            medico.apellido AS apellido_medico,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.apellido AS apellido_usuario,
+            servicios.nombre AS nombre_servicio,
+            citas.fecha,
+            citas.hora,
+            citas.estatus,
+            citas.fk_usuario_sesion,
+            consultorios.nombre AS nombre_consultorio
+        FROM
+            citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.id = :id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo "Error al recuperar la cita con ID $id: " . $e->getMessage();
+            return false;
+        }
+    }
     
+    public function InformacionPacientes() {
+        try {
+            $query = "SELECT
+            citas.id,
+            paciente.cedula AS cedula_paciente,
+            paciente.nombre AS nombre_paciente,
+            paciente.segundo_nombre AS segundo_nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            paciente.segundo_apellido AS segundo_apellido_paciente,
+            paciente.sexo AS sexo_paciente,
+            servicios.nombre AS nombre_servicio
+        FROM citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.estatus = '6'
+        ORDER BY id ASC;";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
+
     public function obtenerInformacionCitas() {
+        try {
+            $query = "SELECT
+            citas.id,
+			citas.fecha,
+            citas.hora,
+            citas.estatus,
+            citas.fk_usuario_sesion,
+            paciente.nombre AS nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            medico.nombre AS nombre_medico,
+            medico.apellido AS apellido_medico,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.apellido AS apellido_usuario,
+            servicios.nombre AS nombre_servicio,
+            consultorios.nombre AS nombre_consultorio
+        FROM
+            citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.fecha = CURRENT_DATE
+		ORDER BY id ASC;";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
+    public function obtenerInformacionCitasMedico($usuario_id) {
+        try {
+            $query = "SELECT
+                citas.id,
+                citas.fk_usuario AS usuario,
+                paciente.nombre AS nombre_paciente,
+                paciente.apellido AS apellido_paciente,
+                medico.nombre AS nombre_medico,
+                medico.apellido AS apellido_medico,
+                usuarios.nombre AS nombre_usuario,
+                usuarios.apellido AS apellido_usuario,
+                servicios.nombre AS nombre_servicio,
+                citas.fecha,
+                citas.hora,
+                citas.estatus,
+                citas.fk_usuario_sesion,
+                consultorios.nombre AS nombre_consultorio
+            FROM
+                citas
+            JOIN personas paciente ON citas.fk_persona = paciente.id
+            JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+            JOIN personas medico ON medico_usuario.fk_persona = medico.id
+            JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+            JOIN personas usuarios ON llave.fk_persona = usuarios.id
+            JOIN servicios ON citas.fk_servicio = servicios.id
+            JOIN consultorios ON citas.fk_consultorio = consultorios.id
+            WHERE citas.fk_usuario = :usuario_id AND citas.estatus = '5' AND citas.fecha = CURRENT_DATE
+            ORDER BY citas.id ASC";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':usuario_id', $usuario_id);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
+    public function obtenerInformacionCitasEnfermeria() {
         try {
             $query = "SELECT
             citas.id,
@@ -195,13 +371,58 @@ class Citas
         JOIN personas paciente ON citas.fk_persona = paciente.id
         JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
         JOIN personas medico ON medico_usuario.fk_persona = medico.id
-        JOIN personas usuarios ON citas.fk_usuario_sesion = usuarios.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
         JOIN servicios ON citas.fk_servicio = servicios.id
-        JOIN consultorios ON citas.fk_consultorio = consultorios.id ORDER BY id ASC;";
-    
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.estatus = '3' AND citas.fecha = CURRENT_DATE
+        ORDER BY id ASC;";
             $stmt = $this->conexion->prepare($query);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function obtenerInformacionCitasPorId($id) {
+        try {
+            $query = "SELECT
+            citas.id,
+            paciente.cedula AS cedula_paciente,
+            paciente.correo AS correo_paciente,
+            paciente.nombre AS nombre_paciente,
+            paciente.segundo_nombre AS segundo_nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            paciente.segundo_apellido AS segundo_apellido_paciente,
+            paciente.f_nacimiento AS fecha_nacimiento,
+            paciente.sexo AS sexo,
+            medico.nombre AS nombre_medico,
+            medico.apellido AS apellido_medico,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.apellido AS apellido_usuario,
+            servicios.nombre AS nombre_servicio,
+            citas.fecha,
+            citas.hora,
+            citas.estatus,
+            citas.fk_usuario_sesion,
+            consultorios.nombre AS nombre_consultorio
+        FROM
+            citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.id = :id";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error al obtener la información de las citas: " . $e->getMessage();
             return false;

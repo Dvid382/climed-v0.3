@@ -1,8 +1,21 @@
 <?php
 require_once '../modelo/Citas.php';
+require_once '../dist/PHPMailer/src/Exception.php';
+require_once '../dist/PHPMailer/src/PHPMailer.php';
+require_once '../dist/PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class CitasController {
     private $citasModelo;
+    
+   // Configuración de correo electrónico
+   private $mail_host = 'smtp.office365.com';
+   private $mail_username = 'climedY@hotmail.com';
+   private $mail_password = '19063494B.';
+   private $mail_port = 587; // o 465 si usas SSL/TLS
+   private $mail_encryption = 'tls'; // o 'ssl' si usas SSL/TLS
 
     public function __construct() {
         $conexion = new Conexion();
@@ -80,17 +93,119 @@ class CitasController {
         // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }
 
+    public function EnviarCorreo($citaId)
+    {
+        try {
+            $citasModelo = new Citas();
+    
+            // Obtener los datos de la cita
+            $cita = $citasModelo->obtenerInformacionCitasPorId($citaId);
+    
+            // Enviar el correo
+            $to = strtolower($cita['correo_paciente']);
+            $subject = "Asignacion de cita";
+            $message = "Estimado(a) paciente, tiene una cita programada para el dia " . $cita['fecha'] . " a las " . $cita['hora'];
+    
+            $mail = new PHPMailer(true);
+            try {
+               // Configuración del servidor SMTP
+               $mail->SMTPDebug = 0;
+               $mail->isSMTP();
+               $mail->Host = $this->mail_host;
+               $mail->SMTPAuth = true;
+               $mail->Username = $this->mail_username;
+               $mail->Password = $this->mail_password;
+               $mail->SMTPSecure = $this->mail_encryption;
+               $mail->Port = $this->mail_port;
+           
+               // Configuración del correo
+               $mail->setFrom($this->mail_username, 'Modulo Humberto Silva');
+               $mail->addAddress($to);
+               $mail->Subject = ucwords(strtolower($subject)); // Convierte el asunto a minúsculas y luego capitaliza la primera letra de cada palabra
+               $mail->Body = strtolower($message); // Convierte el mensaje a minúsculas
+               
+           
+               // Envío del correo
+               $mail->send();
+           
+               // Actualizar el estatus de la cita
+               $citasModelo->actualizarEstatusCitaCorreo($citaId, 2);
+           
+               // Mostrar alerta de éxito con SweetAlert
+               echo "<script>
+                       Swal.fire({
+                           icon: 'success',
+                           title: '¡Éxito!',
+                           text: 'El correo se ha enviado correctamente.'
+                       });
+                   </script>";
+               return true;
+           } catch (Exception $e) {
+               // Mostrar alerta de error con SweetAlert
+               echo "<script>
+                       Swal.fire({
+                           icon: 'error',
+                           title: 'Error',
+                           text: 'Error al enviar el correo: '
+                       });
+                   </script>";
+               return false;
+           }
+        } catch (Exception $e) {
+            echo "Error al enviar el correo: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function ConfirmarCorreo($citaId)
+    {
+      $citasModelo = new Citas();
+      // Actualizar el estatus de la cita
+      $citasModelo->actualizarEstatusConfirmarCorreo($citaId, 3);
+      return true;
+    }
+
+    public function RestaurarCita($citaId)
+    {
+      $citasModelo = new Citas();
+      // Actualizar el estatus de la cita
+      $citasModelo->actualizarEstatusConfirmarCorreo($citaId, 1);
+      return true;
+    }
+    
+
+
+
     public function index() {
         $citas = $this->citasModelo->obtenerInformacionCitas();
         return $citas;
     }
+    public function indexEnfermeria() {
+      $citas = $this->citasModelo->obtenerInformacionCitasEnfermeria();
+      return $citas;
+  }
+  public function indexMedico($usuario_id) {
+   $citas = $this->citasModelo->obtenerInformacionCitasMedico($usuario_id);
+   return $citas;
+}
 
+    public function VerDatos($id) {
+      $citas = $this->citasModelo->obtenerInformacionCitasPorId($id);
+      return $citas;
+  }
+    public function InformacionPacientes() {
+        return $this->citasModelo->InformacionPacientes();
+    }
     public function verTodas() {
         return $this->citasModelo->verTodasCitas();
     }
 
     public function verPorId($id) {
         return $this->citasModelo->verCitasId($id);
+    }
+
+      public function verCitasEnfermeriaPorId($id) {
+        return $this->citasModelo->verCitasEnfermeriaPorId($id);
     }
 
     public function verificarCitasExistentes($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora) {

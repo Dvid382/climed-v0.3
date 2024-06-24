@@ -111,13 +111,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 <label class="form-label" for="hora">Hora:</label>
             </div>
 
-            <div class="form-floating mb-3">
-                <select class="form-select" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
-                    <option value="1" <?php if ($cita['estatus'] == 1) echo 'selected'; ?>>Activo</option>
-                    <option value="0" <?php if ($cita['estatus'] == 0) echo 'selected'; ?>>Inactivo</option>
-                </select>
-                <label for="descripcion">Estatus:</label>
-            </div>
+            <input type="hidden" class="form-control form-control-sm" id="estatus" name="estatus" value="<?php echo $cita['estatus']; ?>">
 
             <input type="hidden" class="form-control form-control-sm" name="fk_usuario_sesion" id="fk_usuario_sesion" value="<?php echo $_SESSION['id_usuario']; ?>">
 

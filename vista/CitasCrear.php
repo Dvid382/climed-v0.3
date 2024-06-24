@@ -123,14 +123,9 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     <label class="form-label " for="hora">Hora:</label>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input class="form-select" type="hidden" id="descripcion" aria-label="Default select example" name="estatus" id="estatus">
-                    <option value="-0">Seleccionar un estatus</option>
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                    </select>
-                    <label  for="descripcion">Estatus:</label>
-                </div>
+
+                    <input class="form-select" type="hidden" id="descripcion" aria-label="Default select example" name="estatus" id="estatus" value="1">
+
 
                 <input type='hidden' class='form-control form-control-sm' name='fk_usuario_sesion' id='fk_usuario_sesion' value='<?php echo $_SESSION['id_usuario'] ?>'>
 

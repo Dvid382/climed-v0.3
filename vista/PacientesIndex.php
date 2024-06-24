@@ -8,7 +8,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
 require_once '../controlador/CitasController.php';
 $controlador = new CitasController();
-$citas = $controlador->verTodas();
+$citas = $controlador->InformacionPacientes();
 ?>
 
 
@@ -20,70 +20,6 @@ $citas = $controlador->verTodas();
 </head>
 <body>
 <?php include('menus/menu.php');?>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] == 'EnviarCorreo') {
-        $citaId = $_POST['id'];
-        try {
-            $controlador->EnviarCorreo($citaId);
-            echo "<script>
-            swal({
-               title: 'Completado',
-               text: 'Correo enviado correctamente.',
-               icon: 'success',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
-        } catch (Exception $e) {
-            echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al enviar el correo: " . $e->getMessage() . "'
-            });
-            </script>";
-        }
-        exit;
-    }
-
-    if (isset($_POST['action']) && $_POST['action'] == 'ConfirmarCorreo') {
-        $citaId = $_POST['id'];
-        $controlador->ConfirmarCorreo($citaId);
-        echo "<script>
-        swal({
-           title: 'Completado',
-           text: 'Cita confirmada correctamente.',
-           icon: 'success',
-        }).then((willRedirect) => {
-           if (willRedirect) {
-              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-           }
-        });
-     </script>";
-        exit;
-    }
-
-    if (isset($_POST['action']) && $_POST['action'] == 'RestaurarCita') {
-        $citaId = $_POST['id'];
-        $controlador->RestaurarCita($citaId);
-        echo "<script>
-        swal({
-           title: 'Completado',
-           text: 'Cita restaurada correctamente.',
-           icon: 'success',
-        }).then((willRedirect) => {
-           if (willRedirect) {
-              window.location.href = 'CitasIndex.php'; // Redirige a tu página PHP
-           }
-        });
-     </script>";
-        exit;
-    }
-}
-?>
 <div class="content open">
         <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
@@ -107,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Catalogo Asignaciones -->
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light rounded h-100 p-4">
-            <h2>Catalogo de Citas.</h2>
+            <h2>Catalogo de Pacientes.</h2>
             <!-- Buscador dinámico para buscar por nombre -->
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
             
@@ -120,60 +56,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
-                            <th>Pacientes</th>
-                            <th>Consultorios</th>
+                            <th>Cedula</th>
+                            <th>Nombres del paciente</th>
+                            <th>Apellidos del paciente</th>
+                            <th>Sexo</th>
                             <th>Servicios</th>
-                            <th>Médicos</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <?php if($_SESSION['valor_rol'] == '1'): ?>
-                                <th>Acciones</th>
-                            <?php endif; ?>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         require_once '../controlador/CitasController.php';
-                        $citasController = new CitasController();
-                        $citas = $citasController->index();
                         foreach ($citas as $cita):
                         ?>
                         <tr>
-                            <td><?php echo $cita['nombre_paciente'] . ' ' . $cita['apellido_paciente']; ?></td>
-                            <td><?php echo $cita['nombre_consultorio']; ?></td>
-                            <td><?php echo $cita['nombre_servicio']; ?></td>
-                            <td><?php echo $cita['nombre_medico'] . ' ' . $cita['apellido_medico']; ?></td>
-                            <td><?php echo $cita['fecha']; ?></td>
-                            <td><?php echo $cita['hora']; ?></td>
-
-                            <?php if($_SESSION['valor_rol'] == '1'): ?>
-                            <td>
-                            <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                            <a class="btn btn-outline-warning" href="CitasEditar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
-                            <a class="btn btn-outline-danger" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
-                            <?php if($cita['estatus'] == '1'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="EnviarCorreo">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-primary" id="btn-send-email"><i class="fa fa-envelope"></i></button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if($cita['estatus'] == '2'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="ConfirmarCorreo">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-success"><i class="fa fa-check"></i></button>
-                                </form>
-                            <?php endif; ?>
-                            <?php if($cita['estatus'] == '7'): ?>
-                                <form action="Citasindex.php" method="post" class="btn">
-                                    <input type="hidden" name="action" value="RestaurarCita">
-                                    <input type="hidden" name="id" value="<?php echo $cita['id']; ?>">
-                                    <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-arrows-rotate"></i></button>
-                                </form>
-                            <?php endif; ?>
-                            </td>
-                            <?php endif; ?>
+                            <td><?php echo $cita['cedula_paciente']; ?></td>
+                            <td><?php echo $cita['nombre_paciente'] . ' ' . $cita['segundo_nombre_paciente']; ?></td>
+                            <td><?php echo $cita['apellido_paciente'] . ' ' . $cita['segundo_apellido_paciente']; ?></td>
+                            <td><?php echo ($cita['sexo_paciente'] == 1) ? 'MASCULINO' : 'FEMENINO'; ?></td>                            <td><?php echo $cita['nombre_servicio']; ?></td>
+                            <td><a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -182,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+
         <!-- Modal para ver a la persona -->
     <!-- Incluir el archivo PersonasVer.php en el modal -->
 <div class="modal fade" id="personaModal" tabindex="-1" aria-labelledby="personaModalLabel" aria-hidden="true">
@@ -201,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
     <!-- Fin del modal -->
+
     <!-- libreries JS -->
 <script src="../dist/js/jquery-3.7.1.min.js"></script>
         <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
@@ -216,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
-<!--     <script>
+    <script>
         $(document).ready(function() {
             // Ocultar filas con estatus inactivo al cargar la página
             $("table tr").each(function() {
@@ -246,16 +149,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
         });
-    </script> -->
-        <script>
+    </script>
+    <script>
         // Botón de cierre del modal
         $('.btn-close').on('click', function() {
-            window.location.href = 'CitasIndex.php';
+            window.location.href = 'PacientesIndex.php';
         });
 
         // Botón "Cerrar"
         $('.btn-secondary').on('click', function() {
-            window.location.href = 'CitasIndex.php';
+            window.location.href = 'PacientesIndex.php';
         });
 
         $('#personaModal').on('show.bs.modal', function (event) {
@@ -263,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             var id = button.data('id');
 
             $.ajax({
-                url: 'CitasVer.php',
+                url: 'PacientesVer.php',
                 type: 'GET',
                 data: { id: id },
                 success: function(data) {
