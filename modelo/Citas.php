@@ -260,7 +260,7 @@ class Citas
 		JOIN personas usuarios ON llave.fk_persona = usuarios.id
         JOIN servicios ON citas.fk_servicio = servicios.id
         JOIN consultorios ON citas.fk_consultorio = consultorios.id
-        WHERE citas.estatus = '6'
+        WHERE citas.estatus >= '4'
         ORDER BY id ASC;";
     
             $stmt = $this->conexion->prepare($query);

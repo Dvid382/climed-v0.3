@@ -99,6 +99,10 @@ class RolesController {
         $rolesMenusSubmenus = $this->rolesModelo->obtenerMenusSubMenusPorRol($rol_id);
         return $rolesMenusSubmenus;
     }
+            public function obtenerMenusSubMenusPorUsuario($rol_id) {
+        $rolesMenusSubmenus = $this->rolesModelo->obtenerMenusSubMenusPorUsuario($rol_id);
+        return $rolesMenusSubmenus;
+    }
     public function crearRolMenu($fk_rol, $fk_menu, $fk_submenu) {
         // Insertar en la tabla roles_menu
         $resultado = $this->rolesModelo->crearRolMenu($fk_rol, $fk_menu, $fk_submenu);

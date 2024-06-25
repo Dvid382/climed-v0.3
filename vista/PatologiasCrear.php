@@ -25,6 +25,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             $estatus = ucfirst($_POST['estatus']);
             $valor = ucfirst($_POST['valor']);
             $descripcion = ucfirst($_POST['descripcion']);
+            $alerta = ucfirst($_POST['alerta']);
             
             
 
@@ -36,7 +37,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             if ($existepatologias) {
                 echo "<script> alert ('Error: El Rol ya existe.')</script>";
             } else {
-                $resultado = $patologiascontroller->crear($nombre, $estatus, $valor, $descripcion);
+                $resultado = $patologiascontroller->crear($nombre, $estatus, $valor, $descripcion, $alerta);
 
                 if ($resultado) {
                     echo "<script> alert '(Error: Estado creado exitosamente.)'</script>";
@@ -80,6 +81,23 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             <label  for="descripcion">Descripción:</label>
         </div>
 
+        <div class="col-sm-10">
+            <label>Alerta Epidemiologica</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="alerta" id="alerta" value="1" checked="">
+                                            <label class="form-check-label" for="alerta">
+                                                Positivo
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="alerta" id="alerta" value="0">
+                                            <label class="form-check-label" for="alerta">
+                                                Negativo
+                                            </label>
+                                        </div>
+            </div>
+
+
         <div class="form-floating mb-3">
                 <button class="btn btn-outline-success" type="submit">Guardar patologia. <i class="fa fa-check"></i></button>
                 <a class="btn btn-outline-info" href="PatologiasIndex.php">Volver <i class="fa fa-right-to-bracket"></i></a>
@@ -103,7 +121,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <!-- Template Javascript -->
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
-    <script src="../dist/js/validaciongenerica.js"></script>
+   <!--  <script src="../dist/js/validaciongenerica.js"></script> -->
     <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>

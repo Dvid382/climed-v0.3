@@ -127,6 +127,7 @@ $personas = $controlador->verTodosPersonas();
     <script src="../dist/plantilla/lib/bootstrap.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="../dist/js/paginacion.js"></script>
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
@@ -161,30 +162,31 @@ $personas = $controlador->verTodosPersonas();
             });
         });
     </script>
-<script>
-    // Botón de cierre del modal
-    $('.btn-close').on('click', function() {
-        window.location.href = 'PersonasIndex.php';
-    });
-
-    // Botón "Cerrar"
-    $('.btn-secondary').on('click', function() {
-        window.location.href = 'PersonasIndex.php';
-    });
-
-    $('#personaModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-
-        $.ajax({
-            url: 'PersonasVer.php',
-            type: 'GET',
-            data: { id: id },
-            success: function(data) {
-                $('.modal-body').empty().html(data);
-            }
+    <script>
+        // Botón de cierre del modal
+        $('.btn-close').on('click', function() {
+            window.location.href = 'PersonasIndex.php';
         });
-    });
-</script>
+
+        // Botón "Cerrar"
+        $('.btn-secondary').on('click', function() {
+            window.location.href = 'PersonasIndex.php';
+        });
+
+        $('#personaModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+
+            $.ajax({
+                url: 'PersonasVer.php',
+                type: 'GET',
+                data: { id: id },
+                success: function(data) {
+                    $('.modal-body').empty().html(data);
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

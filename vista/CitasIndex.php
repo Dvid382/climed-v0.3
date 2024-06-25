@@ -213,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="../dist/js/paginacion.js"></script>
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>

@@ -28,18 +28,19 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
                         // Obtener los datos del Rol con el ID proporcionado
                         $patologia = $patologiascontroller->verPorId($patologiaId);
-
+                        
                         // Verificar si se enviaron los datos actualizados del Rol
-                        if (isset($_POST['nombre']) && isset($_POST['estado']) && isset($_POST['valor']) && isset($_POST['descripcion'])) {
+                        if (isset($_POST['nombre']) && isset($_POST['estado']) && isset($_POST['valor']) && isset($_POST['descripcion']) && isset($_POST['alerta'])) {
                             $nuevoNombre = $_POST['nombre'];
                             $nuevoEstado = $_POST['estado'];
                             $nuevoValor = $_POST['valor'];
                             $nuevoDescripcion = $_POST['descripcion'];
+                            $nuevoAlerta = $_POST['alerta'];
                             
 
                             // Actualizar los datos del Rol con los nuevos valores
-                            $patologiascontroller->modificar($patologiaId, $nuevoNombre, $nuevoEstado, $nuevoValor, $nuevoDescripcion);
-
+                            $patologiascontroller->modificar($patologiaId, $nuevoNombre, $nuevoEstado, $nuevoValor, $nuevoDescripcion, $nuevoAlerta);
+                            
                             exit();
                         }
                     }
@@ -54,7 +55,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <div class="form-floating mb-3">  
-                <input type="hidden" class="form-control" name="estatus" id="estatus" value="1">
+                <input type="hidden" class="form-control" name="estado" id="estado" value="1">
                 </div>
 
                 <div class="form-floating mb-3">  
@@ -105,12 +106,28 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     <label  for="nombre">Descripcion:</label>  
                 </div>
 
+                <div class="col-sm-10">
+                <label>Alerta Epidemiologica</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="alerta" id="alerta-positivo" value="1" checked="">
+                        <label class="form-check-label" for="alerta">
+                            Positivo
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="alerta" id="alerta-negativo" value="0">
+                        <label class="form-check-label" for="alerta">
+                            Negativo
+                        </label>
+                    </div>
+            </div>
+
                 <div class="form-floating mb-3">  
                     <button class="btn btn-outline-success" type="submit">Guardar patologia <i class="fa fa-check"></i></button>
                     <a class="btn btn-outline-info" href="PatologiasIndex.php">Volver <i class="fa fa-right-to-bracket"></i></a>
                 </div>
                 </form>
-                <?php /* var_dump($nombre, $estatus, $valor, $descripcion ); */?>
+                
 
             </div>
         </div>

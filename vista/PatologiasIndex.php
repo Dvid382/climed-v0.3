@@ -64,6 +64,7 @@ $patologias = $controlador->verTodos();
                             <th>Estatus</th>
                             <th>Valor</th>
                             <th>Descripcion</th>
+                            <th>Alerta Epidemiologica</th>
                             <?php if($_SESSION['valor_rol'] == '1'): ?> 
                                 <th>Acciones</th>
                             <?php endif; ?>
@@ -93,6 +94,14 @@ $patologias = $controlador->verTodos();
                                 
                                 ?></td>
                             <td><?php echo $Patologia['descripcion'];?></td>
+                            <td><?php
+                            if ($Patologia['alerta']==0){
+                            echo "negativo";
+                            }else{
+                                echo "positivo";
+                            }
+                            
+                            ?></td>
                             <td>
                             <?php if($_SESSION['valor_rol'] == '1'):?>
                                 <a  class="btn btn-outline-warning m-2" href="PatologiasEditar.php?id=<?php echo $Patologia['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
@@ -118,6 +127,7 @@ $patologias = $controlador->verTodos();
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="../dist/js/paginacion.js"></script>
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>

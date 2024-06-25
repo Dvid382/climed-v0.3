@@ -243,8 +243,13 @@ class Roles
         try {
             // Iniciar una transacción para garantizar la integridad de los datos
             $this->conexion->beginTransaction();
-
-
+    
+            // Eliminar los datos existentes en la tabla menu_usuario
+            $query_eliminar = "DELETE FROM menu_usuario WHERE fk_usuario = :fk_usuario";
+            $stmt_eliminar = $this->conexion->prepare($query_eliminar);
+            $stmt_eliminar->bindParam(':fk_usuario', $fk_usuario);
+            $stmt_eliminar->execute();
+    
             // Insertar las nuevas asignaciones
             $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) VALUES (:fk_rol, :fk_menu, :fk_submenu)";
             $stmt = $this->conexion->prepare($query);
@@ -256,9 +261,7 @@ class Roles
                     $stmt->bindValue(':fk_submenu', $submenu_id);
                     $stmt->execute();
                     $last_insert_id = $this->conexion->lastInsertId();
-
-
-
+    
                     // Insertar en la tabla usuario_menu
                     $query_usuario_menu = "INSERT INTO menu_usuario (fk_rol_menu, fk_usuario) VALUES (:fk_rol_menu, :fk_usuario)";
                     $stmt_usuario_menu = $this->conexion->prepare($query_usuario_menu);
@@ -278,6 +281,7 @@ class Roles
             return false;
         }
     }
+    
     
     
     
@@ -325,6 +329,37 @@ public function eliminarRolesMenuUsuario($last_insert_id) {
                       ORDER BY m.orden, sm.orden";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':rol_id', $rol_id);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener menús y submenús por rol: " . $e->getMessage();
+            return [];
+        }
+    }
+    public function obtenerMenusSubMenusPorUsuario($fk_usuario) {
+        try {
+            $query = "SELECT
+						u.id AS id_usuario,
+                        m.id AS menu_id, 
+                        m.nombre AS menu_nombre, 
+                        m.icono AS menu_icono, 
+                        m.orden AS menu_orden,
+                        sm.id AS submenu_id,
+                        sm.nombre AS submenu_nombre, 
+                        sm.icono AS submenu_icono, 
+                        sm.url AS submenu_url,
+                        sm.fk_menus AS submenu_menu,
+                        sm.orden AS submenu_orden
+                      FROM menu_usuario mu
+					  JOIN usuarios u ON mu.fk_usuario = u.id
+					  JOIN roles_menu rm ON mu.fk_rol_menu = rm.id
+                      JOIN menus m ON rm.fk_menu = m.id  
+                      JOIN submenus sm ON rm.fk_submenu = sm.id 
+                      WHERE mu.fk_usuario = :fk_usuario
+                      ORDER BY m.orden, sm.orden";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_usuario', $fk_usuario);
             $stmt->execute();
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $resultados;

@@ -73,7 +73,8 @@ $citas = $controlador->InformacionPacientes();
                             <td><?php echo $cita['cedula_paciente']; ?></td>
                             <td><?php echo $cita['nombre_paciente'] . ' ' . $cita['segundo_nombre_paciente']; ?></td>
                             <td><?php echo $cita['apellido_paciente'] . ' ' . $cita['segundo_apellido_paciente']; ?></td>
-                            <td><?php echo ($cita['sexo_paciente'] == 1) ? 'MASCULINO' : 'FEMENINO'; ?></td>                            <td><?php echo $cita['nombre_servicio']; ?></td>
+                            <td><?php echo ($cita['sexo_paciente'] == 1) ? 'MASCULINO' : 'FEMENINO'; ?></td>                            
+                            <td><?php echo $cita['nombre_servicio']; ?></td>
                             <td><a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a></td>
                         </tr>
                         <?php endforeach; ?>
@@ -116,6 +117,7 @@ $citas = $controlador->InformacionPacientes();
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="../dist/js/paginacion.js"></script>
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>

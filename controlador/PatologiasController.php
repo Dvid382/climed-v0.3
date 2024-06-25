@@ -9,7 +9,7 @@ class PatologiasController {
         $this->patologiasModelo = new Patologias($conexion->Conectar());
     }
     
-    public function crear($nombre, $estatus, $valor, $descripcion) {
+    public function crear($nombre, $estatus, $valor, $descripcion, $alerta) {
         if ($this->patologiasModelo->verificarPatologiasExistente($nombre)) {
             echo "<script>
             swal({
@@ -24,7 +24,7 @@ class PatologiasController {
          </script>";
             exit;
         } else {
-            $this->patologiasModelo->crearPatologia($nombre, $estatus, $valor, $descripcion);
+            $this->patologiasModelo->crearPatologia($nombre, $estatus, $valor, $descripcion, $alerta);
             
             echo "<script>
             swal({
@@ -58,8 +58,9 @@ class PatologiasController {
         // Puedes agregar lógica adicional después de eliminar el Patologias si es necesario
     }
     
-    public function modificar($id, $nombre, $estatus, $valor, $descripcion) {
-        $this->patologiasModelo->modificarPatologias($id, $nombre, $estatus, $valor, $descripcion);
+    public function modificar($id, $nombre, $estatus, $valor, $descripcion, $alerta) {
+        $this->patologiasModelo->modificarPatologias($id, $nombre, $estatus, $valor, $descripcion, $alerta);
+/*           var_dump($nombre, $estatus, $valor, $descripcion, $alerta );  */
         echo "<script>
         swal({
            title: 'Completado',

@@ -22,7 +22,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     
     // Obtener los menús y submenús asociados al rol del usuario
     $rol_id = isset($_GET['fk_rol']) ? $_GET['fk_rol'] : null;
-    $menus_submenus = $rol_id ? $controladorRoles->obtenerMenusSubMenusPorRol($rol_id) : [];
+    $menus_submenus = $rol_id ? $controladorRoles->obtenerMenusSubMenusPorUsuario($usuario_id) : [];
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fk_rol = ucfirst($_POST['fk_rol']);
         $fk_menus = $_POST['fk_menu'];

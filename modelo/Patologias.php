@@ -22,6 +22,7 @@ class Patologias
     private $estatus;
     private $valor;
     private $descripcion;
+    private $alerta;
     
 
     //setters y getters
@@ -65,15 +66,24 @@ class Patologias
 		$this->valor = $descripcion;
 	}
 
+    public function getalerta(){
+		return $this->alerta;
+	}
 
-    public function crearPatologia( $nombre, $estatus, $valor, $descripcion) {
+	public function setalerta($alerta){
+		$this->valor = $alerta;
+	}
+
+
+    public function crearPatologia( $nombre, $estatus, $valor, $descripcion, $alerta) {
         try {
-            $query = "INSERT INTO patologias ( nombre, estatus, valor, descripcion ) VALUES ( :nombre, :estatus, :valor, :descripcion )";
+            $query = "INSERT INTO patologias ( nombre, estatus, valor, descripcion, alerta ) VALUES ( :nombre, :estatus, :valor, :descripcion, :alerta )";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':estatus', $estatus);
             $stmt->bindParam(':valor', $valor);
             $stmt->bindParam(':descripcion', $descripcion);
+            $stmt->bindParam(':alerta', $alerta);
             $stmt->execute();
             return true;
         } catch(PDOException $e) {
@@ -95,15 +105,16 @@ class Patologias
         }
     }
     
-    public function modificarPatologias($id, $nombre, $estatus, $valor, $descripcion) {
+    public function modificarPatologias($id, $nombre, $estatus, $valor, $descripcion, $alerta) {
         try {
-            $query = "UPDATE patologias SET nombre = :nombre, estatus = :estatus, valor = :valor, descripcion = :descripcion  WHERE id = :id";
+            $query = "UPDATE patologias SET nombre = :nombre, estatus = :estatus, valor = :valor, descripcion = :descripcion, alerta = :alerta  WHERE id = :id";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':estatus', $estatus);
             $stmt->bindParam(':valor', $valor);
             $stmt->bindParam(':descripcion', $descripcion);
+            $stmt->bindParam(':alerta', $alerta);
             $stmt->execute();
             return true;
         } catch(PDOException $e) {

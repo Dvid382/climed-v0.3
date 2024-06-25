@@ -6,9 +6,9 @@ $vistas = $controladorUsuario->Vistas();
 $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
-require_once '../controlador/CargosController.php';
-$controlador = new CargosController();
-$cargos = $controlador->verTodos();
+require_once '../controlador/MedicamentosController.php';
+$controlador = new MedicamentosController();
+$medicamento = $controlador->verTodos();
 ?>
 
 
@@ -43,7 +43,7 @@ $cargos = $controlador->verTodos();
 
         <div class="container-fluid pt-4 px-4">
             <div class="bg-light rounded h-100 p-4">
-                <h2>Catálogo de Cargos</h2>
+                <h2>Catálogo de Medicamento</h2>
                 <!-- Buscador dinámico para buscar por nombre -->
                 <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
 
@@ -51,47 +51,54 @@ $cargos = $controlador->verTodos();
 
                 <div class="table-responsive">
     <?php if($_SESSION['valor_rol'] == '1'): ?>
-        <br><a class="btn btn-outline-primary m-2" href="CargosCrear.php">Nuevo Cargo</a>
+        <br><a class="btn btn-outline-primary m-2" href="MedicamentosCrear.php">Nuevo medicamento</a>
     <?php endif; ?>
     
     <?php if($_SESSION['valor_rol'] == '1'): ?>
-        <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
+       
 
-        <a class="btn btn-outline-primary m-2" href="Reporte_Cargos.php">Imprimir lista <i class="fa-solid fa-file-pdf"></i></a>
+        <a class="btn btn-outline-primary m-2" href="Reporte_Medicamento.php">Imprimir lista <i class="fa-solid fa-file-pdf"></i></a>
     <?php endif; ?>
 
     <table id="tabla" class="table table-bordered table-hover table-striped">
                     <tr>
-                    <th>Nombre</th>
+                    <th>Nombre Comercial</th>
                     <th>Descripción</th>              
-                    <th>Servicio</th>         
-                    <th>Estatus</th>
+                    <th>Cantidad</th>
+                    <th>Unidad de Peso</th>         
+                    <th>Componente Activo</th>
+                    <th>Tipo Medicamento</th>
+                    <th>Forma Farmacéutica</th>
+                    
                     <?php if($_SESSION['valor_rol'] == '1'): ?> 
                         <th>Acciones</th>
                     <?php endif; ?>
                     </tr>
                     <?php 
-if(is_array($cargos)) {
-    foreach($cargos as $cargo): 
+if(is_array($medicamento)) {
+    foreach($medicamento as $medicamento): 
 ?>
     <tr>
-        <td><?php echo $cargo['nombre']; ?></td>
-        <td><?php echo $cargo['descripcion']; ?></td>
-        <td><?php echo $cargo['nombre_servicio']; ?></td>
-        <td><?php echo ($cargo['estatus'] == 1) ? 'ACTIVO' : 'INACTIVO'; ?></td>
+        <td><?php echo $medicamento['nombre_comercial']; ?></td>
+        <td><?php echo $medicamento['descripcion']; ?></td>
+        <td><?php echo $medicamento['cantidad']; ?></td>
+        <td><?php echo $medicamento['nombre_unidad_peso']; ?></td>
+        <td><?php echo $medicamento['nombre_componente_activo']; ?></td>
+        <td><?php echo $medicamento['nombre_tipo_medicamento']; ?></td>
+        <td><?php echo $medicamento['nombre_unidad_medida']; ?></td>
        
         
         <td>
             <?php if($_SESSION['valor_rol'] == '1'): ?>
-                <a class="btn btn-outline-warning" href="CargosEditar.php?id=<?php echo $cargo['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
-                <a class="btn btn-outline-danger" href="CargosEliminar.php?id=<?php echo $cargo['id']; ?>"><i class="fa fa-trash-alt"></i></a>
+                <a class="btn btn-outline-warning" href="MedicamentosEditar.php?id=<?php echo $medicamento['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
+                <a class="btn btn-outline-danger" href="MedicamentosEliminar.php?id=<?php echo $medicamento['id']; ?>"><i class="fa fa-trash-alt"></i></a>
             <?php endif; ?>
         </td>
     </tr>
 <?php 
     endforeach; 
 } else {
-    echo "<tr><td colspan='5'>" . $cargos . "</td></tr>";
+    echo "<tr><td colspan='5'>" . $medicamento . "</td></tr>";
 }
 ?>
 </table>
@@ -111,7 +118,6 @@ if(is_array($cargos)) {
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="../dist/js/paginacion.js"></script>
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
