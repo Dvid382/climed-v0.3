@@ -104,6 +104,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>
         <script src="../dist/js/validacionseguridad.js"></script>
-    <!--     <script src="../dist/js/validarusuario.js"></script> -->
+
 </body>
 </html>

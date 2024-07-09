@@ -43,12 +43,11 @@ $citas = $controlador->verTodas();
         <!-- Catalogo Asignaciones -->
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light rounded h-100 p-4">
-            <h2>Catalogo de Citas de enfermeria.</h2>
+            <h2>Catalogo de historias medicas.</h2>
             <!-- Buscador dinámico para buscar por nombre -->
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
             
             <div class="table-responsive">
-                <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
                 
                 <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
@@ -57,41 +56,30 @@ $citas = $controlador->verTodas();
                             <th>Consultorios</th>
                             <th>Servicios</th>
                             <th>Médicos</th>
-                            <th>Usuario Creación</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
                             <th>Estatus</th>
-                            <?php if($_SESSION['valor_rol'] == '1'): ?>
-                                <th>Acciones</th>
-                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        require_once '../controlador/CitasController.php';
-                        $citasController = new CitasController();
-                        
-                        // Verificar el valor del rol del usuario que inició sesión
+                        require_once '../controlador/HistoriasMedicasController.php';
+                        $historiasmedicasController = new HistoriasMedicasController();
+                        $usuario_id = $_SESSION['id_usuario'];
                         if ($_SESSION['valor_rol'] == '1' || $_SESSION['valor_rol'] == '2') {
-                            $citas = $citasController->indexTodas();
+                            $historiasmedicas = $historiasmedicasController->indexTodasHistoriasMedicas();
                         } elseif ($_SESSION['valor_rol'] == '4') {
-                            $citas = $citasController->index();
-                        } elseif ($_SESSION['valor_rol'] == '5') {
-                            $citas = $citasController->indexEnfermeria();
+                            $historiasmedicas = $historiasmedicasController->indexTodasHistoriasMedicas($usuario_id);
                         }
-                        foreach ($citas as $cita):
+
+                        foreach ($historiasmedicas as $historiasmedica):
                         ?>
                         <tr>
-                            <td><?php echo $cita['nombre_paciente'] . ' ' . $cita['apellido_paciente']; ?></td>
-                            <td><?php echo $cita['nombre_consultorio']; ?></td>
-                            <td><?php echo $cita['nombre_servicio']; ?></td>
-                            <td><?php echo $cita['nombre_medico'] . ' ' . $cita['apellido_medico']; ?></td>
-                            <td><?php echo $cita['nombre_usuario'] . ' ' . $cita['apellido_usuario']; ?></td>
-                            <td><?php echo $cita['fecha']; ?></td>
-                            <td><?php echo $cita['hora']; ?></td>
+                            <td><?php echo $historiasmedica['nombre_paciente'] . ' ' . $historiasmedica['apellido_paciente']; ?></td>
+                            <td><?php echo $historiasmedica['nombre_consultorio']; ?></td>
+                            <td><?php echo $historiasmedica['nombre_servicio']; ?></td>
+                            <td><?php echo $historiasmedica['nombre_medico'] . ' ' . $historiasmedica['apellido_medico']; ?></td>
                             <td>
                                 <?php
-                                    switch ($cita['estatus']) {
+                                    switch ($historiasmedica['estatus']) {
                                         case 1:
                                             echo 'CREADA';
                                             break;
@@ -116,13 +104,6 @@ $citas = $controlador->verTodas();
                                     }
                                 ?>
                             </td>
-                            <?php if($_SESSION['valor_rol'] == '5' || $_SESSION['valor_rol'] == '1'): ?>
-                            <td>
-                            <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                                <a class="btn btn-outline-warning m-2" href="CitasEnfermeriaCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
-                                <a class="btn btn-outline-danger m-2" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
-                            </td>
-                            <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -202,12 +183,12 @@ $citas = $controlador->verTodas();
     <script>
         // Botón de cierre del modal
         $('.btn-close').on('click', function() {
-            window.location.href = 'CitasEnfermeriaIndex.php';
+            window.location.href = 'CitasMedicoIndex.php';
         });
 
         // Botón "Cerrar"
         $('.btn-secondary').on('click', function() {
-            window.location.href = 'CitasEnfermeriaIndex.php';
+            window.location.href = 'CitasMedicoIndex.php';
         });
 
         $('#personaModal').on('show.bs.modal', function (event) {
@@ -215,7 +196,7 @@ $citas = $controlador->verTodas();
             var id = button.data('id');
 
             $.ajax({
-                url: 'CitasEnfermeriaVer.php',
+                url: 'CitasMedicoVer.php',
                 type: 'GET',
                 data: { id: id },
                 success: function(data) {

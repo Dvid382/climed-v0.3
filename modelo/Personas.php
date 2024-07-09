@@ -149,7 +149,56 @@ class Persona  {
             return false;
         }
         }
+
+        public function InsertarPersonaCitas($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus, $segundo_nombre, $segundo_apellido) {
+           
+            try {
+            $query = "INSERT INTO personas (nombre, apellido, cedula, telefono, correo, sexo, direccion, f_nacimiento, estatus, segundo_nombre, segundo_apellido) 
+                      VALUES (:nombre, :apellido, :cedula, :telefono, :correo, :sexo, :direccion, :f_nacimiento, :estatus, :segundo_nombre, :segundo_apellido)";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':apellido', $apellido);
+            $stmt->bindParam(':cedula', $cedula);
+            $stmt->bindParam(':telefono', $telefono);
+            $stmt->bindParam(':correo', $correo);
+            $stmt->bindParam(':sexo', $sexo);
+            $stmt->bindParam(':direccion', $direccion);
+            $stmt->bindParam(':f_nacimiento', $f_nacimiento);
+            $stmt->bindParam(':estatus', $estatus);
+            $stmt->bindParam(':segundo_nombre', $segundo_nombre);
+            $stmt->bindParam(':segundo_apellido', $segundo_apellido);
+            $stmt->execute();
+            return true;
+        } catch(PDOException $e) {
+            echo "Error al crear el Persona: " . $e->getMessage();
+            return false;
+        }
+        }
         
+        public function InsertarPersonaUsuario($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento , $estatus, $segundo_nombre, $segundo_apellido) {
+           
+            try {
+            $query = "INSERT INTO personas (nombre, apellido, cedula, telefono, correo, sexo, direccion, f_nacimiento, estatus, segundo_nombre, segundo_apellido) 
+                      VALUES (:nombre, :apellido, :cedula, :telefono, :correo, :sexo, :direccion, :f_nacimiento, :estatus, :segundo_nombre, :segundo_apellido)";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':apellido', $apellido);
+            $stmt->bindParam(':cedula', $cedula);
+            $stmt->bindParam(':telefono', $telefono);
+            $stmt->bindParam(':correo', $correo);
+            $stmt->bindParam(':sexo', $sexo);
+            $stmt->bindParam(':direccion', $direccion);
+            $stmt->bindParam(':f_nacimiento', $f_nacimiento);
+            $stmt->bindParam(':estatus', $estatus);
+            $stmt->bindParam(':segundo_nombre', $segundo_nombre);
+            $stmt->bindParam(':segundo_apellido', $segundo_apellido);
+            $stmt->execute();
+            return true;
+        } catch(PDOException $e) {
+            echo "Error al crear el Persona: " . $e->getMessage();
+            return false;
+        }
+        }
         
         public function eliminarPersona($id) {
             $query = "UPDATE personas SET estatus = 0 WHERE id = :id";

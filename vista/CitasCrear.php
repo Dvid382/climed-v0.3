@@ -16,6 +16,12 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <?php
         require_once '../controlador/CitasController.php';
 
+        if (isset($_GET['cedula'])) {
+            $cedula = $_GET['cedula'];
+        } else {
+            $cedula = '';
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fk_persona = ucfirst($_POST['fk_persona']);
             $fk_servicio = ucfirst($_POST['fk_servicio']);
@@ -64,6 +70,10 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
                 <div id="datos_persona"></div>
                 <input type="hidden" name="fk_persona" id="fk_persona">
+
+                <div id="agregar_persona" style="display: none;">
+                    <a class="btn btn-outline-info" href="InsertarPersonaCitas.php">Agregar Paciente</a>
+                </div>
 
                 <div class="form-floating mb-3">
                     <select class="form-select" id="fk_consultorio" aria-label="Default select example" name="fk_consultorio" required>
@@ -118,10 +128,15 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     <label class="form-label " for="fecha">Fecha:</label>
                 </div>
 
+                
                 <div class="form-floating mb-3">
-                    <input class="form-control " type="time" name="hora" id="hora" required><br>
-                    <label class="form-label " for="hora">Hora:</label>
+                    <select class="form-select" id="hora" name="hora" required>
+                      <option value="">Seleccione una hora</option>
+                     </select>
+                  <label class="form-label" for="hora">Hora:</label>
                 </div>
+
+
 
 
                     <input class="form-select" type="hidden" id="descripcion" aria-label="Default select example" name="estatus" id="estatus" value="1">
@@ -136,30 +151,49 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </form>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../dist/js/jquery-3.7.1.min.js"></script>
 <!-- Nombre y Apellido de Usuario -->
+<script src="../dist/js/generateTimeOptions.js"></script>
+
 <script>
     $(document).ready(function() {
+    // Obtener la cédula del parámetro de la URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var cedula = urlParams.get('cedula');
+
+    // Asignar la cédula al campo de cédula
+    if (cedula) {
+        $('#cedula').val(cedula);
+        $('#cedula').trigger('input');
+    }
         $("#cedula").on("input", function() {
             var cedula = $(this).val();
-            $.ajax({
-                url: "funcionPersona.php",
-                type: "POST",
-                data: {
-                    cedula: cedula
-                },
-                success: function(data) {
-                    var persona = JSON.parse(data);
-                    if (persona.id) {
-                        $("#fk_persona").val(persona.id);
-                        $("#datos_persona").html("<p>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</p>");
-                    } else {
-                        $("#fk_persona").val("");
-                        $("#datos_persona").html("<p>No se encontró una persona con esa cédula.</p>");
+            if (cedula.trim() === "") {
+                $("#datos_persona").html("");
+                $("#agregar_persona").hide();
+            } else {
+                $.ajax({
+                    url: "funcionPersona.php",
+                    type: "POST",
+                    data: {
+                        cedula: cedula
+                    },
+                    success: function(data) {
+                        var persona = JSON.parse(data);
+                        if (persona.id) {
+                            $("#fk_persona").val(persona.id);
+                            $("#datos_persona").html("<div class='alert alert-info'>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</div>");
+                            $("#agregar_persona").hide();
+                        } else {
+                            $("#fk_persona").val("");
+                            $("#datos_persona").html("");
+                            $("#agregar_persona").html("<div class='alert alert-warning'>No se encontró una persona con esa cédula. <a class='btn btn-outline-info' href='InsertarPersonaCitas.php'>Agregar Paciente</a></div>");
+                            $("#agregar_persona").show();
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     });
 </script>
@@ -219,6 +253,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>
         <script src="../dist/js/validacionseguridad.js"></script>
-    <!-- <!--     <script src="../dist/js/validarusuario.js"></script> --> -->
+        <script src="../dist/js/validarfechapasado.js"></script>
 </body>
 </html>

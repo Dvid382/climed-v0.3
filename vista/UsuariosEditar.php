@@ -174,6 +174,7 @@ function verificarPersonaExistente(cedula) {
                 <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
             <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
         <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-<!--  <script src="../dist/js/validarusuario.js"></script> -->
+ <script src="../dist/js/validarusuario.js"></script>
+ <script src="../dist/js/validarpersona.js"></script>
 </body>
 </html>

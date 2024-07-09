@@ -208,6 +208,7 @@ class Citas
         try {
             $query = "SELECT
             citas.id,
+			llave_enfermeria.id AS citas_enfermeria_id,
             paciente.cedula AS cedula_paciente,
             paciente.nombre AS nombre_paciente,
             paciente.apellido AS apellido_paciente,
@@ -230,6 +231,7 @@ class Citas
 		JOIN personas usuarios ON llave.fk_persona = usuarios.id
         JOIN servicios ON citas.fk_servicio = servicios.id
         JOIN consultorios ON citas.fk_consultorio = consultorios.id
+		JOIN citas_enfermeria llave_enfermeria ON citas.id = llave_enfermeria.fk_cita
         WHERE citas.id = :id";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':id', $id);
@@ -308,6 +310,42 @@ class Citas
             return false;
         }
     }
+
+    public function obtenerInformacionTodasCitas() {
+        try {
+            $query = "SELECT
+            citas.id,
+			citas.fecha,
+            citas.hora,
+            citas.estatus,
+            citas.fk_usuario_sesion,
+            paciente.nombre AS nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            medico.nombre AS nombre_medico,
+            medico.apellido AS apellido_medico,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.apellido AS apellido_usuario,
+            servicios.nombre AS nombre_servicio,
+            consultorios.nombre AS nombre_consultorio
+        FROM
+            citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+		ORDER BY id ASC;";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
     
 
     public function obtenerInformacionCitasMedico($usuario_id) {
@@ -337,6 +375,45 @@ class Citas
             JOIN servicios ON citas.fk_servicio = servicios.id
             JOIN consultorios ON citas.fk_consultorio = consultorios.id
             WHERE citas.fk_usuario = :usuario_id AND citas.estatus = '5' AND citas.fecha = CURRENT_DATE
+            ORDER BY citas.id ASC";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':usuario_id', $usuario_id);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la información de las citas: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function obtenerInformacionHistoriasMedicas($usuario_id) {
+        try {
+            $query = "SELECT
+                citas.id,
+                citas.fk_usuario AS usuario,
+                paciente.nombre AS nombre_paciente,
+                paciente.apellido AS apellido_paciente,
+                medico.nombre AS nombre_medico,
+                medico.apellido AS apellido_medico,
+                usuarios.nombre AS nombre_usuario,
+                usuarios.apellido AS apellido_usuario,
+                servicios.nombre AS nombre_servicio,
+                citas.fecha,
+                citas.hora,
+                citas.estatus,
+                citas.fk_usuario_sesion,
+                consultorios.nombre AS nombre_consultorio
+            FROM
+                citas
+            JOIN personas paciente ON citas.fk_persona = paciente.id
+            JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+            JOIN personas medico ON medico_usuario.fk_persona = medico.id
+            JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+            JOIN personas usuarios ON llave.fk_persona = usuarios.id
+            JOIN servicios ON citas.fk_servicio = servicios.id
+            JOIN consultorios ON citas.fk_consultorio = consultorios.id
+            WHERE citas.fk_usuario = :usuario_id AND citas.estatus = '6' AND citas.fecha = CURRENT_DATE
             ORDER BY citas.id ASC";
     
             $stmt = $this->conexion->prepare($query);

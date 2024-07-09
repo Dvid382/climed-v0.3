@@ -1,98 +1,133 @@
 $(document).ready(function() {
-    // Validar que el campo nombre solo contenga letras
-    $('#nombre, #segundo_nombre, #apellido, #segundo_apellido').on('input', function() {
-        var fieldName = $(this).attr('id');
-        var fieldValue = $(this).val();
-        if (!/^[a-zA-Z\s]*$/.test(fieldValue)) {
-            $(this).addClass('is-invalid');
-            $(this).after('<div class="text-danger">Este campo solo permite letras.</div>');
-        } else {
-            $(this).removeClass('is-invalid');
-            $(this).next('.text-danger').remove();
-        }
-        checkFormValidity();
-    });
-
-    // Validar que el campo cedula solo contenga números y esté entre 1,000,000 y 50,000,000
-    $('#cedula').on('input', function() {
-        var cedulaValue = $(this).val();
-        if (!/^\d+$/.test(cedulaValue) || cedulaValue < 1000000 || cedulaValue > 50000000) {
-            $(this).addClass('is-invalid');
-            $(this).after('<div class="text-danger">La cédula debe contener solo números y estar entre 1,000,000 y 50,000,000.</div>');
-        } else {
-            $(this).removeClass('is-invalid');
-            $(this).next('.text-danger').remove();
-        }
-        checkFormValidity();
-    });
-
-    // Validar que el campo telefono solo contenga números, tenga exactamente 11 caracteres y comience con un prefijo válido
-    $('#telefono').on('input', function() {
-        var telefonoValue = $(this).val();
-        if (!/^\d+$/.test(telefonoValue) || telefonoValue.length !== 11 || !/^0412|^0416|^0426|^0414|^0424|^0254/.test(telefonoValue)) {
-            $(this).addClass('is-invalid');
-            $(this).after('<div class="text-danger">El teléfono debe contener solo números, tener 11 caracteres y comenzar con un prefijo válido.</div>');
-        } else {
-            $(this).removeClass('is-invalid');
-            $(this).next('.text-danger').remove();
-        }
-        checkFormValidity();
-    });
-
-    // Validar que el campo correo sea un correo electrónico válido
-    $('#correo').on('input', function() {
-        var correoValue = $(this).val();
-        var regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-        if (!regex.test(correoValue)) {
-            $(this).addClass('is-invalid');
-            $(this).after('<div class="text-danger">El correo debe ser un correo válido (nombre@dominio.com).</div>');
-        } else {
-            $(this).removeClass('is-invalid');
-            $(this).next('.text-danger').remove();
-        }
-        checkFormValidity();
-    });
-
-    // Validar que el campo direccion no exceda los 100 caracteres
-    $('#direccion').on('input', function() {
-        var direccionValue = $(this).val();
-        if (direccionValue.length > 100) {
-            $(this).addClass('is-invalid');
-            $(this).after('<div class="text-danger">La dirección no puede exceder los 100 caracteres.</div>');
-        } else {
-            $(this).removeClass('is-invalid');
-            $(this).next('.text-danger').remove();
-        }
-        checkFormValidity();
-    });
-
-    // Validar que el campo sexo esté seleccionado
-    $('input[type=radio][name=sexo]').change(function() {
-        if (!$('input[type=radio][name=sexo]:checked').val()) {
-            alert('El campo sexo debe estar seleccionado');
-        }
-        checkFormValidity();
-    });
-
-    // Validar que todos los campos estén llenos antes de enviar el formulario
+    // Función para verificar la validez del formulario
     function checkFormValidity() {
-        var isValid = true;
-        $('input, select').each(function() {
-            if ($(this).hasClass('is-invalid') || $(this).val() === '') {
-                isValid = false;
-            }
-        });
-        $('button[type="submit"]').prop('disabled', !isValid);
-    }
-
-    // Inicialmente desactivar el botón de envío
-    checkFormValidity();
-
-    // Validar el formulario antes de enviarlo
-    $('form').submit(function(e) {
-        if ($('button[type="submit"]').prop('disabled')) {
-            e.preventDefault();
-            alert('Por favor complete todos los campos correctamente.');
+      var isValid = true;
+      $('.form-control, input[name="sexo"]').each(function() {
+        if ($(this).hasClass('is-invalid')) {
+          isValid = false;
+          return false;
         }
+      });
+      return isValid;
+    }
+  
+    // Validación de campo cédula
+    $('#cedula').on('input', function() {
+      var cedulaValue = $(this).val();
+      if (!/^\d+$/.test(cedulaValue) || cedulaValue < 1000000 || cedulaValue > 50000000) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">La cédula debe contener solo números y estar entre 1,000,000 y 50,000,000.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    }).on('keypress', function(e) {
+      var key = String.fromCharCode(e.which);
+      if (!/\d/.test(key)) {
+        e.preventDefault();
+      }
     });
-});
+  
+    // Validación de campos nombre, segundo nombre, apellido, segundo apellido
+    $('.form-control[name="nombre"], .form-control[name="segundo_nombre"], .form-control[name="apellido"], .form-control[name="segundo_apellido"]').on('input', function() {
+      var value = $(this).val();
+      if (!/^[a-zA-Z]+$/.test(value)) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">Este campo solo acepta letras.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    });
+  
+    // Validación de campo teléfono
+    $('#telefono').on('input', function() {
+      var value = $(this).val();
+      var regex = /^(0412|0416|0426|0414|0424|0254)\d{7}$/;
+      if (value.length !== 11 || !regex.test(value)) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">El teléfono debe tener 11 dígitos y comenzar con 0412, 0416, 0426, 0414, 0424 o 0254.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    }).on('keypress', function(e) {
+      var key = String.fromCharCode(e.which);
+      if (!/\d/.test(key)) {
+        e.preventDefault();
+      }
+    });
+  
+    // Validación de campo correo electrónico
+    $('#correo').on('input', function() {
+      var value = $(this).val();
+      var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regex.test(value)) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">Ingrese un correo electrónico válido.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    });
+  
+    // Validación de campo dirección
+    $('#direccion').on('input', function() {
+      var value = $(this).val();
+      if (value.length > 100) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">La dirección no puede tener más de 100 caracteres.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    });
+  
+    // Validación de campo sexo
+    $('input[name="sexo"]').on('change', function() {
+      if ($('input[name="sexo"]:checked').length === 0) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).parent().after('<div class="text-danger">Debe seleccionar un sexo.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).parent().next('.text-danger').remove();
+      }
+      checkFormValidity();
+    });
+  
+    // Validación de campo fecha de nacimiento
+    $('#f_nacimiento').on('input', function() {
+      var value = $(this).val();
+      var today = new Date();
+      var birthDate = new Date(value);
+      var minDate = new Date('1900-01-01');
+      if (birthDate > today || birthDate < minDate) {
+        $(this).addClass('is-invalid');
+        $(this).next('.text-danger').remove();
+        $(this).after('<div class="text-danger">La fecha de nacimiento debe estar entre el 1 de enero de 1900 y la fecha actual.</div>');
+      } else {
+        $(this).removeClass('is-invalid');
+        $(this).next('.text-danger').remove();
+      }
+      checkFormValidity();
+    });
+  
+    // Validación del formulario antes de enviar
+    $('form').submit(function(e) {
+      if (!checkFormValidity()) {
+        e.preventDefault();
+      }
+    });
+  });
+  

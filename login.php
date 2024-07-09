@@ -43,11 +43,11 @@
                     </div>
                     <form action="controlador/validar_sesion.php" method="POST">
                         <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput" name="cedula"  placeholder="Cedula">
+                        <input type="number" class="form-control" id="floatingInput" name="cedula"  placeholder="Cedula" autocomplete="off">
                             <label for="floatingInput">Cedula de identidad.</label>
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="password" class="form-control" id="floatingPassword" name="clave"  placeholder="Contraseña">
+                            <input type="password" class="form-control" id="floatingPassword" name="clave"  placeholder="Contraseña" autocomplete="off">
                             <label for="floatingPassword">Contraseña</label>
                         </div>
                         <input type="submit" value="Iniciar Sesión" class="btn btn-primary py-3 w-100 mb-4">

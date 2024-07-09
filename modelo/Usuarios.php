@@ -82,7 +82,7 @@ class Usuario extends Roles {
             $this->estatus = $estatus;
         }
         
-        public function crearUsuario( $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
+        public function crearUsuario($foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // Encriptar la contraseña
             try {
             $query = "INSERT INTO usuarios ( foto, clave, fk_persona, fk_rol, fk_servicio, estatus) 
@@ -147,7 +147,7 @@ class Usuario extends Roles {
             return $stmt->fetch();
         }
 
-        public function modificarUsuario($id, $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
+        public function modificarUsuario($id, $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus) {
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // Encriptar la contraseña
             try {
                 $query = "UPDATE usuarios 
@@ -157,8 +157,8 @@ class Usuario extends Roles {
                 $stmt->bindParam(':id', $id);
                 $stmt->bindParam(':foto', $foto);
                 $stmt->bindParam(':clave', $clave_encriptada);
-                $stmt->bindParam(":fk_persona", $fk_persona);
                 $stmt->bindParam(':fk_rol', $fk_rol);
+                $stmt->bindParam(":fk_persona", $fk_persona);
                 $stmt->bindParam(':fk_servicio', $fk_servicio);
                 $stmt->bindParam(':estatus', $estatus);
                 $stmt->execute();

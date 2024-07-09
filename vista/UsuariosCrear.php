@@ -58,6 +58,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     </div>
 
                     <div id="datos_persona"></div>
+                    <input type="hidden" name="fk_persona" id="fk_persona">
+
+                    <div id="agregar_persona" style="display: none;">
+                        <a class="btn btn-outline-info" href="InsertarPersonaUsuario.php">Registrar Persona</a>
+                    </div>
 
                     <div class="form-floating mb-3">
                         <input class="form-control " type="file" name="foto" id="foto" required><br>
@@ -69,7 +74,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         <label class="form-label " for="clave">Contraseña:</label>
                     </div>
 
-                    <input type="hidden" name="fk_persona" id="fk_persona">
 
 
                     <div class="form-floating mb-3">
@@ -120,7 +124,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     </div>
 
     <script src="../dist/js/jquery-3.7.1.min.js"></script>
-<script>
+    <script>
     $(document).ready(function() {
         $("#cedula").on("input", function() {
             var cedula = $(this).val();
@@ -134,10 +138,10 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     var persona = JSON.parse(data);
                     if (persona.id) {
                         $("#fk_persona").val(persona.id);
-                        $("#datos_persona").html("<p>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</p>");
+                        $("#datos_persona").html("<div class='alert alert-info'>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</div>");
                     } else {
                         $("#fk_persona").val("");
-                        $("#datos_persona").html("<p>No se encontró una persona con esa cédula.</p>");
+                        $("#datos_persona").html("<div class='alert alert-warning'>No se encontró una persona con esa cédula. <a class='btn btn-outline-info' href='InsertarPersonaCitas.php'>Agregar Usuario</a></div>");
                     }
                 }
             });
@@ -159,6 +163,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
-<!--     <!--     <script src="../dist/js/validarusuario.js"></script> --> -->
+    <script src="../dist/js/validarpersona.js"></script>
+    <script src="../dist/js/validarusuario.js"></script>
 </body>
 </html>

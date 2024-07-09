@@ -43,7 +43,7 @@ $citas = $controlador->verTodas();
         <!-- Catalogo Asignaciones -->
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light rounded h-100 p-4">
-            <h2>Catalogo de Citas.</h2>
+            <h2>Catalogo de Citas del Medico.</h2>
             <!-- Buscador dinámico para buscar por nombre -->
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
             
@@ -74,7 +74,7 @@ $citas = $controlador->verTodas();
                         $citasController = new CitasController();
                         $usuario_id = $_SESSION['id_usuario'];
                         if ($_SESSION['valor_rol'] == '1' || $_SESSION['valor_rol'] == '2') {
-                            $citas = $citasController->index();
+                            $citas = $citasController->indexTodas();
                         } elseif ($_SESSION['valor_rol'] == '4') {
                             $citas = $citasController->indexMedico($usuario_id);
                         }
@@ -118,7 +118,7 @@ $citas = $controlador->verTodas();
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                             <td>
                                 <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                                <a class="btn btn-outline-warning m-2" href="CitasEditar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
+                                <a class="btn btn-outline-warning m-2" href="HistoriasMedicasCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
                                 <a class="btn btn-outline-danger m-2" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
                             </td>
                             <?php endif; ?>

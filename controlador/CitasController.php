@@ -104,7 +104,7 @@ class CitasController {
             // Enviar el correo
             $to = strtolower($cita['correo_paciente']);
             $subject = "Asignacion de cita";
-            $message = "Estimado(a) paciente, tiene una cita programada para el dia " . $cita['fecha'] . " a las " . $cita['hora'];
+            $message = "Estimado(a) paciente " . $cita['nombre_paciente'] ." ". $cita['segundo_nombre_paciente'] ." ". $cita['apellido_paciente'] ." ". $cita['segundo_apellido_paciente'] ."  titular de la Cedula de identidad N°:". $cita['cedula_paciente'] . ", usted tiene una cita programada para el dia " . $cita['fecha'] . " a las " . $cita['hora']. ", con el doctor ".$cita['nombre_medico']. " ".$cita['apellido_medico'].". Por favor confirmar el recibido, Feliz Dia!!";
     
             $mail = new PHPMailer(true);
             try {
@@ -180,6 +180,10 @@ class CitasController {
         $citas = $this->citasModelo->obtenerInformacionCitas();
         return $citas;
     }
+    public function indexTodas() {
+        $citas = $this->citasModelo->obtenerInformacionTodasCitas();
+        return $citas;
+    }
     public function indexEnfermeria() {
       $citas = $this->citasModelo->obtenerInformacionCitasEnfermeria();
       return $citas;
@@ -188,7 +192,10 @@ class CitasController {
    $citas = $this->citasModelo->obtenerInformacionCitasMedico($usuario_id);
    return $citas;
 }
-
+  public function indexHistoriasMedicas($usuario_id) {
+   $citas = $this->citasModelo->obtenerInformacionHistoriasMedicas($usuario_id);
+   return $citas;
+}
     public function VerDatos($id) {
       $citas = $this->citasModelo->obtenerInformacionCitasPorId($id);
       return $citas;

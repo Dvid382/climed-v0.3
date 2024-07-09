@@ -84,7 +84,124 @@ class PersonasController  {
             exit;
         }
     }
+
+    public function InsertarPersonaCitas($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido) {
+      if ($this->verificarPersonaExistente($cedula)) {
+          echo "<script>
+          swal({
+             title: 'Error',
+             text: 'La Personas ya existe.')</',
+             icon: 'error',
+          }).then((willRedirect) => {
+             if (willRedirect) {
+                window.location.href = 'InsertarPersona.php'; // Redirige a tu página PHP
+             }
+          });
+       </script>";
+          exit;
+      }
+  
+      $this->personasModelo->setId('id');
+      $this->personasModelo->setNombre('nombre');
+      $this->personasModelo->setApellido('apellido');
+      $this->personasModelo->setCedula('cedula');
+      $this->personasModelo->setTelefono('telefono');
+      $this->personasModelo->setCorreo('correo');
+      $this->personasModelo->setSexo('sexo');
+      $this->personasModelo->setDireccion('direccion');
+      $this->personasModelo->setF_nacimiento('f_nacimiento');
+      $this->personasModelo->setEstatus('estatus');
+      $this->personasModelo->setSegundo_nombre('segundo_nombre');
+      $this->personasModelo->setSegundo_apellido('segundo_apellido');
+      
+  
+      if ($this->personasModelo->InsertarPersonaCitas($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido)) {
+         echo "<script>
+         swal({
+             title: 'Completado',
+             text: 'Persona creada correctamente.',
+             icon: 'success',
+         }).then((willRedirect) => {
+             if (willRedirect) {
+                 window.location.href = 'CitasCrear.php?cedula=" . $cedula . "'; // Redirige a CitasCrear.php y pasa la cédula como parámetro
+             }
+         });
+         </script>";
+         exit;
+      } else {
+          echo "<script>
+          swal({
+             title: 'Error',
+             text: 'Error al crear la Persona.',
+             icon: 'error',
+          }).then((willRedirect) => {
+             if (willRedirect) {
+                window.location.href = 'InsertarPersona.php'; // Redirige a tu página PHP
+             }
+          });
+       </script>";
+          exit;
+      }
+  }
     
+  public function InsertarPersonaUsuario($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido) {
+   if ($this->verificarPersonaExistente($cedula)) {
+       echo "<script>
+       swal({
+          title: 'Error',
+          text: 'La Personas ya existe.')</',
+          icon: 'error',
+       }).then((willRedirect) => {
+          if (willRedirect) {
+             window.location.href = 'InsertarPersona.php'; // Redirige a tu página PHP
+          }
+       });
+    </script>";
+       exit;
+   }
+
+   $this->personasModelo->setId('id');
+   $this->personasModelo->setNombre('nombre');
+   $this->personasModelo->setApellido('apellido');
+   $this->personasModelo->setCedula('cedula');
+   $this->personasModelo->setTelefono('telefono');
+   $this->personasModelo->setCorreo('correo');
+   $this->personasModelo->setSexo('sexo');
+   $this->personasModelo->setDireccion('direccion');
+   $this->personasModelo->setF_nacimiento('f_nacimiento');
+   $this->personasModelo->setEstatus('estatus');
+   $this->personasModelo->setSegundo_nombre('segundo_nombre');
+   $this->personasModelo->setSegundo_apellido('segundo_apellido');
+   
+
+   if ($this->personasModelo->InsertarPersonaUsuario($nombre, $apellido, $cedula, $telefono, $correo, $sexo, $direccion, $f_nacimiento, $estatus, $segundo_nombre, $segundo_apellido)) {
+      echo "<script>
+      swal({
+          title: 'Completado',
+          text: 'Persona creada correctamente.',
+          icon: 'success',
+      }).then((willRedirect) => {
+          if (willRedirect) {
+              window.location.href = 'UsuariosCrear.php?cedula=" . $cedula . "'; // Redirige a UsuariosCrear.php y pasa la cédula como parámetro
+          }
+      });
+      </script>";
+      exit;
+   } else {
+       echo "<script>
+       swal({
+          title: 'Error',
+          text: 'Error al crear la Persona.',
+          icon: 'error',
+       }).then((willRedirect) => {
+          if (willRedirect) {
+             window.location.href = 'InsertarPersona.php'; // Redirige a tu página PHP
+          }
+       });
+    </script>";
+       exit;
+   }
+}
     
     public function eliminarPersona($id) {
         $this->personasModelo->eliminarPersona($id);

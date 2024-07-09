@@ -110,13 +110,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Catalogo de Citas.</h2>
             <!-- Buscador dinámico para buscar por nombre -->
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
-            
+            <br>
             <div class="table-responsive">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="filtroEstatus" class="form-label">Filtrar por estatus:</label>
+                        <select class="form-select" id="filtroEstatus">
+                        <option value="">Todos</option>
+                        <option value="Creada">Creada</option>
+                        <option value="Notificada">Notificada</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="En proceso">En proceso</option>
+                        <option value="Finalizada">Finalizada</option>
+                        <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filtroFechaInicio" class="form-label">Filtrar por fecha de inicio:</label>
+                        <input type="date" class="form-control" id="filtroFecha">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="hora">Hora:</label>
+                            <select class="form-select" id="hora" name="hora" required >
+                                <option value="">Seleccione una hora</option>
+                            </select>
+                    </div>
+                </div>
+
                 <?php  if($_SESSION['valor_rol'] == '1'): ?>
-                <br><a class="btn btn-primary" href="CitasCrear.php">Nueva cita</a>
+                <a class="btn btn-primary" href="CitasCrear.php">Nueva cita</a>
                 <?php endif; ?>
-                <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
-                
                 <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
@@ -126,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th>Médicos</th>
                             <th>Fecha</th>
                             <th>Hora</th>
+                            <th>Estatus</th>
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                                 <th>Acciones</th>
                             <?php endif; ?>
@@ -135,7 +159,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                         require_once '../controlador/CitasController.php';
                         $citasController = new CitasController();
-                        $citas = $citasController->index();
+                        if ($_SESSION['valor_rol'] == '1' || $_SESSION['valor_rol'] == '2') {
+                            $citas = $citasController->indexTodas();
+                        } elseif ($_SESSION['valor_rol'] == '4') {
+                            $citas = $citasController->index();
+                        }
+
                         foreach ($citas as $cita):
                         ?>
                         <tr>
@@ -145,6 +174,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?php echo $cita['nombre_medico'] . ' ' . $cita['apellido_medico']; ?></td>
                             <td><?php echo $cita['fecha']; ?></td>
                             <td><?php echo $cita['hora']; ?></td>
+                            <td>
+                                <?php
+                                if ($cita['estatus'] == 1) {
+                                    echo 'Creada';
+                                } elseif ($cita['estatus'] == 2) {
+                                    echo 'Notificada';
+                                } elseif ($cita['estatus'] == 3) {
+                                    echo 'Confirmada';
+                                } elseif ($cita['estatus'] == 4) {
+                                    echo 'En proceso';
+                                } elseif ($cita['estatus'] == 5) {
+                                    echo 'Finalizada';
+                                } elseif ($cita['estatus'] == 6) {
+                                    echo 'Cancelada';
+                                } elseif ($cita['estatus'] == 7) 
+                                    echo 'Suspendida';
+                                ?>
+                            </td>
 
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                             <td>
@@ -203,6 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Fin del modal -->
     <!-- libreries JS -->
 <script src="../dist/js/jquery-3.7.1.min.js"></script>
+<script src="../dist/js/generateTimeOptions.js"></script>
         <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
             <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
                 <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
@@ -272,6 +320,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
         });
+    </script>
+
+    <script>
+// Función para filtrar por estatus
+function filtrarPorEstatus() {
+  var selectEstatus = document.getElementById("filtroEstatus");
+  var estatus = selectEstatus.value;
+  filtrarTabla(estatus, "", "");
+}
+
+// Función para filtrar por fecha
+function filtrarPorFecha() {
+  var fechaTexto = document.getElementById("filtroFecha").value;
+  filtrarTabla("", fechaTexto, "");
+}
+
+// Función para filtrar por hora
+function filtrarPorHora() {
+  var horaSelect = document.getElementById("hora");
+  var horaMinutoTexto = horaSelect.value;
+  filtrarTabla("", "", horaMinutoTexto);
+}
+
+// Función principal para filtrar la tabla
+function filtrarTabla(estatus, fechaTexto, horaMinutoTexto) {
+  var tabla = document.getElementById("tabla");
+  var filas = tabla.getElementsByTagName("tr");
+
+  for (var i = 1; i < filas.length; i++) {
+    var fila = filas[i];
+    var celdaEstatus = fila.getElementsByTagName("td")[6]; // Suponiendo que el estatus está en la 7a columna
+    var celdaFecha = fila.getElementsByTagName("td")[4]; // Suponiendo que la fecha está en la 5a columna
+    var celdaHora = fila.getElementsByTagName("td")[5]; // Suponiendo que la hora está en la 6a columna
+
+    var estatusTexto = celdaEstatus.textContent.trim();
+    var fechaFilaTexto = celdaFecha.textContent.trim();
+    var horaFilaTexto = celdaHora.textContent.trim().substring(0, 5); // Extraer solo la hora y los minutos
+
+    var mostrarFila = true;
+
+    if (estatus !== "" && estatusTexto !== estatus) {
+      mostrarFila = false;
+    }
+
+    if (fechaTexto !== "" && fechaFilaTexto !== fechaTexto) {
+      mostrarFila = false;
+    }
+
+    if (horaMinutoTexto !== "" && horaFilaTexto !== horaMinutoTexto) {
+      mostrarFila = false;
+    }
+
+    if (mostrarFila) {
+      fila.style.display = "";
+    } else {
+      fila.style.display = "none";
+    }
+  }
+}
+
+// Agregar los event listeners a los controles
+document.getElementById("filtroEstatus").addEventListener("change", filtrarPorEstatus);
+document.getElementById("filtroFecha").addEventListener("input", filtrarPorFecha);
+document.getElementById("hora").addEventListener("change", filtrarPorHora);
+
+// Función para generar las opciones del select de horas
+function generateTimeOptions(startTime, endTime, interval) {
+  var startHour = parseInt(startTime.split(":")[0]);
+  var startMinute = parseInt(startTime.split(":")[1]);
+  var endHour = parseInt(endTime.split(":")[0]);
+  var endMinute = parseInt(endTime.split(":")[1]);
+
+  var options = "";
+  var currentHour = startHour;
+  var currentMinute = startMinute;
+
+  while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
+    var timeString = ("0" + currentHour).slice(-2) + ":" + ("0" + currentMinute).slice(-2);
+    options += "<option value='" + timeString + "'>" + timeString + "</option>";
+    currentMinute += interval;
+    if (currentMinute >= 60) {
+      currentMinute = 0;
+      currentHour++;
+    }
+  }
+
+  return options;
+}
+
     </script>
 </body>
 </html>

@@ -107,9 +107,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="time" name="hora" id="hora" value="<?php echo $cita['hora']; ?>" required><br>
-                <label class="form-label" for="hora">Hora:</label>
-            </div>
+                    <select class="form-select" id="hora" name="hora" required>
+                      <option value="">Seleccione una hora</option>
+                     </select>
+                  <label class="form-label" for="hora">Hora:</label>
+                </div>
 
             <input type="hidden" class="form-control form-control-sm" id="estatus" name="estatus" value="<?php echo $cita['estatus']; ?>">
 
@@ -216,6 +218,6 @@ function verificarPersonaExistente(cedula) {
     <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>
         <script src="../dist/js/validacionseguridad.js"></script>
-    <!--     <script src="../dist/js/validarusuario.js"></script> -->
+        <script src="../dist/js/validarfechapasado.js"></script>
 </body>
 </html>
