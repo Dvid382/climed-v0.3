@@ -1,4 +1,6 @@
 <?php
+include ('../dist/Plantilla.php');
+
 require_once 'UsuariosController.php';
 
 

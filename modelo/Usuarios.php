@@ -82,18 +82,18 @@ class Usuario extends Roles {
             $this->estatus = $estatus;
         }
         
-        public function crearUsuario($foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
+        public function crearUsuario($foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus) {
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // Encriptar la contraseña
             try {
-            $query = "INSERT INTO usuarios ( foto, clave, fk_persona, fk_rol, fk_servicio, estatus) 
-                      VALUES ( :foto, :clave, :fk_persona, :fk_rol, :fk_servicio, :estatus)";
+            $query = "INSERT INTO usuarios ( foto, clave, fk_rol, fk_persona, fk_servicio, estatus) 
+                      VALUES ( :foto, :clave, :fk_rol, :fk_persona, :fk_servicio, :estatus)";
             $stmt = $this->conexion->prepare($query);
            
 
             $stmt->bindParam(':foto', $foto);
             $stmt->bindParam(':clave', $clave_encriptada);
-            $stmt->bindParam(":fk_persona", $fk_persona);
             $stmt->bindParam(':fk_rol', $fk_rol);
+            $stmt->bindParam(":fk_persona", $fk_persona);
             $stmt->bindParam(':fk_servicio', $fk_servicio);
             $stmt->bindParam(':estatus', $estatus);
             $stmt->execute();
@@ -151,7 +151,7 @@ class Usuario extends Roles {
             $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT); // Encriptar la contraseña
             try {
                 $query = "UPDATE usuarios 
-                SET   foto = :foto, clave = :clave, fk_persona = :fk_persona, fk_rol = :fk_rol, fk_servicio = :fk_servicio, estatus = :estatus 
+                SET   foto = :foto, clave = :clave, fk_rol = :fk_rol, fk_persona = :fk_persona, fk_servicio = :fk_servicio, estatus = :estatus 
                 WHERE id = :id";
                 $stmt = $this->conexion->prepare($query);
                 $stmt->bindParam(':id', $id);
@@ -237,7 +237,7 @@ class Usuario extends Roles {
             $result = $stmt->fetch();
             return $result['count'] > 0;
         }
-        
+
         public function iniciarSesion($cedula, $clave) {
             $query = "SELECT personas.nombre AS nombre, personas.apellido AS apellido, usuarios.foto AS foto_usuario,usuarios.id AS id_usuario, personas.cedula AS cedula, Usuarios.fk_rol, Roles.id AS rol_id, Roles.nombre AS nombre_rol, roles.valor AS valor_rol, Usuarios.clave, usuarios.estatus
             FROM Usuarios

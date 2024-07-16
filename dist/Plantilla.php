@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="../dist/plantilla/lib/bootstrap-icons.css">
 
     <!-- Libraries Stylesheet -->
+    <script src="../dist/js/jquery-3.7.1.min.js"></script>
+    <script src="../dist/sweetalert2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="../dist/sweetalert2/sweetalert2.min.css">
     <script src="../dist/js/sweetalert.min.js"></script>
     <link href="../dist/plantilla/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="../dist/plantilla/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />

@@ -99,8 +99,7 @@ class UsuariosController extends RolesController {
         // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }
     
-    public function modificarUsuario($id, $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus) {
-    
+    public function modificarUsuario($id, $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus) {
         $this->usuariosModelo->setId('id');
         $this->usuariosModelo->setFoto('foto');
         $this->usuariosModelo->setClave('clave');
@@ -120,8 +119,8 @@ class UsuariosController extends RolesController {
         // Mover la foto a la carpeta de destino
         $rutaFotoDestino = $carpetaDestino . $foto['name'];
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino);
-
-        if ($this->usuariosModelo->modificarUsuario($id, $rutaFotoDestino, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus)) {
+        var_dump($id, $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus);
+        if ($this->usuariosModelo->modificarUsuario($id, $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus)) {
 
             echo "<script>
             swal({
@@ -149,7 +148,6 @@ class UsuariosController extends RolesController {
          </script>";
             exit;
         }
-        var_dump($id, $rutaFotoDestino, $clave, $fk_rol, $fk_servicio, $estatus);
     }
     
     public function iniciarSesion($cedula, $clave) {
@@ -162,8 +160,17 @@ class UsuariosController extends RolesController {
             if ($usuario) {
                 // Verificar el estado del usuario
                 if ($usuario['estatus'] == '0') {
-                    echo "<script> alert ('Error: Su usuario se encuentra inactivo.')</script>";
-                    echo '<script language="javascript">window.location="../Index.php"</script>';
+                    echo "<script>
+                    swal({
+                       title: 'Error',
+                       text: 'Su Usuario se encuentra Inactivo, Comuniquese con un Administrador.',
+                       icon: 'error',
+                    }).then((willRedirect) => {
+                       if (willRedirect) {
+                          window.location.href = '../Index.php'; // Redirige a tu página PHP
+                       }
+                    });
+                 </script>";
                 } else {
                     // Guardar el nombre del usuario y su rol en las variables de sesión
                     $_SESSION['id_usuario'] = $usuario['id_usuario'];
@@ -180,8 +187,17 @@ class UsuariosController extends RolesController {
                     }
                 }
             } else {
-                 echo "<script> alert ('Error: Usuario o Contraseña incorrecta.')</script>";
-                echo '<script language="javascript">window.location="../Index.php"</script>';
+                echo "<script>
+                swal({
+                   title: 'Error',
+                   text: 'Usuario o Contraseña Incorrecta.',
+                   icon: 'error',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = '../Index.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
             }
         }
     }

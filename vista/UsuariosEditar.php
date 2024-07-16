@@ -39,12 +39,12 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     
                     $nuevaFoto = $_FILES['foto'];
                     $nuevaClave = $_POST['clave'];
-                    $nuevaPersona = $_POST['fk_persona'];
                     $nuevoRol = $_POST['fk_rol'];
+                    $nuevaPersona = $_POST['fk_persona'];
                     $nuevoServicio = $_POST['fk_servicio'];
                     $nuevoEstado = $_POST['estatus'];
                     // Actualizar los datos del Usuario con los nuevos valores
-                    $resultado = $usuariocontroller->modificarUsuario($usuarioId, $nuevaFoto, $nuevaClave, $nuevaPersona, $nuevoRol, $nuevoServicio, $nuevoEstado);
+                    $resultado = $usuariocontroller->modificarUsuario($usuarioId, $nuevaFoto, $nuevaClave, $nuevoRol, $nuevaPersona, $nuevoServicio, $nuevoEstado);
                     
                     if ($resultado) {
                     echo "<script>alert('Usuario Modificado exitosamente.');</script>";

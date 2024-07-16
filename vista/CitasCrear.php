@@ -9,6 +9,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <!DOCTYPE html>
 <html>
 <head>
+
 <?php include('../dist/Plantilla.php');?>
 </head>
 <body>
@@ -151,8 +152,8 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </form>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../dist/js/jquery-3.7.1.min.js"></script>
+<!--     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
 <!-- Nombre y Apellido de Usuario -->
 <script src="../dist/js/generateTimeOptions.js"></script>
 
@@ -239,7 +240,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
     <!-- libreries JS -->
 
-    <script src="../dist/js/jquery-3.7.1.min.js"></script>
         <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>
             <script src="../dist/plantilla/lib/chart/chart.min.js"></script>
                 <script src="../dist/plantilla/lib/easing/easing.min.js"></script>
@@ -250,7 +250,6 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>
         <script src="../dist/js/validacionseguridad.js"></script>
         <script src="../dist/js/validarfechapasado.js"></script>

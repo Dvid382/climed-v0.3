@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     // Validar fecha al cambiar el valor del campo
     $('#fecha').on('change', function() {

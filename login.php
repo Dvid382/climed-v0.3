@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +11,10 @@
     <link rel="stylesheet" href="dist/plantilla/lib/bootstrap-icons.css">
 
     <!-- Libraries Stylesheet -->
+    <script src="dist/js/jquery-3.7.1.min.js"></script>
+    <script src="dist/sweetalert2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="dist/sweetalert2/sweetalert2.min.css">
+    <script src="dist/js/sweetalert.min.js"></script>
     <link href="dist/plantilla/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="dist/plantilla/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
@@ -88,9 +90,15 @@
             });
         });
     </script>
+
+    <?php
+    if (isset($_SESSION['swal_message'])) {
+        echo "<script>".$_SESSION['swal_message']."</script>";
+        unset($_SESSION['swal_message']);
+    }
+    ?>
+
     <!-- libreries JS -->
-    <script src="dist/plantilla/lib/jquery-3.7.1.min.js"></script>
-        <script src="dist/js/sweetalert.min.js"></script>
         <script src="dist/plantilla/lib/bootstrap.bundle.min.js"></script>
             <script src="dist/plantilla/lib/chart/chart.min.js"></script>
                 <script src="dist/plantilla/lib/easing/easing.min.js"></script>
@@ -105,7 +113,3 @@
     <script src="dist/js/validacionseguridad.js"></script>
 </body>
 </html>
-
-
-
-        

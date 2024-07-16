@@ -1,5 +1,6 @@
 <?php
 require_once '../controlador/UsuariosController.php';
+
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
@@ -47,10 +48,47 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                                         echo $datosUsuario['nombre_persona'] . " " . $datosUsuario['apellido_persona'];
                                         ?>
                             </p>
+
+                            <p><strong>Rol:</strong>
+                            <?php
+                                        $datosRolUsuario = $usuariosController->buscarNombreRol($usuario['fk_rol']);
+                                        echo $datosRolUsuario['nombre_rol'];
+                                        ?>
+                            </p>
                         </center>
                     </div>
                     <form method="POST">
                         <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
+
+                        <?php
+                        if ($_SESSION['valor_rol'] == $usuario['fk_rol']) {
+                            echo "<script>
+                            swal({
+                               title: 'Error',
+                               text: 'No se puede Autodestruir un usuario.',
+                               icon: 'error',
+                            }).then((willRedirect) => {
+                               if (willRedirect) {
+                                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+                               }
+                            });
+                         </script>";
+                            exit;
+                        }elseif($_SESSION['valor_rol'] == "1") {
+                            echo "<script>
+                            swal({
+                               title: 'Error',
+                               text: 'No se puede Eliminar un usuario Administrador.',
+                               icon: 'error',
+                            }).then((willRedirect) => {
+                               if (willRedirect) {
+                                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+                               }
+                            });
+                         </script>";
+                            exit;
+                        }
+                        ?>
                         <button class="btn btn-outline-danger" type="button" onclick="mostrarSweetAlert()">X Eliminar</button>
                         <a class="btn btn-outline-info" href="UsuariosIndex.php">Volver <i class="fa fa-right-to-bracket"></i></a>
                     </form>

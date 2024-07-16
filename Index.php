@@ -1,5 +1,5 @@
 <?php
-/*session_start();*/
+/*session_start();
 
 // Verificar si hay una sesión activa y válida
 if(isset($_SESSION['cedula']) && isset($_SESSION['clave'])) {
@@ -18,7 +18,7 @@ if(isset($_SESSION['cedula']) && isset($_SESSION['clave'])) {
         // Si las credenciales no son válidas, destruye la sesión
         session_destroy();
     }
-}
+}*/
 ?>
 
 <?php
