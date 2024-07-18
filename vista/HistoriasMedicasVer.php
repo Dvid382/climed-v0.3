@@ -1,167 +1,79 @@
 <?php
 require_once '../controlador/UsuariosController.php';
+require_once '../controlador/CitasController.php';
+
 $controladorUsuario = new UsuariosController();
 $usuarios = $controladorUsuario->verTodosUsuarios();
 $vistas = $controladorUsuario->Vistas();
 $controlar = $controladorUsuario->controlarAcceso(__FILE__);
-?>
 
+$CitasController = new CitasController();
+
+// Verificar si se recibió el ID del paciente
+if (isset($_GET['id'])) {
+    $pacienteId = $_GET['id'];
+    $datosHistoria = $CitasController->VerDatosHistoriaMedica($pacienteId);
+} else {
+    // Manejar el caso en que no se proporciona un ID
+    die("No se proporcionó un ID de paciente válido.");
+}
+
+if (!$datosHistoria) {
+    die("No se encontraron datos para este paciente.");
+}
+
+$datosPaciente = $datosHistoria['datos_paciente'];
+$historiaMedica = $datosHistoria['historia_medica'];
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('../dist/Plantilla.php');?>
+    <?php include('../dist/Plantilla.php');?>
+    <title>Historia Médica del Paciente</title>
 </head>
 <body>
     <div class="container-fluid pt-4 px-4">
-                
-
-                <?php
-                    require_once('../controlador/CitasController.php');
-
-                    // Crear una instancia de rolcontroller
-                    $CitasController = new CitasController();
-
-                    // Verificar si se recibió el ID del Rol a editar
-                    if (isset($_GET['id'])) {
-                        $citasId = $_GET['id'];
-
-                    }
-                    $datos = $CitasController->VerDatos($citasId);
-                ?>
-
-<div class="card bg-light shadow-sm align-items-center" style="width: 80%; margin: auto; margin-top: -30px;">
-    <div class="card-body">
-        <div class="row align-items-center">
-            <div class="col-lg-12">
-                <center><h2 class="card-title text-primary">Datos de: <?php echo $datos['nombre_paciente']. " ". $datos['apellido_paciente']; ?></h2></center>
-                
-                <div class="row mb-3">
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Cédula:</h5>
-                        <p class="alert alert-info"><?php echo $datos['cedula_paciente']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Nombre:</h5>
-                        <p class="alert alert-info"><?php echo $datos['nombre_paciente']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Segundo Nombre:</h5>
-                        <p class="alert alert-info"><?php echo $datos['segundo_nombre_paciente']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Apellido:</h5>
-                        <p class="alert alert-info"><?php echo $datos['apellido_paciente']; ?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Segundo Apellido:</h5>
-                        <p class="alert alert-info"><?php echo $datos['segundo_apellido_paciente']; ?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Fecha de Nacimiento:</h5>
-                        <p class="alert alert-info"><?php echo date('d/m/Y', strtotime($datos['fecha_nacimiento'])); ?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Edad:</h5>
-                        <p class="alert alert-info"><?php $f_nacimiento = "$datos[fecha_nacimiento]"; // Reemplazar con la fecha de nacimiento real
-                                    $fecha_actual = date('Y-m-d');
-
-                                    $diferencia_en_segundos = strtotime($fecha_actual) - strtotime($f_nacimiento);
-                                    $segundos_en_un_año = 365.25 * 24 * 60 * 60;
-                                    $edad_en_años = floor($diferencia_en_segundos / $segundos_en_un_año);
-
-                                    echo " $edad_en_años";?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Sexo:</h5>
-                        <p class="alert alert-info"><?php echo $datos['sexo'] == 1 ? 'Masculino' : 'Femenino'; ?></p>
-                    </div>
-
+        <div class="card bg-light shadow-sm align-items-center" style="width: 80%; margin: auto; margin-top: -30px;">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-lg-12">
+                        <center><h2 class="card-title text-primary">Historia Médica del Paciente: <?php echo $datosPaciente['nombre_paciente'] . " " . $datosPaciente['apellido_paciente']; ?></h2></center>
+                        
+                        <div class="row mb-3">
+    <h3>Historia Médica</h3><br><br>
+    <div class="form-floating mb-3">
+        <a class="btn btn-outline-info" href="MenusIndex.php">X</a>
+    </div>
+    <?php foreach ($historiaMedica as $fecha => $citasPorFecha): ?>
+        <h4>Fecha: <?php echo date('d/m/Y', strtotime($fecha)); ?></h4><br><br>
+        <?php foreach ($citasPorFecha as $claveCita => $cita): ?>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Cita a las <?php echo $cita['hora']; ?></h5><br>
+                    <p>Médico: <?php echo $cita['nombre_medico'] . ' ' . $cita['apellido_medico']; ?></p>
+                    <p>Servicio: <?php echo $cita['nombre_servicio']; ?></p>
+                    <p>Consultorio: <?php echo $cita['nombre_consultorio']; ?></p>
+                    <p>Diagnóstico: <?php echo $cita['diagnostico_paciente']; ?></p>
+                    <p>Patología: <?php echo $cita['patologia_paciente']; ?></p>
+                    <p>Laboratorio: <?php echo $cita['laboratorio_paciente']; ?></p>
+                    <p>Indicación medica: <?php echo $cita['receta_paciente']; ?></p>
+                    <p>Medicamento: <?php echo $cita['nombre_medicamento']; ?></p>
+                    <p>Tiempo del tratamiento: Desde el <?php echo $cita['inicio_recipe']. " al " . $cita['fin_recipe']; ?></p>
+                    <p>Reposo: <?php echo $cita['descripcion_reposo']; ?></p>
+                    <p>Tiempo estimado del reposo: Desde el <?php echo $cita['inicio_reposo'] ." al ". $cita['inicio_reposo']; ?></p>
+                    <p>Altura: <?php echo $cita['altura_paciente']; ?> cm</p>
+                    <p>Peso: <?php echo $cita['peso_paciente']; ?> kg</p>
+                    <p>Tensión: <?php echo $cita['tension_paciente']; ?></p>
                 </div>
-
-                <div class="row mb-3">
-                    <p>Datos del Doctor</p>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Nombre:</h5>
-                        <p class="alert alert-info"><?php echo $datos['nombre_medico']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Apellido:</h5>
-                        <p class="alert alert-info"><?php echo $datos['apellido_medico']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Servicio:</h5>
-                        <p class="alert alert-info"><?php echo $datos['nombre_servicio']; ?></p>
-                    </div>
-
-                </div>
-
-                <div class="row mb-3">
-                    <p>Datos de  la cita</p>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Fecha y hora:</h5>
-                        <p class="alert alert-info">Programada el <?php echo $datos['fecha']. " a las ". $datos['hora']; ?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Consultorio:</h5>
-                        <p class="alert alert-info"><?php echo $datos['nombre_consultorio']; ?></p>
-                    </div>
-<!-- 
-                
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Teléfono:</h5>
-                        <p class="alert alert-info"><?php echo $datos['telefono']; ?></p>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Correo:</h5>
-                        <p class="alert alert-info"><?php echo $datos['correo']; ?></p>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <h5 class="card-subtitle">Dirección:</h5>
-                        <p class="alert alert-info"><?php echo $datos['direccion']; ?></p>
-                    </div> -->
-
-                    <div class="col-sm-3">
-                    <h5 class="card-subtitle">Estatus:</h5>
-                    <p class="alert alert-info"><?php
-                                    switch ($datos['estatus']) {
-                                        case 1:
-                                            echo 'CREADA';
-                                            break;
-                                        case 2:
-                                            echo 'NOTIFICADA';
-                                            break;
-                                        case 3:
-                                            echo 'CONFIRMADA';
-                                            break;
-                                        case 4:
-                                            echo 'REVISIÓN';
-                                            break;
-                                        case 5:
-                                            echo 'EN PROCESO';
-                                            break;
-                                        case 6:
-                                            echo 'FINALIZADA';
-                                            break;
-                                        default:
-                                            echo 'CANCELADA';
-                                            break;
-                                    }
-                                ?></p>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
-</div>
     </div>
 
     <!-- libreries JS -->

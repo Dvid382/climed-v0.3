@@ -9,8 +9,8 @@ class CitasMedicoController {
         $this->citasmedicoModelo = new CitasMedico($conexion->Conectar());
     }
 
-    public function CrearHistoriaMedica( $diagnostico, $fk_patologia, $fk_laboratorio, $fk_cita_enfermeria, $receta, $f_inicio, $f_fin, $fk_medicamento, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId) {
-        if ($this->citasmedicoModelo->CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio,  $fk_cita_enfermeria, $receta, $f_inicio, $f_fin, $fk_medicamento, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId)) {
+    public function CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $fk_cita_enfermeria, $receta, $f_inicio, $fk_medicamento, $f_fin, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId) {
+        if ($this->citasmedicoModelo->CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio,  $fk_cita_enfermeria, $receta, $f_inicio, $fk_medicamento, $f_fin, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId)) {
 
                 echo "<script>
                 swal({

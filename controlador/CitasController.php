@@ -200,6 +200,33 @@ class CitasController {
       $citas = $this->citasModelo->obtenerInformacionCitasPorId($id);
       return $citas;
   }
+
+  public function VerDatosHistoriaMedica($idPaciente) {
+    $modeloCitas = new Citas();
+    $citasPaciente = $modeloCitas->obtenerHistoriaMedicaPorPaciente($idPaciente);
+    
+    if ($citasPaciente) {
+        $historiaMedica = $modeloCitas->organizarCitasPorFecha($citasPaciente);
+        
+        // Obtener los datos del paciente de la primera cita (asumiendo que son los mismos para todas)
+        $datosPaciente = $citasPaciente[0];
+        
+        return [
+            'datos_paciente' => [
+                'cedula_paciente' => $datosPaciente['cedula_paciente'],
+                'nombre_paciente' => $datosPaciente['nombre_paciente'],
+                'segundo_nombre_paciente' => $datosPaciente['segundo_nombre_paciente'],
+                'apellido_paciente' => $datosPaciente['apellido_paciente'],
+                'segundo_apellido_paciente' => $datosPaciente['segundo_apellido_paciente'],
+                'fecha_nacimiento' => $datosPaciente['fecha_nacimiento'],
+                'sexo' => $datosPaciente['sexo'],
+            ],
+            'historia_medica' => $historiaMedica
+        ];
+    } else {
+        return false;
+    }
+}
     public function InformacionPacientes() {
         return $this->citasModelo->InformacionPacientes();
     }
@@ -211,8 +238,12 @@ class CitasController {
         return $this->citasModelo->verCitasId($id);
     }
 
-      public function verCitasEnfermeriaPorId($id) {
+    public function verCitasEnfermeriaPorId($id) {
         return $this->citasModelo->verCitasEnfermeriaPorId($id);
+    }
+
+      public function verCitasEnfermeriaMedicoPorId($id) {
+        return $this->citasModelo->verCitasEnfermeriaMedicoPorId($id);
     }
 
     public function verificarCitasExistentes($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora) {

@@ -208,6 +208,43 @@ class Citas
         try {
             $query = "SELECT
             citas.id,
+            paciente.cedula AS cedula_paciente,
+            paciente.nombre AS nombre_paciente,
+            paciente.apellido AS apellido_paciente,
+            medico.nombre AS nombre_medico,
+            medico.apellido AS apellido_medico,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.apellido AS apellido_usuario,
+            servicios.nombre AS nombre_servicio,
+            citas.fecha,
+            citas.hora,
+            citas.estatus,
+            citas.fk_usuario_sesion,
+            consultorios.nombre AS nombre_consultorio
+        FROM
+            citas
+        JOIN personas paciente ON citas.fk_persona = paciente.id
+        JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+        JOIN personas medico ON medico_usuario.fk_persona = medico.id
+        JOIN usuarios llave ON citas.fk_usuario_sesion = llave.id
+		JOIN personas usuarios ON llave.fk_persona = usuarios.id
+        JOIN servicios ON citas.fk_servicio = servicios.id
+        JOIN consultorios ON citas.fk_consultorio = consultorios.id
+        WHERE citas.id = :id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo "Error al recuperar la cita con ID $id: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function verCitasEnfermeriaMedicoPorId($id) {
+        try {
+            $query = "SELECT
+            citas.id,
 			llave_enfermeria.id AS citas_enfermeria_id,
             paciente.cedula AS cedula_paciente,
             paciente.nombre AS nombre_paciente,
@@ -506,6 +543,86 @@ class Citas
         }
     }
     
+    public function obtenerHistoriaMedicaPorPaciente($idPaciente) {
+        try {
+            $query = "SELECT
+                citas.id,
+                paciente.cedula AS cedula_paciente,
+                paciente.correo AS correo_paciente,
+                paciente.nombre AS nombre_paciente,
+                paciente.segundo_nombre AS segundo_nombre_paciente,
+                paciente.apellido AS apellido_paciente,
+                paciente.segundo_apellido AS segundo_apellido_paciente,
+                paciente.f_nacimiento AS fecha_nacimiento,
+                paciente.sexo AS sexo,
+                post_cita.altura AS altura_paciente,
+                post_cita.peso AS peso_paciente,
+                post_cita.tension AS tension_paciente,
+                historia_cita.fk_cita_enfermeria AS llave_enfermeria,
+                historia_cita.diagnostico AS diagnostico_paciente,
+                llave_p.nombre AS patologia_paciente,
+                llave_l.nombre AS laboratorio_paciente,
+                medico.nombre AS nombre_medico,
+                medico.apellido AS apellido_medico,
+                servicios.nombre AS nombre_servicio,
+                citas.fecha,
+                citas.hora,
+                citas.estatus,
+                consultorios.nombre AS nombre_consultorio,
+
+                recipes.id AS id_recipe,
+                recipes.receta AS receta_paciente,
+                recipes.f_inicio AS inicio_recipe,
+                recipes.f_fin AS fin_recipe,
+                recipes.fk_medicamento AS id_medicamento,
+                medicamentos.nombre_comercial AS nombre_medicamento,
+                reposo.id AS id_reposo,
+                reposo.descripcion AS descripcion_reposo,
+                reposo.f_inicio AS inicio_reposo,
+                reposo.f_fin AS fin_reposo
+            FROM
+                citas
+                JOIN personas paciente ON citas.fk_persona = paciente.id
+                JOIN citas_enfermeria post_cita ON post_cita.fk_cita = citas.id
+                JOIN usuarios medico_usuario ON citas.fk_usuario = medico_usuario.id
+                JOIN personas medico ON medico_usuario.fk_persona = medico.id
+                JOIN servicios ON citas.fk_servicio = servicios.id
+                JOIN consultorios ON citas.fk_consultorio = consultorios.id
+                JOIN historias_medicas historia_cita ON historia_cita.fk_cita_enfermeria = post_cita.id
+                JOIN patologias llave_p ON llave_p.id = historia_cita.fk_patologia
+                JOIN laboratorios llave_l ON llave_l.id = historia_cita.fk_laboratorio
+                LEFT JOIN recipes ON historia_cita.id = recipes.fk_historia_medica
+                LEFT JOIN medicamentos ON recipes.fk_medicamento = medicamentos.id
+                LEFT JOIN reposo ON historia_cita.id = reposo.fk_historia_medica
+            WHERE paciente.id = :idPaciente
+            ORDER BY citas.fecha DESC, citas.hora DESC";
+    
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':idPaciente', $idPaciente);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener la historia médica del paciente: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    public function organizarCitasPorFecha($citas) {
+        $citasOrganizadas = [];
+        foreach ($citas as $cita) {
+            $fecha = $cita['fecha'];
+            $hora = $cita['hora'];
+            $idCita = $cita['id'];
+            
+            // Usar una clave única combinando fecha, hora e ID de la cita
+            $claveCita = $fecha . '_' . $hora . '_' . $idCita;
+            
+            if (!isset($citasOrganizadas[$fecha][$claveCita])) {
+                $citasOrganizadas[$fecha][$claveCita] = $cita;
+            }
+        }
+        return $citasOrganizadas;
+    }
 
    public function verificarCitasExistentes($fk_persona, $fk_servicio, $fk_usuario, $fecha, $hora) {
         try {

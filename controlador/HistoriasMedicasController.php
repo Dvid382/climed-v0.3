@@ -13,4 +13,9 @@ class HistoriasMedicasController {
         $citas = $this->historiasmedicasModelo->obtenerInformacionTodasHistoriasMedicas();
         return $citas;
     }
+
+    public function obtenerInformacionHistoriasMedicasId() {
+        $historiasmedicas = $this->historiasmedicasModelo->obtenerInformacionHistoriasMedicasId();
+        return $historiasmedicas;
+    }
 }

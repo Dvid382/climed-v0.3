@@ -57,6 +57,7 @@ $citas = $controlador->verTodas();
                             <th>Servicios</th>
                             <th>Médicos</th>
                             <th>Estatus</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,6 +104,9 @@ $citas = $controlador->verTodas();
                                             break;
                                     }
                                 ?>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline-success" href="HistoriasMedicasVer.php?id=<?php echo $historiasmedica['id_paciente']; ?>"><i class="fa fa-magnifying-glass"></i></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

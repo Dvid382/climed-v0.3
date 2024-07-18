@@ -54,7 +54,7 @@ class CitasMedico
 		$this->fk_cita_enfermeria = $fk_cita_enfermeria;
 	}
 
-    public function CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $fk_cita_enfermeria, $receta, $f_inicio, $f_fin, $fk_medicamento, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId)
+    public function CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $fk_cita_enfermeria, $receta, $f_inicio, $fk_medicamento, $f_fin, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId)
     {
         try {
             // Iniciar una transacción para garantizar la integridad de los datos
@@ -73,15 +73,15 @@ class CitasMedico
             $last_insert_id = $this->conexion->lastInsertId();
     
             // Insertar en la tabla recipes
-            $sql_recipes = "INSERT INTO recipes (receta, f_inicio, f_fin, fk_medicamento, fk_historia_medica) 
-                    VALUES (:receta, :f_inicio, :f_fin, :fk_medicamento, :fk_historia_medica)";
+            $sql_recipes = "INSERT INTO recipes (receta, f_inicio, fk_medicamento, fk_historia_medica, f_fin) 
+                    VALUES (:receta, :f_inicio, :fk_medicamento, :fk_historia_medica, :f_fin)";
             $stmt_recipes = $this->conexion->prepare($sql_recipes);
             $stmt_recipes->bindParam(':receta', $receta);
             $stmt_recipes->bindParam(':f_inicio', $f_inicio);
-            $stmt_recipes->bindParam(':f_fin', $f_fin);
             $stmt_recipes->bindParam(':fk_medicamento', $fk_medicamento);
             $stmt_recipes->bindParam(':fk_historia_medica', $last_insert_id);
-            $stmt->execute();
+            $stmt_recipes->bindParam(':f_fin', $f_fin);
+            $stmt_recipes->execute();
 
             // Insertar en la tabla reposo
             $sql_reposo = "INSERT INTO reposo (descripcion, f_inicio, f_fin, fk_historia_medica) 

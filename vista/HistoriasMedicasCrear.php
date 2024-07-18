@@ -24,7 +24,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
     if (isset($_GET['id'])) {
         $citaId = $_GET['id'];
-        $cita = $citasController->verCitasEnfermeriaPorId($citaId);
+        $cita = $citasController->verCitasEnfermeriaMedicoPorId($citaId);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $diagnostico = $_POST['diagnostico'];
@@ -33,13 +33,13 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             $cita_enfermeria_id = $_POST['citas_enfermeria_id'];
             $receta = $_POST['receta'];
             $f_inicio = $_POST['f_inicio'];
-            $f_fin = $_POST['f_fin'];
             $fk_medicamento = $_POST['fk_medicamento'];
+            $f_fin = $_POST['f_fin'];
             $descripcion = $_POST['descripcion'];
             $f_inicio_evolucion = $_POST['f_inicio_evolucion'];
             $f_fin_evolucion = $_POST['f_fin_evolucion'];
 
-            $citasMedicoController->CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $cita_enfermeria_id, $receta, $f_inicio, $f_fin, $fk_medicamento, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId);
+            $citasMedicoController->CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $cita_enfermeria_id, $receta, $f_inicio, $fk_medicamento, $f_fin, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId);
 
             exit();
         }
