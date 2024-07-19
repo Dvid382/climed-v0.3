@@ -82,7 +82,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         ?>
                     </select>
                 </div>
-
+                <a href="CargosCrear.php" id="link-agregar-cargo" style="display: none;">Crear Cargo, si no existe un cargo en la lista</a>
                 <div class="form-floating mb-3">
                     <textarea class="form-control" placeholder="Descripcion"
                     id="descripcion" name="descripcion" style="height: 150px;" required></textarea>
@@ -107,7 +107,27 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
         <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script>
+        // Obtener referencias a los elementos del formulario
+    const cargoSelect = document.getElementById('fk_cargos');
+    const linkAgregarCargo = document.getElementById('link-agregar-cargo');
 
+    // Agregar evento de escucha al select
+    cargoSelect.addEventListener('change', mostrarOcultarLink);
+
+    // Función para mostrar u ocultar el enlace
+    function mostrarOcultarLink() {
+        // Verificar si se ha seleccionado un valor en el select
+        if (cargoSelect.value === '') {
+            linkAgregarCargo.style.display = 'inline-block'; // Mostrar enlace de agregar cargo
+        } else {
+            linkAgregarCargo.style.display = 'none'; // Ocultar enlace de agregar cargo
+        }
+    }
+
+    // Llamar a la función al cargar la página para establecer el estado inicial del enlace
+    mostrarOcultarLink();
+    </script>
     <!-- Template Javascript -->
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>

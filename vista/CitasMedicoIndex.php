@@ -51,7 +51,6 @@ $citas = $controlador->verTodas();
                 <?php  if($_SESSION['valor_rol'] == '1'): ?>
                 <br><a class="btn btn-primary" href="CitasCrear.php">Nueva cita</a>
                 <?php endif; ?>
-                <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
                 
                 <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
@@ -118,7 +117,9 @@ $citas = $controlador->verTodas();
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                             <td>
                                 <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                                <a class="btn btn-outline-warning m-2" href="HistoriasMedicasCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
+                                <?php if($cita['estatus'] == '4'): ?>
+                                    <a class="btn btn-outline-warning m-2" href="HistoriasMedicasCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
+                                <?php endif; ?>
                                 <a class="btn btn-outline-danger m-2" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>
                             </td>
                             <?php endif; ?>

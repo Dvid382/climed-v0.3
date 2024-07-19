@@ -61,7 +61,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
 <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
 
-            <center><h1>Crear menu</h1></center>
+            <center><h1>Crear Submenu</h1></center>
 
     <form method="POST" autocomplete="off">
         <div class="form-floating mb-3">

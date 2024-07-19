@@ -73,6 +73,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 }
             ?>
         </select>
+        <a href="ServiciosCrear.php" id="btn-agregar-servicio" style="display: none;">Crear Servicio, si no existe un servicio en la lista</a>
     </div>
 
 
@@ -91,7 +92,27 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             <script src="../dist/plantilla/lib/tempusdominus/js/moment.min.js"></script>
         <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script>
+    // Obtener referencias a los elementos del formulario
+    const servicioSelect = document.getElementById('fk_servicios');
+    const btnAgregarServicio = document.getElementById('btn-agregar-servicio');
 
+    // Agregar eventos de escucha a los select
+    servicioSelect.addEventListener('change', mostrarOcultarBotones);
+
+// Función para mostrar u ocultar los botones
+function mostrarOcultarBotones() {
+
+    if (servicioSelect.value === '') {
+        btnAgregarServicio.style.display = 'inline-block'; // Mostrar botón de agregar servicio
+    } else {
+        btnAgregarServicio.style.display = 'none'; // Ocultar botón de agregar servicio
+    }
+}
+
+// Llamar a la función al cargar la página para establecer el estado inicial de los botones
+mostrarOcultarBotones();
+</script>
     <!-- Template Javascript -->
     <script src="../dist/plantilla/js/main.js"></script>
         <script src="../dist/js/buscar.js"></script>

@@ -10,6 +10,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <html>
 <head>
 <?php include('../dist/Plantilla.php');?>
+
 </head>
 <body>
 
@@ -39,13 +40,32 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             $f_inicio_evolucion = $_POST['f_inicio_evolucion'];
             $f_fin_evolucion = $_POST['f_fin_evolucion'];
 
+
             $citasMedicoController->CrearHistoriaMedica($diagnostico, $fk_patologia, $fk_laboratorio, $cita_enfermeria_id, $receta, $f_inicio, $fk_medicamento, $f_fin, $descripcion, $f_inicio_evolucion, $f_fin_evolucion, $citaId);
 
             exit();
         }
     }
     ?>
+    <?php
+     $cita = $citasController->verCitasEnfermeriaMedicoPorId($citaId);
 
+     if ($cita['estatus'] < 3) {
+            echo "<script>
+            swal({
+                title: 'Error',
+                text: 'No se puede generar este paso si no se ha creado, notificado y confirmado la cita.',
+                icon: 'error',
+                className: 'custom-swal'
+            }).then((willRedirect) => {
+                if (willRedirect) {
+                    window.location.href = 'CitasMedicoIndex.php'; // Redirige a tu página PHP
+                }
+            });
+        </script>";
+         exit();
+     }
+    ?>
 
     <div class="container-fluid pt-4 px-4">
         <div class="bg-white rounded h-25 p-4" style="width: 90%; margin:auto;">

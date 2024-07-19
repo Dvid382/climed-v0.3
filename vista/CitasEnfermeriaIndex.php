@@ -48,8 +48,6 @@ $citas = $controlador->verTodas();
             <input class="form-control" type="text" id="buscador" onkeyup="buscarEnTabla()" placeholder="Buscar">
             
             <div class="table-responsive">
-                <button id="btnMostrarInactivos" class="btn btn-outline-success m-2">Mostrar inactivos</button>
-                
                 <table id="tabla" class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>

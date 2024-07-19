@@ -23,8 +23,8 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $foto = $_FILES['foto'];
                         $clave = ucfirst($_POST['clave']);
-                        $fk_persona = ucfirst($_POST['fk_persona']);
                         $fk_rol = ucfirst($_POST['fk_rol']);
+                        $fk_persona = ucfirst($_POST['fk_persona']);
                         $fk_servicio = ucfirst($_POST['fk_servicio']);
                         $estatus = $_POST['estatus'];
 
@@ -36,7 +36,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         if ($existeUsuario) {
                             echo "<script>alert('Error: El usuario ya existe.');</script>";
                         } else {
-                            $resultado = $UsuarioController->crearUsuario( $foto, $clave, $fk_persona, $fk_rol, $fk_servicio, $estatus);
+                            $resultado = $UsuarioController->crearUsuario( $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus);
 
                             if ($resultado) {
                                 echo "<script>alert('Usuario creado exitosamente.');</script>";
@@ -49,7 +49,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 ?>
 <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
                 <center><h1>Crear Usuario</h1></center>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" >
                     
 
                     <div class="form-floating mb-3">
@@ -91,8 +91,8 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                             ?>
                         </select><br>
                         <label class="form-label " for="fk_rol">Rol del usuario:</label>
+                        <a href="RolesCrear.php" id="btn-agregar-rol" style="display: none;">Crear Rol, si no existe Rol en la lista</a>
                     </div>
-
 
                     <div class="form-floating mb-3">
                         <select class="form-select" aria-label="Default select example" name="fk_servicio" id="fk_servicio" required>
@@ -109,6 +109,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                             ?>
                         </select><br>
                         <label class="form-label " for="fk_servicio">Servicio del usuario:</label>
+                        <a href="ServiciosCrear.php" id="btn-agregar-servicio" style="display: none;">Crear Servicio, si no existe un servicio en la lista</a>
                     </div>
 
                     <div class="form-floating mb-3">
@@ -126,27 +127,74 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <script src="../dist/js/jquery-3.7.1.min.js"></script>
     <script>
     $(document).ready(function() {
+    // Obtener la cédula del parámetro de la URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var cedula = urlParams.get('cedula');
+
+    // Asignar la cédula al campo de cédula
+    if (cedula) {
+        $('#cedula').val(cedula);
+        $('#cedula').trigger('input');
+    }
         $("#cedula").on("input", function() {
             var cedula = $(this).val();
-            $.ajax({
-                url: "funcionPersona.php",
-                type: "POST",
-                data: {
-                    cedula: cedula
-                },
-                success: function(data) {
-                    var persona = JSON.parse(data);
-                    if (persona.id) {
-                        $("#fk_persona").val(persona.id);
-                        $("#datos_persona").html("<div class='alert alert-info'>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</div>");
-                    } else {
-                        $("#fk_persona").val("");
-                        $("#datos_persona").html("<div class='alert alert-warning'>No se encontró una persona con esa cédula. <a class='btn btn-outline-info' href='InsertarPersonaCitas.php'>Agregar Usuario</a></div>");
+            if (cedula.trim() === "") {
+                $("#datos_persona").html("");
+                $("#agregar_persona").hide();
+            } else {
+                $.ajax({
+                    url: "funcionPersona.php",
+                    type: "POST",
+                    data: {
+                        cedula: cedula
+                    },
+                    success: function(data) {
+                        var persona = JSON.parse(data);
+                        if (persona.id) {
+                            $("#fk_persona").val(persona.id);
+                            $("#datos_persona").html("<div class='alert alert-info'>Nombre y Apellido: " + persona.nombre + " " + persona.apellido + "</div>");
+                            $("#agregar_persona").hide();
+                        } else {
+                            $("#fk_persona").val("");
+                            $("#datos_persona").html("");
+                            $("#agregar_persona").html("<div class='alert alert-warning'>No se encontró una persona con esa cédula. <a class='btn btn-outline-info' href='InsertarPersonaCitas.php'>Agregar Paciente</a></div>");
+                            $("#agregar_persona").show();
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     });
+</script>
+<script>
+    // Obtener referencias a los elementos del formulario
+const rolSelect = document.getElementById('fk_rol');
+const servicioSelect = document.getElementById('fk_servicio');
+const btnAgregarRol = document.getElementById('btn-agregar-rol');
+const btnAgregarServicio = document.getElementById('btn-agregar-servicio');
+
+// Agregar eventos de escucha a los select
+rolSelect.addEventListener('change', mostrarOcultarBotones);
+servicioSelect.addEventListener('change', mostrarOcultarBotones);
+
+// Función para mostrar u ocultar los botones
+function mostrarOcultarBotones() {
+    // Verificar si se ha seleccionado un valor en los select
+    if (rolSelect.value === '') {
+        btnAgregarRol.style.display = 'inline-block'; // Mostrar botón de agregar rol
+    } else {
+        btnAgregarRol.style.display = 'none'; // Ocultar botón de agregar rol
+    }
+
+    if (servicioSelect.value === '') {
+        btnAgregarServicio.style.display = 'inline-block'; // Mostrar botón de agregar servicio
+    } else {
+        btnAgregarServicio.style.display = 'none'; // Ocultar botón de agregar servicio
+    }
+}
+
+// Llamar a la función al cargar la página para establecer el estado inicial de los botones
+mostrarOcultarBotones();
 </script>
     <!-- libreries JS -->
 

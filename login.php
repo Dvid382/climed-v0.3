@@ -110,6 +110,6 @@
 
     <!-- Template Javascript -->
     <script src="dist/plantilla/js/main.js"></script>
-    <script src="dist/js/validacionseguridad.js"></script>
+
 </body>
 </html>

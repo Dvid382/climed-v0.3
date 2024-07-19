@@ -32,8 +32,8 @@ class UsuariosController extends RolesController {
         $this->usuariosModelo->setId('id');
         $this->usuariosModelo->setFoto('foto');
         $this->usuariosModelo->setClave('clave');
-        $this->usuariosModelo->setFK_Persona('fk_persona');
         $this->usuariosModelo->setFk_rol('fk_rol');
+        $this->usuariosModelo->setFK_Persona('fk_persona');
         $this->usuariosModelo->setFK_servicio('fk_servicio');
         $this->usuariosModelo->setEstatus('estatus');
     
@@ -119,7 +119,6 @@ class UsuariosController extends RolesController {
         // Mover la foto a la carpeta de destino
         $rutaFotoDestino = $carpetaDestino . $foto['name'];
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino);
-        var_dump($id, $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus);
         if ($this->usuariosModelo->modificarUsuario($id, $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus)) {
 
             echo "<script>
@@ -214,7 +213,7 @@ class UsuariosController extends RolesController {
                 1 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'CitasVer', 'CitasEnfermeriaIndex',  'CitasEnfermeriaCrear',  'CitasEnfermeriaVer', 'CitasMedicoIndex', 'CitasMedicoVer', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'UsuariosMenuCrear', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar', 'MenusIndex', 'MenusCrear', 'MenusEditar', 'MenusEliminar', 'SubmenusIndex', 'SubmenusEliminar', 'SubmenusCrear', 'SubmenusEditar', 'PacientesIndex', 'PacientesVer', 'Tipo_medicamentosIndex', 'Tipo_medicamentosCrear', 'Tipo_MedicamentosEditar', 'Tipo_MedicamentosEliminar', 'UnidadMedidasIndex', 'UnidadMedidasCrear', 'UnidadMedidasEditar', 'UnidadMedidasEliminar', 'UnidadPesosIndex', 'UnidadPesosCrear', 'UnidadPesosEditar', 'UnidadPesosEliminar', 'ComponentesActivosIndex', 'ComponentesActivosCrear', 'ComponentesActivosEditar', 'ComponentesActivosEliminar', 'MedicamentosIndex', 'MedicamentosCrear', 'MedicamentosEditar', 'MedicamentosEliminar','HistoriasMedicasIndex', 'HistoriasMedicasCrear', 'HistoriasMedicasVer', 'InsertarPersonaCitas', 'InsertarPersonaUsuario'],
                 2 => ['AsignacionesCrear', 'AsignacionesEditar', 'AsignacionesEliminar', 'AsignacionesIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'RolesCrear', 'RolesEditar', 'RolesEliminar', 'RolesIndex', 'RolesMenuCrear', 'RolesMenuEditar', 'ServiciosCrear', 'ServiciosEditar', 'ServiciosEliminar', 'ServiciosIndex', 'UsuariosCrear', 'UsuariosEditar', 'UsuariosEliminar', 'UsuariosIndex', 'UsuariosVer', 'CargosIndex', 'CargosCrear', 'CargosEditar', 'CargosEliminar', 'InsertarPersonaCitas', 'InsertarPersonaUsuario'],
                 3 => ['CitasCrear', 'CitasEditar', 'CitasEliminar', 'CitasIndex', 'PacientesIndex', 'PacientesVer', 'ConsultoriosCartel', 'ConsultoriosCrear', 'ConsultoriosEditar', 'ConsultoriosEliminar', 'ConsultoriosIndentificadores', 'ConsultoriosIndex', 'Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosCrear', 'LaboratoriosEditar', 'LaboratoriosEliminar', 'LaboratoriosIndex', 'PatologiasCrear', 'PatologiasEditar', 'PatologiasEliminar', 'PatologiasIndex', 'PersonasCrear', 'PersonasEditar', 'PersonasEliminar', 'PersonasIndex', 'PersonasVer' , 'InsertarPersonaCitas', 'InsertarPersonaUsuario'],
-                4 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosIndex', 'PatologiasIndex', 'MedicamentosIndex', 'MedicamentosCrear', 'MedicamentosEditar', 'MedicamentosEliminar',  'CitasMedicoIndex', 'CitasMedicoVer',  'CitasMedicoVer', 'PacientesIndex', 'PacientesVer','HistoriasMedicasIndex', 'HistoriasMedicasCrear', 'HistoriasMedicasVer',],
+                4 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'LaboratoriosIndex', 'PatologiasIndex', 'MedicamentosIndex', 'MedicamentosCrear', 'MedicamentosEditar', 'MedicamentosEliminar',  'CitasMedicoIndex', 'CitasMedicoVer',  'CitasMedicoVer', 'PacientesIndex', 'PacientesVer','HistoriasMedicasIndex', 'HistoriasMedicasCrear', 'HistoriasMedicasVer'],
                 5 => ['Error404', 'funcionPersona', 'Home', 'Inicio', 'menu', 'CitasEnfermeriaIndex', 'CitasEnfermeriaCrear', 'CitasEnfermeriaVer', 'PacientesIndex', 'Pacientes'],
             ];
 
@@ -269,7 +268,6 @@ class UsuariosController extends RolesController {
     //maneja el acceso a las vistas
     public function Vistas(){
         if (!isset($_SESSION['rol'])) {
-            echo "<script>alert('Usted debe iniciar sesión para acceder a esta página.'); window.location.href = '../Index.php';</script>";
             echo "<script>
             swal({
                title: 'Error',
@@ -285,7 +283,6 @@ class UsuariosController extends RolesController {
         }
         
         if ( $_SESSION['valor_rol']==false) {
-            echo "<script>alert('Usted no tiene permiso para acceder a esta página.'); window.location.href = 'Home.php';</script>";
             echo "<script>
             swal({
                title: 'Error',
@@ -408,3 +405,4 @@ class UsuariosController extends RolesController {
     } */
 
 }
+include('../dist/Plantilla.php');

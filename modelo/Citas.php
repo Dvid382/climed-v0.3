@@ -317,7 +317,7 @@ class Citas
             citas.id,
 			citas.fecha,
             citas.hora,
-            citas.estatus,
+            citas.estatus AS estatus,
             citas.fk_usuario_sesion,
             paciente.nombre AS nombre_paciente,
             paciente.apellido AS apellido_paciente,
