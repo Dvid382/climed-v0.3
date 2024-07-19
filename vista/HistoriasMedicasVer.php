@@ -43,7 +43,7 @@ $historiaMedica = $datosHistoria['historia_medica'];
                         <div class="row mb-3">
     <h3>Historia Médica</h3><br><br>
     <div class="form-floating mb-3">
-        <a class="btn btn-outline-info" href="MenusIndex.php">X</a>
+        <a class="btn btn-outline-info" href="HistoriasMedicasIndex.php">X</a>
     </div>
     <?php foreach ($historiaMedica as $fecha => $citasPorFecha): ?>
         <h4>Fecha: <?php echo date('d/m/Y', strtotime($fecha)); ?></h4><br><br>
