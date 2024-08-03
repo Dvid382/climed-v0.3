@@ -46,7 +46,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     }
                 ?>
 
-                <form method="POST">
+                <form method="POST" autocomplete="off">
 
                     <div class="form-floating mb-3">    
                         <input class="form-control" type="text" name="nombre" id="nombre" value="<?php echo $componentesactivos['nombre']; ?> "><br>

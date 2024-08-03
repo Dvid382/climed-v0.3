@@ -43,7 +43,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 <div class="container-fluid pt-4 px-4">
 <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
         <center><h1>Editar cita</h1></center>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" autocomplete="off">
 
             <div class="form-floating mb-3">
                 <input class="form-control" type="number" name="cedula" id="cedula" value="<?php require_once '../controlador/UsuariosController.php'; $personasUsuario = $controladorUsuario->buscarDatosPersonas($cita['fk_persona']); echo $personasUsuario['cedula_persona'];?>" required><br>

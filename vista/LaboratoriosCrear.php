@@ -50,7 +50,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
             <center><h1>Crear Laboratorio</h1></center>
 
-            <form method="POST">
+            <form method="POST" autocomplete="off">
 
 
             <div class="form-floating mb-3">

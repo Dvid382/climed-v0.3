@@ -87,8 +87,12 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     <h5 class="card-subtitle">Datos de la cita:</h5>
                     <p class="alert alert-info">Servicio: <?php echo $cita['nombre_servicio']. " Consultorio:" . $cita['nombre_consultorio'];?></p>
                 </div>
+                <div class="col-sm-5">
+                    <h5 class="card-subtitle">Examen Fisico:</h5>
+                    <p class="alert alert-info">Peso: <?php echo $cita['peso']. ", altura:" . $cita['altura']. ", Tencion: " . $cita['tension'];?></p>
+                </div>
             </div>
-        <form  method="post" id="formulario-historia-medica">
+        <form  method="post" id="formulario-historia-medica" autocomplete="off">
             <div class="form-group">
                 <h2>Datos de la Historia Médica</h2>
                 <input type="hidden" value="<?php echo $cita['citas_enfermeria_id'];?>" name="citas_enfermeria_id" >

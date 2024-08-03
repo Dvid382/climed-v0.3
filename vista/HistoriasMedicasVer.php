@@ -31,6 +31,24 @@ $historiaMedica = $datosHistoria['historia_medica'];
 <head>
     <?php include('../dist/Plantilla.php');?>
     <title>Historia Médica del Paciente</title>
+    <style>
+.container {
+    display: flex;
+    flex-direction: column; /* Alinear elementos en columna */
+}
+
+.form-group {
+    margin-top: -40px;
+    margin-bottom: 1px; /* Espaciado entre elementos */
+    text-align: right; /* Alinear el contenido a la derecha */
+}
+
+.btn {
+    margin-left: auto; /* Empujar el botón hacia la derecha */
+}
+
+
+    </style>
 </head>
 <body>
     <div class="container-fluid pt-4 px-4">
@@ -38,12 +56,17 @@ $historiaMedica = $datosHistoria['historia_medica'];
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-lg-12">
-                        <center><h2 class="card-title text-primary">Historia Médica del Paciente: <?php echo $datosPaciente['nombre_paciente'] . " " . $datosPaciente['apellido_paciente']; ?></h2></center>
-                        
+                        <center><h2 class="card-title text-primary">Historia Médica del Paciente: <?php echo $datosPaciente['nombre_paciente'] . " " . $datosPaciente['apellido_paciente']; ?></h2>
+                        </center>
+                        <div class="container">
+                            <div class="form-group">
+                                <a class="btn btn-outline-info" href="HistoriasMedicasIndex.php">X</a>
+                            </div>
+                        </div>
                         <div class="row mb-3">
     <h3>Historia Médica</h3><br><br>
     <div class="form-floating mb-3">
-        <a class="btn btn-outline-info" href="HistoriasMedicasIndex.php">X</a>
+
     </div>
     <?php foreach ($historiaMedica as $fecha => $citasPorFecha): ?>
         <h4>Fecha: <?php echo date('d/m/Y', strtotime($fecha)); ?></h4><br><br>

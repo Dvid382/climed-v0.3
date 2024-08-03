@@ -117,7 +117,7 @@ $citas = $controlador->verTodas();
                             <?php if($_SESSION['valor_rol'] == '1'): ?>
                             <td>
                                 <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $cita['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                                <?php if($cita['estatus'] == '4'): ?>
+                                <?php if($cita['estatus'] == '5'): ?>
                                     <a class="btn btn-outline-warning m-2" href="HistoriasMedicasCrear.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
                                 <?php endif; ?>
                                 <a class="btn btn-outline-danger m-2" href="CitasEliminar.php?id=<?php echo $cita['id']; ?>"><i class="fa fa-trash-alt"></i></a>

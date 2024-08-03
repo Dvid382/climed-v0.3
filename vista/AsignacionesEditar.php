@@ -42,7 +42,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             }
             ?>
 
-            <form method="POST">
+            <form method="POST" autocomplete="off">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $asignacion['nombre']; ?>" required>
                     <label for="nombre">Nombre</label>

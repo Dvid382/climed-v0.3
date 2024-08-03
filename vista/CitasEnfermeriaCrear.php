@@ -42,7 +42,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
     <div class="container-fluid pt-4 px-4">
         <div class="bg-white rounded h-25 p-4" style="width: 90%; margin:auto;">
             <center><h1>Exámen Físico</h1></center>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
 
             <div class="row">
                 <div class="col-sm-3">
@@ -66,17 +66,17 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
             <div class="form-floating mb-3 " id="divAltura">
                 <input class="form-control" type="number" name="altura" id="altura" required>
-                <label for="altura">Altura</label>
+                <label for="altura">Altura (CM)</label>
             </div>
 
             <div class="form-floating mb-3 " id="divPeso">
                 <input class="form-control" type="number" name="peso" id="peso" required>
-                <label for="peso">Peso</label>
+                <label for="peso">Peso (KG)</label>
             </div>
 
             <div class="form-floating mb-3 " id="divTension">
                 <input class="form-control" type="text" name="tension" id="tension" required>
-                <label for="tension">Tensión</label>
+                <label for="tension">Tensión (AA/BB)</label>
             </div>
 
                 <div class="form-floating mb-3">

@@ -246,6 +246,9 @@ class Citas
             $query = "SELECT
             citas.id,
 			llave_enfermeria.id AS citas_enfermeria_id,
+            llave_enfermeria.peso AS peso,
+            llave_enfermeria.altura AS altura,
+            llave_enfermeria.tension AS tension,
             paciente.cedula AS cedula_paciente,
             paciente.nombre AS nombre_paciente,
             paciente.apellido AS apellido_paciente,

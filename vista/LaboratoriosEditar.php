@@ -47,7 +47,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     }
                 ?>
 
-                <form method="POST">
+                <form method="POST" autocomplete="off">
 
 
                     <div class="form-floating mb-3">

@@ -52,7 +52,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
 
 <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
     <center><h1>Crear consultorio</h1></center>
-        <form method="POST">
+        <form method="POST" autocomplete="off">
 
 
         <div class="form-floating mb-3">
@@ -61,8 +61,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         </div>    
 
         <div class="form-floating mb-3">    
-            <textarea class="form-control" placeholder="Descripcion"
-                id="descripcion" name="descripcion" style="height: 150px;" required></textarea>
+            <textarea class="form-control" placeholder="Descripcion" id="descripcion" name="descripcion" style="height: 150px;" required></textarea>
             <label  for="descripcion">Descripción:</label>
         </div>
 
@@ -94,10 +93,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
         <script src="../dist/plantilla/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="../dist/plantilla/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+
     <!-- Template Javascript -->
     <script src="../dist/plantilla/js/main.js"></script>
     <script src="../dist/js/buscar.js"></script>
-    <script src="../dist/js/validaciongenerica.js"></script>
+    <script src="../dist/js/validaciongenericaconsultorio.js"></script>
     <script src="../dist/js/validacionseguridad.js"></script>
 </body>
 </html>
