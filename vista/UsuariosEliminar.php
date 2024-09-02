@@ -45,7 +45,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                             <p><strong>Nombre:</strong>
                             <?php
                                         $datosUsuario = $usuariosController->buscarDatosPersonas($usuario['fk_persona']);
-                                        echo $datosUsuario['nombre_persona'] . " " . $datosUsuario['apellido_persona'];
+                                        echo $datosUsuario['nombre_persona'] . " " . $datosUsuario['apellido_persona']. " " . $datosUsuario['fk_rol'];
                                         ?>
                             </p>
 
@@ -61,20 +61,20 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                         <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
 
                         <?php
-                        if ($_SESSION['valor_rol'] == $usuario['fk_rol']) {
+                        if ($_SESSION['id_usuario'] == $usuario['id']) {
                             echo "<script>
-                            swal({
-                               title: 'Error',
-                               text: 'No se puede Autodestruir un usuario.',
-                               icon: 'error',
-                            }).then((willRedirect) => {
-                               if (willRedirect) {
-                                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
-                               }
-                            });
-                         </script>";
+                                        swal({
+                                        title: 'Error',
+                                        text: 'No se puede Autodestruir un usuario.',
+                                        icon: 'error',
+                                        }).then((willRedirect) => {
+                                        if (willRedirect) {
+                                            window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+                                        }
+                                        });
+                                    </script>";
                             exit;
-                        }elseif($_SESSION['valor_rol'] == "1") {
+                        }elseif($datosRolUsuario['valor_rol'] == "1") {
                             echo "<script>
                             swal({
                                title: 'Error',
