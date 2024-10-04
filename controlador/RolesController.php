@@ -103,39 +103,60 @@ class RolesController {
         $rolesMenusSubmenus = $this->rolesModelo->obtenerMenusSubMenusPorUsuario($rol_id);
         return $rolesMenusSubmenus;
     }
-    public function crearRolMenu($fk_rol, $fk_menu, $fk_submenu) {
-        // Insertar en la tabla roles_menu
-        $resultado = $this->rolesModelo->crearRolMenu($fk_rol, $fk_menu, $fk_submenu);
-    
-        if ($resultado) {
-            echo "<script>
-                swal({
-                    title: 'Completado',
-                    text: 'Asignación de rol, menú y submenu realizada correctamente.',
-                    icon: 'success',
-                }).then((willRedirect) => {
-                    if (willRedirect) {
-                        window.location.href = 'RolesIndex.php';
-                    }
-                });
-            </script>";
-            return true;
-        } else {
-            echo "<script>
-                swal({
-                    title: 'Error',
-                    text: 'Hubo un error al asignar el rol, menú y submenu.',
-                    icon: 'error',
-                }).then((willRedirect) => {
-                    if (willRedirect) {
-                        window.location.href = 'RolesIndex.php';
-                    }
-                });
-            </script>";
-            return false;
-        }
+
+    public function obtenerMenuPorSubmenu($submenu_id) {
+        return $this->rolesModelo->obtenerMenuPorSubmenu($submenu_id);
     }
 
+    public function crearRolMenu($fk_rol, $fk_menus, $fk_submenus) {
+        var_dump($fk_rol, $fk_menus, $fk_submenus);
+        // Asegurarse de que $fk_menus y $fk_submenus sean arrays
+        if (!is_array($fk_menus)) {
+            $fk_menus = array();
+        }
+        if (!is_array($fk_submenus)) {
+            $fk_submenus = array();
+        }
+    
+        // Usar un conjunto para evitar duplicados
+        $combinaciones = [];
+    
+        // Agrupar submenús por menú
+        foreach ($fk_menus as $menu_id) {
+            $combinaciones[$menu_id] = []; // Inicializar el array para cada menú
+        }
+    
+        foreach ($fk_submenus as $submenu_id) {
+            // Obtener el ID del menú correspondiente al submenú
+            $menu_id = $this->obtenerMenuPorSubmenu($submenu_id);
+            if (isset($combinaciones[$menu_id])) {
+                $combinaciones[$menu_id][] = $submenu_id; // Agregar el submenú al menú correspondiente
+            }
+        }
+    
+        // Insertar en la base de datos
+        foreach ($combinaciones as $menu_id => $submenus) {
+            foreach ($submenus as $submenu_id) {
+                $resultado = $this->rolesModelo->crearRolMenu($fk_rol, $menu_id, $submenu_id);
+                if (!$resultado) {
+                    // Manejar el error si es necesario
+                }
+            }
+        }
+    
+        // Mensaje de éxito
+        echo "<script>
+            swal({
+                title: 'Completado',
+                text: 'Asignación de rol, menú y submenú realizada correctamente.',
+                icon: 'success',
+            }).then((willRedirect) => {
+                if (willRedirect) {
+                    window.location.href = 'RolesIndex.php';
+                }
+            });
+        </script>";
+    }
     public function actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus, $fk_usuario) {
         $resultado = $this->rolesModelo->actualizarMenusSubMenusPorRol($rol_id, $fk_menus, $fk_submenus, $fk_usuario);
 
@@ -177,7 +198,10 @@ class RolesController {
         return $menus_submenus;
     }
     
-    
+    public function obtenerMenusSubMenusPorRolUsuario($rol_id) {
+        $menus_submenus = $this->rolesModelo->obtenerMenusSubMenusPorRolUsuario($rol_id);
+        return $menus_submenus;
+    }
     
 }
 

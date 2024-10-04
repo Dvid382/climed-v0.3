@@ -163,24 +163,6 @@ class Submenus
             return false;
         }
     }
-
-    public function verSubmenusPorMenus() {
-        try {
-            $query = "SELECT 
-                        sm.id AS id_submenus,
-                        sm.nombre,
-                        m.id AS fk_menu
-                      FROM submenus sm
-                      JOIN menus m ON sm.fk_menus = m.id";
-            $stmt = $this->conexion->prepare($query);
-            $stmt->execute();
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultados;
-        } catch (PDOException $e) {
-            echo "Error al obtener submenús por menús: " . $e->getMessage();
-            return [];
-        }
-    }
     
     
     
@@ -220,6 +202,23 @@ class Submenus
         } catch(PDOException $e) {
             echo "Error al verificar los Submenus: " . $e->getMessage();
             return false;
+        }
+    }
+    public function verSubmenusPorMenu($menu_id) {
+        try {
+            $query = "SELECT id AS submenu_id, nombre, icono, url, fk_menus AS fk_menu
+                      FROM submenus 
+                      WHERE fk_menus = :menu_id
+                      ORDER BY orden"; // Puedes ajustar el orden según tus necesidades
+            
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':menu_id', $menu_id);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retorna todos los submenús asociados al menú
+        } catch (PDOException $e) {
+            echo "Error al obtener submenús por menú: " . $e->getMessage();
+            return [];
         }
     }
     

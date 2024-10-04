@@ -70,36 +70,38 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </div>
 
             <div class="form-floating mb-3">
-                    <select class="form-select" id="fk_servicio" aria-label="Default select example" name="fk_servicio" required>
-                        <option value="">Seleccione un Servicio</option>
-                            <?php
-                                require_once '../controlador/ServiciosController.php';
-                                $ServiciosController = new ServiciosController();
-                                $servicios = $ServiciosController->verTodos();
+                <select class="form-select" id="fk_servicio" aria-label="Default select example" name="fk_servicio" required>
+                    <option value="">Seleccione un Servicio</option>
+                    <?php
+                        require_once '../controlador/ServiciosController.php';
+                        $ServiciosController = new ServiciosController();
+                        $servicios = $ServiciosController->verTodos();
 
-                                foreach ($servicios as $servicio) {
-                                    if ($servicio['valor'] == 4) {
-                                        echo "<option value='" . $servicio['id'] . "'>" . $servicio['nombre'] . "</option>";
-                                    }
-                                }
-                            ?>
-                    </select>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="fk_usuario" aria-label="Default select example" name="fk_usuario" required disabled>
-                        <option value="">Seleccione un Usuario</option>
-                        <?php
-                        require_once '../controlador/UsuariosController.php';
-                        $UsuariosController = new UsuariosController();
-                        $Usuarios = $UsuariosController->verTodosAsignacion();
-
-                        foreach ($Usuarios as $Usuario) {
-                            echo "<option value='" . $Usuario['id_usuario'] . "' data-service='" . $Usuario['servicio'] . "'>" . $Usuario['nombre_usuario'] . "</option>";
+                        foreach ($servicios as $servicio) {
+                            if ($servicio['valor'] == 4) {
+                            $selected = ($servicio['id'] == $cita['fk_servicio']) ? 'selected' : ''; // Seleccionar el servicio actual
+                            echo "<option value='" . $servicio['id'] . "' $selected>" . $servicio['nombre'] . "</option>";
                         }
-                        ?>
-                    </select>
-                </div>
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-floating mb-3">
+                <select class="form-select" id="fk_usuario" aria-label="Default select example" name="fk_usuario" required disabled>
+                    <option value="">Seleccione un Usuario</option>
+                    <?php
+                    require_once '../controlador/UsuariosController.php';
+                    $UsuariosController = new UsuariosController();
+                    $Usuarios = $UsuariosController->verTodosAsignacion();
+
+                    foreach ($Usuarios as $Usuario) {
+                        // Asegúrate de que 'servicio' sea el valor correcto para filtrar
+                        echo "<option value='" . $Usuario['id_usuario'] . "' data-service='" . $Usuario['servicio'] . "'" . (($Usuario['id_usuario'] == $cita['fk_usuario']) ? ' selected' : '') . ">" . $Usuario['nombre_usuario'] . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
 
             <div class="form-floating mb-3">
                 <input class="form-control" type="date" name="fecha" id="fecha" value="<?php echo $cita['fecha']; ?>" required><br>
@@ -107,11 +109,11 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
             </div>
 
             <div class="form-floating mb-3">
-                    <select class="form-select" id="hora" name="hora" required>
-                      <option value="">Seleccione una hora</option>
-                     </select>
-                  <label class="form-label" for="hora">Hora:</label>
-                </div>
+                <select class="form-select" id="hora" name="hora" required>
+                <option value="">Seleccione una hora</option>
+                </select>
+                <label class="form-label" for="hora">Hora:</label>
+            </div>
 
             <input type="hidden" class="form-control form-control-sm" id="estatus" name="estatus" value="<?php echo $cita['estatus']; ?>">
 
@@ -164,6 +166,18 @@ function verificarPersonaExistente(cedula) {
 }
 </script>
 
+<script src="../dist/js/generateTimeOptions.js"></script>
+            <script>
+                $(document).ready(function() {
+                    // Llama a la función para generar las horas al cargar la página
+                    generateTimeOptions('#hora', '<?php echo $cita["hora"]; ?>'); // Pasa la hora actual como valor seleccionado
+
+                    // También puedes agregar un evento cuando cambie la fecha
+                    $("#fecha").on("change", function() {
+                        generateTimeOptions('#hora', ''); // Limpia la selección anterior al cambiar la fecha
+                    });
+                });
+            </script>
 <!-- Usuarios Asignados -->
 <script>
     document.getElementById('fk_servicio').addEventListener('change', function() {

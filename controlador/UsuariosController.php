@@ -7,6 +7,7 @@ require_once 'ServiciosController.php';
 /*session_start();*/
 class UsuariosController extends RolesController {
     private $usuariosModelo;
+    private $rolesModelo;
 
     public function __construct() {
         $conexion = new Conexion();
@@ -29,6 +30,7 @@ class UsuariosController extends RolesController {
             exit;
         }
     
+        // Asignar valores al modelo
         $this->usuariosModelo->setId('id');
         $this->usuariosModelo->setFoto('foto');
         $this->usuariosModelo->setClave('clave');
@@ -46,43 +48,60 @@ class UsuariosController extends RolesController {
         }
     
         // Mover la foto a la carpeta de destino
-        $rutaFotoDestino = $carpetaDestino . $foto['name'];
+        $rutaFotoDestino = $carpetaDestino . basename($foto['name']);
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino);
     
         // Asignar la nueva ruta de la foto
         $this->usuariosModelo->setFoto($rutaFotoDestino);
     
-        if ($this->usuariosModelo->crearUsuario( $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus)) {
-           
-
+        // Crear el usuario y obtener su ID
+        if ($this->usuariosModelo->crearUsuario($rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus)) {
+            // Obtener el ID del usuario recién creado
+            $usuario_id = $this->usuariosModelo->getLastInsertId();
+    
+            // Guardar los menús y submenús seleccionados
+            if (isset($_POST['fk_menu']) && isset($_POST['fk_submenu'])) {
+                foreach ($_POST['fk_menu'] as $menu_id) {
+                    // Solo guardar los submenús que pertenecen al menú actual
+                    foreach ($_POST['fk_submenu'] as $submenu_id) {
+                        // Verificar si el submenú pertenece al menú actual antes de insertar
+                        if ($this->usuariosModelo->verificarSubmenuPorMenu($menu_id, $submenu_id)) { 
+                            if (!$this->usuariosModelo->asignarMenuUsuario($usuario_id, $menu_id, $submenu_id)) { 
+                                // Manejar error si es necesario
+                                echo "Error al asignar menú ID: {$menu_id} y submenú ID: {$submenu_id} al usuario ID: {$usuario_id}";
+                            }
+                        }
+                    }
+                }
+            }
+    
             echo "<script>
-            swal({
-               title: 'Completado',
-               text: 'Usuario creado correctamente.',
-               icon: 'success',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
-            exit;
+                swal({
+                   title: 'Completado',
+                   text: 'Usuario creado correctamente.',
+                   icon: 'success',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
+             exit;
         } else {
             echo "<script>
-            swal({
-               title: 'Error',
-               text: 'Error al crear el usuario.',
-               icon: 'error',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
-            exit;
-        }
+                swal({
+                   title: 'Error',
+                   text: 'Error al crear el usuario.',
+                   icon: 'error',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
+             exit;
+         }
     }
-
     public function eliminarUsuario($id) {
         $this->usuariosModelo->eliminarUsuario($id);
         echo "<script>
@@ -99,14 +118,18 @@ class UsuariosController extends RolesController {
         // Puedes agregar lógica adicional después de eliminar el Asignaciones si es necesario
     }
     
-    public function modificarUsuario($id, $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus) {
-        $this->usuariosModelo->setId('id');
-        $this->usuariosModelo->setFoto('foto');
-        $this->usuariosModelo->setClave('clave');
-        $this->usuariosModelo->setFK_Persona('fk_persona');
-        $this->usuariosModelo->setFk_rol('fk_rol');
-        $this->usuariosModelo->setFK_servicio('fk_servicio');
-        $this->usuariosModelo->setEstado('estatus');
+    public function modificarUsuario($id, $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus, $fk_menus, $fk_submenus) {
+        // Paso 1: Eliminar los menús y submenús actuales del usuario
+        $this->usuariosModelo->eliminarMenusPorUsuario($id);
+    
+        // Paso 2: Asignar valores al modelo
+        $this->usuariosModelo->setId($id);
+        $this->usuariosModelo->setFoto($foto['name']); // Solo guardamos el nombre del archivo
+        $this->usuariosModelo->setClave($clave);
+        $this->usuariosModelo->setFK_Persona($fk_persona);
+        $this->usuariosModelo->setFk_rol($fk_rol);
+        $this->usuariosModelo->setFK_servicio($fk_servicio);
+        $this->usuariosModelo->setEstado($estatus);
     
         // Ruta de la carpeta de destino
         $carpetaDestino = '../vista/UsuariosFoto/';
@@ -117,38 +140,50 @@ class UsuariosController extends RolesController {
         }
     
         // Mover la foto a la carpeta de destino
-        $rutaFotoDestino = $carpetaDestino . $foto['name'];
+        $rutaFotoDestino = $carpetaDestino . basename($foto['name']);
         move_uploaded_file($foto['tmp_name'], $rutaFotoDestino);
+    
+        // Actualizar la información del usuario en la base de datos
         if ($this->usuariosModelo->modificarUsuario($id, $rutaFotoDestino, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus)) {
-
+            // Paso 3: Insertar los nuevos menús y submenús
+            foreach ($fk_menus as $menu_id) {
+                foreach ($fk_submenus as $submenu_id) {
+                    // Verificar si el submenú pertenece al menú actual antes de insertar
+                    if ($this->usuariosModelo->verificarSubmenuPorMenu($menu_id, $submenu_id)) {
+                        if (!$this->usuariosModelo->asignarMenuUsuario($id, $menu_id, $submenu_id)) { 
+                            echo "Error al asignar menú ID: {$menu_id} y submenú ID: {$submenu_id} al usuario ID: {$id}";
+                        }
+                    }
+                }
+            }
+    
             echo "<script>
-            swal({
-               title: 'Completado',
-               text: 'Usuario modificado correctamente.',
-               icon: 'success',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
+                swal({
+                   title: 'Completado',
+                   text: 'Usuario modificado correctamente.',
+                   icon: 'success',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
             exit;
         } else {
             echo "<script>
-            swal({
-               title: 'Error',
-               text: 'No se pudo modificar el usuario.',
-               icon: 'error',
-            }).then((willRedirect) => {
-               if (willRedirect) {
-                  window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
-               }
-            });
-         </script>";
+                swal({
+                   title: 'Error',
+                   text: 'No se pudo modificar el usuario.',
+                   icon: 'error',
+                }).then((willRedirect) => {
+                   if (willRedirect) {
+                      window.location.href = 'UsuariosCrear.php'; // Redirige a tu página PHP
+                   }
+                });
+             </script>";
             exit;
         }
     }
-    
     public function iniciarSesion($cedula, $clave) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $cedula = ucfirst($_POST['cedula']);
@@ -370,39 +405,82 @@ class UsuariosController extends RolesController {
         $menus_submenus  = $this->usuariosModelo->obtenerMenusSubMenusPorUsuario($fk_usuario);
         return $menus_submenus;
     }
-    
-/*     public function crearUsuarioMenu($fk_usuarios, $fk_roles_menu) {
-        // Insertar en la tabla Usuarios_menu
-        $resultado = $this->usuariosModelo->crearUsuarioMenu($fk_usuarios, $fk_roles_menu);
-    
-        if ($resultado) {
-            echo "<script>
-                swal({
-                    title: 'Completado',
-                    text: 'Asignación de Usuario, Menu realizada correctamente.',
-                    icon: 'success',
-                }).then((willRedirect) => {
-                    if (willRedirect) {
-                        window.location.href = 'RolesIndex.php';
-                    }
-                });
-            </script>";
-            return true;
-        } else {
-            echo "<script>
-                swal({
-                    title: 'Error',
-                    text: 'Hubo un error al asignar el Usuario, Menu.',
-                    icon: 'error',
-                }).then((willRedirect) => {
-                    if (willRedirect) {
-                        window.location.href = 'RolesIndex.php';
-                    }
-                });
-            </script>";
-            return false;
-        }
-    } */
 
+    public function actualizarMenusPorUsuario($fk_usuario, $fk_menus, $fk_submenus) {
+        // Paso 1: Obtener los menús y submenús actuales del usuario
+        $menus_submenus_actuales = $this->usuariosModelo->obtenerMenusSubMenusPorUsuario($fk_usuario);
+    
+        // Crear arrays para facilitar la comparación
+        $menus_actuales = [];
+        $submenus_actuales = [];
+    
+        foreach ($menus_submenus_actuales as $item) {
+            $menus_actuales[$item['menu_id']] = true; // Marcamos el menú como existente
+            $submenus_actuales[$item['submenu_id']] = true; // Marcamos el submenú como existente
+        }
+    
+        // Paso 2: Insertar o actualizar menús y submenús
+        foreach ($fk_menus as $menu_id) {
+            // Si el menú no existe, insertarlo
+            if (!isset($menus_actuales[$menu_id])) {
+                foreach ($fk_submenus as $submenu_id) {
+                    // Verificar si el submenú pertenece al menú actual antes de insertar
+                    if ($this->usuariosModelo->verificarSubmenuPorMenu($menu_id, $submenu_id)) {
+                        if (!$this->usuariosModelo->asignarMenuUsuario($fk_usuario, $menu_id, $submenu_id)) { 
+                            echo "Error al asignar menú ID: {$menu_id} y submenú ID: {$submenu_id} al usuario ID: {$fk_usuario}";
+                        }
+                    }
+                }
+            } else {
+                // Si el menú ya existe, solo debemos verificar los submenús
+                foreach ($fk_submenus as $submenu_id) {
+                    if (!isset($submenus_actuales[$submenu_id])) {
+                        // Si el submenú no existe, insertarlo
+                        if ($this->usuariosModelo->verificarSubmenuPorMenu($menu_id, $submenu_id)) {
+                            if (!$this->usuariosModelo->asignarMenuUsuario($fk_usuario, $menu_id, $submenu_id)) { 
+                                echo "Error al asignar menú ID: {$menu_id} y submenú ID: {$submenu_id} al usuario ID: {$fk_usuario}";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        // Paso 3: Eliminar menús y submenús que ya no están en la vista
+        foreach ($menus_submenus_actuales as $item) {
+            // Si el menú no está en la nueva lista de menús
+            if (!in_array($item['menu_id'], $fk_menus)) {
+                // Eliminar todos los submenús asociados a este menú
+                foreach ($submenus_actuales as $submenu_id => $_) {
+                    // Aquí debes agregar la lógica para eliminar la relación en menu_usuario
+                    if (!$this->usuariosModelo->eliminarMenuUsuario($fk_usuario, $item['menu_id'], $submenu_id)) {
+                        echo "Error al eliminar menú ID: {$item['menu_id']} y submenú ID: {$submenu_id} del usuario ID: {$fk_usuario}";
+                    }
+                }
+            } else {
+                // Si el menú está presente, verificar si hay submenús que deben ser eliminados
+                foreach ($submenus_actuales as $submenu_id => $_) {
+                    if (!in_array($submenu_id, $fk_submenus)) {
+                        // Eliminar solo el submenú que no está en la nueva lista de submenús
+                        if (!$this->usuariosModelo->eliminarMenuUsuario($fk_usuario, $item['menu_id'], $submenu_id)) {
+                            echo "Error al eliminar solo el submenú ID: {$submenu_id} del menú ID: {$item['menu_id']} del usuario ID: {$fk_usuario}";
+                        }
+                    }
+                }
+            }
+        }
+    
+        echo "<script>
+            swal({
+               title: 'Completado',
+               text: 'Menús actualizados correctamente.',
+               icon: 'success',
+            }).then((willRedirect) => {
+               if (willRedirect) {
+                  window.location.href = 'UsuariosIndex.php'; // Redirige a tu página PHP
+               }
+            });
+         </script>";
+    }
 }
 include('../dist/Plantilla.php');

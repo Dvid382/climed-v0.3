@@ -88,8 +88,8 @@ class SubmenusController {
         return $this->submenusModelo->verSubmenusPorId($id);
     }
 
-    public function verSubmenusPorMenus() {
-      return $this->submenusModelo->verSubmenusPorMenus();
+    public function verSubmenusPorMenu($menu_id) {
+      return $this->submenusModelo->verSubmenusPorMenu($menu_id);
    }
 
     public function buscarPorNombre($nombre) {

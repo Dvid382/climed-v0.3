@@ -95,7 +95,7 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                                 <td>
                                     <?php if($_SESSION['valor_rol'] == '1'):?>
                                         <a class="btn btn-outline-success" href="#" data-bs-toggle='modal' data-bs-target='#personaModal' data-id="<?php echo $usuario['id']; ?>"> <i class="fa fa-magnifying-glass"></i></a>
-                                        <a class="btn btn-outline-warning" href="RolesMenuEditar.php?id=<?php echo $usuario['id']; ?>&fk_rol=<?php echo $usuario['fk_rol']; ?>"><i class="fa fa-list-alt"></i></a>
+                                        <a class="btn btn-outline-warning" href="RolesMenuEditar.php?id=<?php echo $usuario['id']; ?>"><i class="fa fa-list-alt"></i></a>
                                         <a class="btn btn-outline-warning m-2" href="UsuariosEditar.php?id=<?php echo $usuario['id']; ?>"><i class="fa fa-pencil-alt"></i></a>
                                         <a class="btn btn-outline-danger m-2" href="UsuariosEliminar.php?id=<?php echo $usuario['id']; ?>"><i class="fa fa-trash-alt"></i></a>
                                     <?php endif; ?>

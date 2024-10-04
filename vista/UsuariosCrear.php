@@ -1,128 +1,129 @@
 <?php
 require_once '../controlador/UsuariosController.php';
 $controladorUsuario = new UsuariosController();
-$usuarios = $controladorUsuario->verTodosUsuarios();
+require_once '../controlador/RolesController.php';
+$controladorRoles = new RolesController();
 $vistas = $controladorUsuario->Vistas();
 $controlar = $controladorUsuario->controlarAcceso(__FILE__);
-?>
 
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<?php include('../dist/Plantilla.php');?>
+    <?php include('../dist/Plantilla.php');?>
 </head>
 <body>
     <div class="container-fluid pt-4 px-4">
 
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $foto = $_FILES['foto'];
+            $clave = ucfirst($_POST['clave']);
+            $fk_rol = ucfirst($_POST['fk_rol']);
+            $fk_persona = ucfirst($_POST['fk_persona']);
+            $fk_servicio = ucfirst($_POST['fk_servicio']);
+            $estatus = $_POST['estatus'];
 
+            $UsuarioController = new UsuariosController();
 
-                <?php
-                    
+            // Verificar si el usuario ya existe
+            $existeUsuario = $UsuarioController->verificarUsuarioExistente($fk_persona);
 
-                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                        $foto = $_FILES['foto'];
-                        $clave = ucfirst($_POST['clave']);
-                        $fk_rol = ucfirst($_POST['fk_rol']);
-                        $fk_persona = ucfirst($_POST['fk_persona']);
-                        $fk_servicio = ucfirst($_POST['fk_servicio']);
-                        $estatus = $_POST['estatus'];
+            if ($existeUsuario) {
+                echo "<script>alert('Error: El usuario ya existe.');</script>";
+            } else {
+                // Crear el usuario
+                $resultado = $UsuarioController->crearUsuario($foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus);
 
-                        $UsuarioController = new UsuariosController();
+                if ($resultado) {
+                    echo "<script>alert('Usuario creado exitosamente.');</script>";
+                    header("Location: UsuarioIndex.php");
+                } else {
+                    echo "Error al crear el Usuario.";
+                }
+            }
+        }
+        ?>
 
-                        // Verificar si el municipio ya existe
-                        $existeUsuario = $UsuarioController->verificarUsuarioExistente($fk_persona);
+        <div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
+            <center><h1>Crear Usuario</h1></center>
+            <form method="POST" enctype="multipart/form-data">
 
-                        if ($existeUsuario) {
-                            echo "<script>alert('Error: El usuario ya existe.');</script>";
-                        } else {
-                            $resultado = $UsuarioController->crearUsuario( $foto, $clave, $fk_rol, $fk_persona, $fk_servicio, $estatus);
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="number" name="cedula" id="cedula" required><br>
+                    <label class="form-label" for="cedula">Cédula:</label>
+                </div>
 
-                            if ($resultado) {
-                                echo "<script>alert('Usuario creado exitosamente.');</script>";
-                                header("Location: UsuarioIndex.php");
-                            } else {
-                                echo "Error al crear el Usuario.";
-                            }
+                <div id="datos_persona"></div>
+                <input type="hidden" name="fk_persona" id="fk_persona">
+
+                <div id="agregar_persona" style="display: none;">
+                    <a class="btn btn-outline-info" href="InsertarPersonaUsuario.php">Registrar Persona</a>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="file" name="foto" id="foto" required><br>
+                    <label class="form-label" for="foto">Foto:</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="password" name="clave" id="clave" required><br>
+                    <label class="form-label" for="clave">Contraseña:</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" aria-label="Default select example" name="fk_rol" id="fk_rol" required>
+                        <option value="">Seleccione un rol</option>
+                        <?php
+                        require_once '../controlador/RolesController.php';
+                        $RolController = new RolesController();
+                        $roles = $RolController->verTodos();
+
+                        foreach ($roles as $rol) {
+                            echo "<option value='" . $rol['id'] . "'>" . $rol['nombre'] . "</option>";
                         }
-                    }
-                ?>
-<div class="bg-white rounded h-25 p-4" style="width: 50%; margin:auto;">
-                <center><h1>Crear Usuario</h1></center>
-            <form method="POST" enctype="multipart/form-data" >
-                    
+                        ?>
+                    </select><br>
+                    <label class="form-label " for="fk_rol">Rol del usuario:</label>
+                    <a href="RolesCrear.php" id="btn-agregar-rol" style="display: none;">Crear Rol, si no existe Rol en la lista</a>
+                </div>
 
-                    <div class="form-floating mb-3">
-                        <input class="form-control " type="number" name="cedula" id="cedula" required><br>
-                        <label class="form-label " for="cedula">Cedula:</label>
-                    </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select" aria-label="Default select example" name="fk_servicio" id="fk_servicio" required>
+                        <option value="">Seleccione un Servicio</option>
+                        <?php
+                        require_once '../controlador/ServiciosController.php';
+                        $ServiciosController = new ServiciosController();
+                        $servicios = $ServiciosController->verTodos();
 
-                    <div id="datos_persona"></div>
-                    <input type="hidden" name="fk_persona" id="fk_persona">
+                        foreach ($servicios as $servicio) {
+                            echo "<option value='" . $servicio['id'] . "'>" . $servicio['nombre'] . "</option>";
+                        }
+                        ?>
+                    </select><br>
+                    <label class="form-label " for="fk_servicio">Servicio del usuario:</label>
+                    <a href="ServiciosCrear.php" id="btn-agregar-servicio" style="display: none;">Crear Servicio, si no existe un servicio en la lista</a>
+                </div>
 
-                    <div id="agregar_persona" style="display: none;">
-                        <a class="btn btn-outline-info" href="InsertarPersonaUsuario.php">Registrar Persona</a>
-                    </div>
+                <div class="form-floating mb-3">
+                    <input type="hidden" class="form-control" name="estatus" id="estatus" value="1">
+                </div>
 
-                    <div class="form-floating mb-3">
-                        <input class="form-control " type="file" name="foto" id="foto" required><br>
-                        <label class="form-label " for="foto">Foto:</label>
-                    </div>
+                <!-- Menús y Submenús -->
+                <div id="menus-container" class="form-floating mb-3">
+                    <label class="form-label" for="menus">Menús del rol:</label>
+                    <div id="menus"></div>
+                </div>
 
-                    <div class="form-floating mb-3">
-                        <input class="form-control " type="password" name="clave" id="clave" required><br>
-                        <label class="form-label " for="clave">Contraseña:</label>
-                    </div>
-
-
-
-                    <div class="form-floating mb-3">
-                        <select class="form-select" aria-label="Default select example" name="fk_rol" id="fk_rol" required>
-                            <option value="">Seleccione un rol</option>
-                            <!-- Populate the options with the list of states from the database -->
-                            <?php
-                                require_once '../controlador/RolesController.php';
-                                $RolController = new RolesController();
-                                $roles = $RolController->verTodos();
-
-                                foreach ($roles as $rol) {
-                                    echo "<option value='" . $rol['id'] . "'>" . $rol['nombre'] . "</option>";
-                                }
-                            ?>
-                        </select><br>
-                        <label class="form-label " for="fk_rol">Rol del usuario:</label>
-                        <a href="RolesCrear.php" id="btn-agregar-rol" style="display: none;">Crear Rol, si no existe Rol en la lista</a>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <select class="form-select" aria-label="Default select example" name="fk_servicio" id="fk_servicio" required>
-                            <option value="">Seleccione un Servicio</option>
-                            <!-- Populate the options with the list of states from the database -->
-                            <?php
-                                require_once '../controlador/ServiciosController.php';
-                                $ServiciosController = new ServiciosController();
-                                $servicios = $ServiciosController->verTodos();
-
-                                foreach ($servicios as $servicio) {
-                                    echo "<option value='" . $servicio['id'] . "'>" . $servicio['nombre'] . "</option>";
-                                }
-                            ?>
-                        </select><br>
-                        <label class="form-label " for="fk_servicio">Servicio del usuario:</label>
-                        <a href="ServiciosCrear.php" id="btn-agregar-servicio" style="display: none;">Crear Servicio, si no existe un servicio en la lista</a>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <input type="hidden" class="form-control" name="estatus" id="estatus" value="1">
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <button class="btn btn-outline-success" type="submit">Crear Usuario. <i class="fa fa-check"></i></button>
-                        <a class="btn btn-outline-info" href="UsuariosIndex.php">Volver <i class="fa fa-right-to-bracket"></i></a>
-                    </div>
-                </form>
-         </div>
+                <div class="">
+                    <button class="btn btn-outline-success" type="submit">Crear Usuario. <i class='fa fa-check'></i></button>
+                    <a class='btn btn-outline-info' href='UsuariosIndex.php'>Volver <i class='fa fa-right-to-bracket'></i></a>
+                </div>
+            </form>
+        </div>
     </div>
+
 
     <script src="../dist/js/jquery-3.7.1.min.js"></script>
     <script>
@@ -195,6 +196,29 @@ function mostrarOcultarBotones() {
 
 // Llamar a la función al cargar la página para establecer el estado inicial de los botones
 mostrarOcultarBotones();
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#fk_rol').change(function() {
+        var rolId = $(this).val();
+        if (rolId) {
+            $.ajax({
+                url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
+                type: 'POST',
+                data: { rol_id: rolId },
+                success: function(data) {
+                    $('#menus').html(data);
+                },
+                error: function() {
+                    alert('Error al obtener los menús.');
+                }
+            });
+        } else {
+            $('#menus').html(''); // Limpiar menús si no hay rol seleccionado
+        }
+    });
+});
 </script>
     <!-- libreries JS -->
 

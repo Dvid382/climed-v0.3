@@ -103,7 +103,36 @@ class Usuario extends Roles {
             return false;
         }
         }
+
+        public function getLastInsertId() {
+            return $this->conexion->lastInsertId();
+        }
         
+        public function asignarMenuUsuario($fk_usuario, $fk_menu, $fk_submenu) {
+            try {
+                $query = "INSERT INTO menu_usuario (fk_usuario, fk_menu, fk_submenu) VALUES (:fk_usuario, :fk_menu, :fk_submenu)";
+                $stmt = $this->conexion->prepare($query);
+                $stmt->bindParam(':fk_usuario', $fk_usuario);
+                $stmt->bindParam(':fk_menu', $fk_menu);
+                $stmt->bindParam(':fk_submenu', $fk_submenu);
+                return $stmt->execute(); // Retorna true si se ejecuta correctamente
+            } catch (PDOException $e) {
+                echo "Error al asignar menú y submenú al usuario: " . $e->getMessage();
+                return false;
+            }
+        }
+
+        public function eliminarMenusPorUsuario($fk_usuario) {
+            try {
+                $query = "DELETE FROM menu_usuario WHERE fk_usuario = :fk_usuario";
+                $stmt = $this->conexion->prepare($query);
+                $stmt->bindParam(':fk_usuario', $fk_usuario);
+                return $stmt->execute(); // Retorna true si se ejecuta correctamente
+            } catch (PDOException $e) {
+                echo "Error al eliminar menús del usuario: " . $e->getMessage();
+                return false;
+            }
+        }
         
         public function eliminarUsuario($id) {
             $query = "UPDATE usuarios SET estatus = 0 WHERE id = :id";
@@ -312,9 +341,8 @@ class Usuario extends Roles {
     public function obtenerMenusSubMenusPorUsuario($fk_usuario) {
         try {
             $query = "SELECT
-						ms.id AS id_menu_usuario,
-						ms.fk_rol_menu AS usuario_rol_menu,
-						ms.fk_usuario AS usuario_menu,
+                        mu.id AS id_menu_usuario,
+                        mu.fk_usuario AS usuario_menu,
                         m.id AS menu_id, 
                         m.nombre AS menu_nombre, 
                         m.icono AS menu_icono, 
@@ -325,21 +353,106 @@ class Usuario extends Roles {
                         sm.url AS submenu_url,
                         sm.fk_menus AS submenu_menu,
                         sm.orden AS submenu_orden
-                      FROM menu_usuario ms
-					  JOIN roles_menu rm ON ms.fk_rol_menu = rm.id
-                      JOIN menus m ON rm.fk_menu = m.id  
-                      JOIN submenus sm ON rm.fk_submenu = sm.id
-					  WHERE ms.fk_usuario = :fk_usuario
+                      FROM menu_usuario mu
+                      JOIN menus m ON mu.fk_menu = m.id  
+                      LEFT JOIN submenus sm ON mu.fk_submenu = sm.id
+                      WHERE mu.fk_usuario = :fk_usuario
                       ORDER BY m.orden, sm.orden";
+            
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':fk_usuario', $fk_usuario);
             $stmt->execute();
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $resultados;
         } catch (PDOException $e) {
-            echo "Error al obtener menús y submenús por rol: " . $e->getMessage();
+            echo "Error al obtener menús y submenús por usuario: " . $e->getMessage();
             return [];
         }
     }
 
+    public function obtenerMenusPorRol($fk_rol) {
+        try {
+            $query = "SELECT
+                        m.id AS id_menu,
+                        rm.id AS id_roles_menu
+                        FROM roles_menu rm 
+                        JOIN menus m ON rm.fk_menu = m.id 
+                        WHERE rm.fk_rol = :fk_rol";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_rol', $fk_rol);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener menús por rol: " . $e->getMessage();
+            return [];
+        }
+    }
+
+    public function obtenerSubmenusPorMenu($menu_id) {
+        try {
+            $query = "SELECT id AS submenu_id, nombre, icono, url, fk_menus AS fk_menu
+                      FROM submenus 
+                      WHERE fk_menus = :menu_id
+                      ORDER BY orden"; // Puedes ajustar el orden según tus necesidades
+            
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':menu_id', $menu_id);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retorna todos los submenús asociados al menú
+        } catch (PDOException $e) {
+            echo "Error al obtener submenús por menú: " . $e->getMessage();
+            return [];
+        }
+    }
+
+    public function verificarMenuSubmenuExistente($fk_usuario, $fk_menu, $fk_submenu) {
+        try {
+            $query = "SELECT COUNT(*) FROM menu_usuario 
+                      WHERE fk_usuario = :fk_usuario 
+                      AND fk_menu = :fk_menu 
+                      AND fk_submenu = :fk_submenu";
+            
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_usuario', $fk_usuario);
+            $stmt->bindParam(':fk_menu', $fk_menu);
+            $stmt->bindParam(':fk_submenu', $fk_submenu);
+            $stmt->execute();
+            
+            return ($stmt->fetchColumn() > 0); // Retorna true si existe al menos una fila
+        } catch (PDOException $e) {
+            echo "Error al verificar existencia de menú y submenú: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function verificarSubmenuPorMenu($menu_id, $submenu_id) {
+        try {
+            $query = "SELECT COUNT(*) FROM submenus WHERE fk_menus = :menu_id AND id = :submenu_id";
+            
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':menu_id', $menu_id);
+            $stmt->bindParam(':submenu_id', $submenu_id);
+            $stmt->execute();
+            
+            return ($stmt->fetchColumn() > 0); // Retorna true si existe al menos una fila que coincida
+        } catch (PDOException $e) {
+            echo "Error al verificar existencia del submenú por menú: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function eliminarMenuUsuario($fk_usuario, $fk_menu, $fk_submenu) {
+        try {
+            $query = "DELETE FROM menu_usuario WHERE fk_usuario = :fk_usuario AND fk_menu = :fk_menu AND fk_submenu = :fk_submenu";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':fk_usuario', $fk_usuario);
+            $stmt->bindParam(':fk_menu', $fk_menu);
+            $stmt->bindParam(':fk_submenu', $fk_submenu);
+            return $stmt->execute(); // Retorna true si se ejecuta correctamente
+        } catch (PDOException $e) {
+            echo "Error al eliminar menú y submenú del usuario: " . $e->getMessage();
+            return false;
+        }
+    }
 }

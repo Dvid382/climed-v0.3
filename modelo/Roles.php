@@ -226,13 +226,32 @@ class Roles
     
     public function crearRolMenu($fk_rol, $fk_menu, $fk_submenu) {
         try {
-            $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) VALUES (:fk_rol, :fk_menu, :fk_submenu)";
+            // Verificar si la combinación ya existe
+            $query = "SELECT COUNT(*) AS count 
+                      FROM roles_menu 
+                      WHERE fk_rol = :fk_rol 
+                        AND fk_menu = :fk_menu 
+                        AND fk_submenu = :fk_submenu";
             $stmt = $this->conexion->prepare($query);
             $stmt->bindParam(':fk_rol', $fk_rol);
             $stmt->bindParam(':fk_menu', $fk_menu);
             $stmt->bindParam(':fk_submenu', $fk_submenu);
             $stmt->execute();
-            return true;
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            // Si la combinación no existe, insertarla en la base de datos
+            if ($result['count'] == 0) {
+                $query = "INSERT INTO roles_menu (fk_rol, fk_menu, fk_submenu) 
+                          VALUES (:fk_rol, :fk_menu, :fk_submenu)";
+                $stmt = $this->conexion->prepare($query);
+                $stmt->bindParam(':fk_rol', $fk_rol);
+                $stmt->bindParam(':fk_menu', $fk_menu);
+                $stmt->bindParam(':fk_submenu', $fk_submenu);
+                $stmt->execute();
+                return true; // Inserción exitosa
+            } else {
+                return false; // La combinación ya existe
+            }
         } catch (PDOException $e) {
             echo "Error al crear la asignación de rol, menú y submenu: " . $e->getMessage();
             return false;
@@ -337,37 +356,85 @@ public function eliminarRolesMenuUsuario($last_insert_id) {
             return [];
         }
     }
-    public function obtenerMenusSubMenusPorUsuario($fk_usuario) {
+    public function obtenerMenusSubMenusPorUsuario($usuario_id) {
+    try {
+        $query = "SELECT 
+                    mu.fk_menu AS menu_id,
+                    mu.fk_submenu AS submenu_id,
+                    m.nombre AS menu_nombre,
+                    sm.nombre AS submenu_nombre
+                  FROM menu_usuario mu
+                  JOIN menus m ON mu.fk_menu = m.id
+                  LEFT JOIN submenus sm ON mu.fk_submenu = sm.id
+                  WHERE mu.fk_usuario = :usuario_id";
+        
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error al obtener menús y submenús por usuario: " . $e->getMessage();
+        return [];
+    }
+}
+    
+    public function obtenerMenusSubMenusPorRolUsuario($rol_id) {
         try {
             $query = "SELECT
-						u.id AS id_usuario,
+                        rm.id AS rol_menu_id,  -- Obtener el ID de roles_menu
                         m.id AS menu_id, 
                         m.nombre AS menu_nombre, 
-                        m.icono AS menu_icono, 
-                        m.orden AS menu_orden,
                         sm.id AS submenu_id,
-                        sm.nombre AS submenu_nombre, 
-                        sm.icono AS submenu_icono, 
-                        sm.url AS submenu_url,
-                        sm.fk_menus AS submenu_menu,
-                        sm.orden AS submenu_orden
-                      FROM menu_usuario mu
-					  JOIN usuarios u ON mu.fk_usuario = u.id
-					  JOIN roles_menu rm ON mu.fk_rol_menu = rm.id
+                        sm.nombre AS submenu_nombre
+                      FROM roles_menu rm
                       JOIN menus m ON rm.fk_menu = m.id  
-                      JOIN submenus sm ON rm.fk_submenu = sm.id 
-                      WHERE mu.fk_usuario = :fk_usuario
+                      LEFT JOIN submenus sm ON rm.fk_submenu = sm.id 
+                      WHERE rm.fk_rol = :rol_id
                       ORDER BY m.orden, sm.orden";
+            
             $stmt = $this->conexion->prepare($query);
-            $stmt->bindParam(':fk_usuario', $fk_usuario);
+            $stmt->bindParam(':rol_id', $rol_id);
             $stmt->execute();
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultados;
+            
+            // Agrupar los resultados por menú
+            $menus = [];
+            foreach ($resultados as $row) {
+                $menu_id = $row['menu_id'];
+                if (!isset($menus[$menu_id])) {
+                    $menus[$menu_id] = [
+                        'rol_menu_id' => $row['rol_menu_id'], // Guardar el ID de roles_menu
+                        'id' => $menu_id,
+                        'nombre' => $row['menu_nombre'],
+                        'submenus' => []
+                    ];
+                }
+                if ($row['submenu_id']) {
+                    $menus[$menu_id]['submenus'][] = [
+                        'id' => $row['submenu_id'],
+                        'nombre' => $row['submenu_nombre']
+                    ];
+                }
+            }
+            
+            return array_values($menus); // Retornar solo los valores del array
         } catch (PDOException $e) {
             echo "Error al obtener menús y submenús por rol: " . $e->getMessage();
             return [];
         }
     }
-    
-    
+
+    public function obtenerMenuPorSubmenu($submenu_id) {
+        try {
+            $query = "SELECT fk_menus FROM submenus WHERE id = :submenu_id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':submenu_id', $submenu_id);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado['fk_menus'] ?? null; // Retorna el ID del menú o null si no existe
+        } catch (PDOException $e) {
+            echo "Error al obtener el menú por submenú: " . $e->getMessage();
+            return null;
+        }
+    }
 }

@@ -183,12 +183,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 } elseif ($cita['estatus'] == 3) {
                                     echo 'Confirmada';
                                 } elseif ($cita['estatus'] == 4) {
-                                    echo 'En proceso';
+                                    echo 'Revición';
                                 } elseif ($cita['estatus'] == 5) {
-                                    echo 'Finalizada';
+                                    echo 'En proceso';
                                 } elseif ($cita['estatus'] == 6) {
+                                    echo 'Finalizada';
+                                } elseif ($cita['estatus'] == 7) {
                                     echo 'Cancelada';
-                                } elseif ($cita['estatus'] == 7) 
+                                } elseif ($cita['estatus'] == 8) 
                                     echo 'Suspendida';
                                 ?>
                             </td>
