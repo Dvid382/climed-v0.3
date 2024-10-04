@@ -111,10 +111,37 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                 </div>
 
                 <!-- Menús y Submenús -->
-                <div id="menus-container" class="form-floating mb-3">
-                    <label class="form-label" for="menus">Menús del rol:</label>
-                    <div id="menus"></div>
-                </div>
+<!-- No se muestra el contenedor -->
+<div id="menus-container" class="form-floating mb-3" style="display: none;">
+    <label class="form-label" for="menus">Menús del rol:</label>
+    <div id="menus"></div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#fk_rol').change(function() {
+        var rolId = $(this).val();
+        if (rolId) {
+            $.ajax({
+                url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
+                type: 'POST',
+                data: { rol_id: rolId },
+                success: function(data) {
+                    $('#menus').html(data);
+                    // Si deseas mostrar los menús bajo ciertas condiciones, puedes agregar lógica aquí
+                    // Por ejemplo:
+                    // $('#menus-container').show(); // Descomentar si deseas mostrarlo bajo ciertas condiciones
+                },
+                error: function() {
+                    alert('Error al obtener los menús.');
+                }
+            });
+        } else {
+            $('#menus').html(''); // Limpiar menús si no hay rol seleccionado
+        }
+    });
+});
+</script>
 
                 <div class="">
                     <button class="btn btn-outline-success" type="submit">Crear Usuario. <i class='fa fa-check'></i></button>
@@ -198,28 +225,6 @@ function mostrarOcultarBotones() {
 mostrarOcultarBotones();
 </script>
 
-<script>
-$(document).ready(function() {
-    $('#fk_rol').change(function() {
-        var rolId = $(this).val();
-        if (rolId) {
-            $.ajax({
-                url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
-                type: 'POST',
-                data: { rol_id: rolId },
-                success: function(data) {
-                    $('#menus').html(data);
-                },
-                error: function() {
-                    alert('Error al obtener los menús.');
-                }
-            });
-        } else {
-            $('#menus').html(''); // Limpiar menús si no hay rol seleccionado
-        }
-    });
-});
-</script>
     <!-- libreries JS -->
 
         <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>

@@ -92,6 +92,10 @@ class SubmenusController {
       return $this->submenusModelo->verSubmenusPorMenu($menu_id);
    }
 
+   public function verSubmenusPorMenus() {
+      return $this->submenusModelo->verSubmenusPorMenus();
+   }
+
     public function buscarPorNombre($nombre) {
         return $this->submenusModelo->buscarSubmenusPorNombre($nombre);
     }

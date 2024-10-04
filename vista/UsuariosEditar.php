@@ -126,11 +126,57 @@ $controlar = $controladorUsuario->controlarAcceso(__FILE__);
                     <input class="form-control" type="hidden" name="estatus" id="estatus" value="1">
                 </div>
 
-                <!-- Menús y Submenús -->
-                <div id="menus-container" class="form-floating mb-3">
-                    <label class="form-label" for="menus">Menús del rol:</label>
-                    <div id="menus"></div>
-                </div>
+                <!-- Menús y Submenús para Editar -->
+<div id="menus-container" class="form-floating mb-3" style="display: none;">
+    <label class="form-label" for="menus">Menús del rol:</label>
+    <div id="menus"></div>
+</div>
+
+<script>
+// Cargar menús automáticamente cuando hay un rol seleccionado
+$(document).ready(function() {
+    var rolId = $('#fk_rol').val(); // Obtener el rol seleccionado al cargar la página
+
+    if (rolId) {
+        $.ajax({
+            url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
+            type: 'POST',
+            data: { rol_id: rolId },
+            success: function(data) {
+                $('#menus').html(data);
+                // Si deseas mostrar los menús bajo ciertas condiciones, puedes agregar lógica aquí
+                // Por ejemplo:
+                // $('#menus-container').show(); // Descomentar si deseas mostrarlo bajo ciertas condiciones
+            },
+            error: function() {
+                alert('Error al obtener los menús.');
+            }
+        });
+    }
+
+    // Agregar evento de cambio al campo de rol para cargar menús dinámicamente
+    $('#fk_rol').change(function() {
+        var rolId = $(this).val();
+        if (rolId) {
+            $.ajax({
+                url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
+                type: 'POST',
+                data: { rol_id: rolId },
+                success: function(data) {
+                    $('#menus').html(data);
+                    // Descomentar si deseas mostrar el contenedor de menús cuando se cargan los datos
+                    // $('#menus-container').show();
+                },
+                error: function() {
+                    alert('Error al obtener los menús.');
+                }
+            });
+        } else {
+            $('#menus').html(''); // Limpiar menús si no hay rol seleccionado
+        }
+    });
+});
+</script>
 
                 <div class="form-floating mb-3">
                     <button class="btn btn-outline-success" type="submit">Crear Usuario. <i class="fa fa-check"></i></button>
@@ -176,46 +222,7 @@ function verificarPersonaExistente(cedula) {
 }
 </script>
 
-<script>
-// Cargar menús automáticamente cuando hay un rol seleccionado
-$(document).ready(function() {
-    var rolId = $('#fk_rol').val(); // Obtener el rol seleccionado al cargar la página
 
-    if (rolId) {
-        $.ajax({
-            url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
-            type: 'POST',
-            data: { rol_id: rolId },
-            success: function(data) {
-                $('#menus').html(data);
-            },
-            error: function() {
-                alert('Error al obtener los menús.');
-            }
-        });
-    }
-
-    // Agregar evento de cambio al campo de rol para cargar menús dinámicamente
-    $('#fk_rol').change(function() {
-        var rolId = $(this).val();
-        if (rolId) {
-            $.ajax({
-                url: 'obtener_menus.php', // Archivo PHP que manejará la lógica
-                type: 'POST',
-                data: { rol_id: rolId },
-                success: function(data) {
-                    $('#menus').html(data);
-                },
-                error: function() {
-                    alert('Error al obtener los menús.');
-                }
-            });
-        } else {
-            $('#menus').html(''); // Limpiar menús si no hay rol seleccionado
-        }
-    });
-});
-</script>
     <!-- libreries JS -->
     <script src="../dist/js/LimpiarInput.js"></script>
             <script src="../dist/plantilla/lib/bootstrap.bundle.min.js"></script>

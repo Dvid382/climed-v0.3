@@ -221,5 +221,22 @@ class Submenus
             return [];
         }
     }
+    public function verSubmenusPorMenus() {
+        try {
+            $query = "SELECT 
+                        sm.id AS id_submenus,
+                        sm.nombre,
+                        m.id AS fk_menu
+                      FROM submenus sm
+                      JOIN menus m ON sm.fk_menus = m.id";
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } catch (PDOException $e) {
+            echo "Error al obtener submenús por menús: " . $e->getMessage();
+            return [];
+        }
+    }
     
 }
